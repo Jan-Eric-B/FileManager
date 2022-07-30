@@ -84,3 +84,5 @@ C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows1
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\WPF UI - Demo App.pdb
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\FileManager.genruntimeconfig.cache
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\ref\WPF UI - Demo App.dll
+C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\ItemlistPage.g.cs
+C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\ItemlistPage.baml
