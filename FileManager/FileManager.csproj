@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="WPF-UI" Version="2.0.2" />
   </ItemGroup>
 
@@ -40,12 +41,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Resources\SearchFilters.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SearchFilters.settings</DependentUpon>
+    </Compile>
     <Compile Update="Views\Pages\Page3.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\Page2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\SearchFilters.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SearchFilters.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

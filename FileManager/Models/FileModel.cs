@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.IO;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace FileManager.Models
 {
-    internal class FileModel : INotifyPropertyChanged
+    public class FileModel : ObservableObject
     {
 
         //C:\Windows\System32\file.png
@@ -24,27 +25,63 @@ namespace FileManager.Models
         }
 
         //file.png
-        public string FileName()
+        private string fileName;
+        public string FileName
         {
-            return Path.GetFileName(FilePath);
+            get => fileName;
+            set
+            {
+                fileName = value;
+                OnPropertyChanged(nameof(FileName));
+            }
         }
 
         //file
-        public string FileNameWithoutExtension()
+        private string fileNameWithoutExtension;
+        public string FileNameWithoutExtension
         {
-            return Path.GetFileNameWithoutExtension(FilePath);
+            get => fileNameWithoutExtension;
+            set
+            {
+                fileNameWithoutExtension = value;
+                OnPropertyChanged(nameof(FileNameWithoutExtension));
+            }
         }
 
         //.png
-        public string Extension()
+        private string extension;
+        public string Extension
         {
-            return Path.GetExtension(FilePath);
+            get => extension;
+            set
+            {
+                extension = value;
+                OnPropertyChanged(nameof(Extension));
+            }
         }
 
         //C:\Windows\System32\
-        public string DirectoryName()
+        private string directoryName;
+        public string DirectoryName
         {
-            return Path.GetDirectoryName(FilePath);
+            get => directoryName;
+            set
+            {
+                directoryName = value;
+                OnPropertyChanged(nameof(DirectoryName));
+            }
+        }
+
+        //System32\file.png
+        private string fileNameWithSubdirectory;
+        public string FileNameWithSubdirectory
+        {
+            get => fileNameWithSubdirectory;
+            set
+            {
+                fileNameWithSubdirectory = value;
+                OnPropertyChanged(nameof(FileNameWithSubdirectory));
+            }
         }
 
 
@@ -59,12 +96,5 @@ namespace FileManager.Models
             }
         }
 
-        #region OnPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion OnPropertyChanged
     }
 }

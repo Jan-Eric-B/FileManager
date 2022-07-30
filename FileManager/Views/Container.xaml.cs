@@ -9,6 +9,10 @@ using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.TaskBar;
 using FileManager.Services;
 using FileManager.ViewModels;
+using System.Windows.Input;
+using FileManager.Views.Windows;
+using FileManager.Resources;
+using System.Windows.Forms;
 
 namespace FileManager.Views;
 
@@ -18,11 +22,19 @@ namespace FileManager.Views;
 public partial class Container : INavigationWindow
 {
     private readonly ITaskBarService _taskBarService;
-    private readonly IWindowService _testWindowService;
+    private readonly IWindowService _windowService;
     private readonly IThemeService _themeService;
-    private bool _initialized = false;
+    private readonly bool _initialized = false;
 
-    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ITaskBarService taskBarService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService testWindowService)
+    private DateTime LastClick;
+    private bool InDoubleClick;
+    private TimeSpan DoubleClickMaxTime;
+    private Action DoubleClickAction;
+    private Action SingleClickAction;
+    private Timer ClickTimer;
+
+    private string ToOpenFile = string.Empty;
+    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ITaskBarService taskBarService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
         // Assign the view model
         ViewModel = viewModel;
@@ -33,9 +45,6 @@ public partial class Container : INavigationWindow
 
         // Attach the taskbar service
         _taskBarService = taskBarService;
-
-        //// Context provided by the service provider.
-        //DataContext = viewModel;
 
         // Initial preparation of the window.
         InitializeComponent();
@@ -52,35 +61,50 @@ public partial class Container : INavigationWindow
         // Allows you to use the Dialog control defined in this window in other pages or windows
         dialogService.SetDialogControl(RootDialog);
 
-        // !! Experimental option
-        //RemoveTitlebar();
-
-        // !! Experimental option
-        //ApplyBackdrop(Wpf.Ui.Appearance.BackgroundType.Mica);
-
-        // We initialize a cute and pointless loading splash that prepares the view and navigate at the end.
-        Loaded += (_, _) => InvokeSplashScreen();
-
         // We register a window in the Watcher class, which changes the application's theme if the system theme changes.
         // Wpf.Ui.Appearance.Watcher.Watch(this, Appearance.BackgroundType.Mica, true, false);
-        _testWindowService = testWindowService;
+        _windowService = windowService;
+
+        LoadSettings();
+
+        ItemsControl.ItemsSource = ViewModel.Files;
+        
+        ViewModel.SearchingAsync().Wait();
+
+
+
+
+
+        DoubleClickMaxTime = TimeSpan.FromMilliseconds(SystemInformation.DoubleClickTime);
+
+        ClickTimer = new Timer();
+        ClickTimer.Interval = SystemInformation.DoubleClickTime;
+        ClickTimer.Tick += ClickTimer_Tick;
+
+        // Click to copy Path to Clipboard and Doubleclick on Item, tries to open it
+        SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
+        DoubleClickAction = () => StartProcess.Start(ToOpenFile, true);
     }
+
+
+
+
+
 
     public ContainerViewModel ViewModel
     {
         get;
     }
 
-    // NOTICE: In the case of this window, we navigate to the Dashboard after loading with Container.InitializeUi()
-    /// <summary>
-    /// Raises the closed event.
-    /// </summary>
+    // Close Event
     protected override void OnClosed(EventArgs e)
     {
+        SaveSettings();
+
         base.OnClosed(e);
 
         // Make sure that closing this window will begin the process of closing the application.
-        Application.Current.Shutdown();
+        System.Windows.Application.Current.Shutdown();
     }
 
     #region INavigationWindow methods
@@ -105,45 +129,146 @@ public partial class Container : INavigationWindow
 
     #endregion INavigationWindow methods
 
-    private void InvokeSplashScreen()
-    {
-        if (_initialized)
-            return;
 
-        _initialized = true;
-
-        RootMainGrid.Visibility = Visibility.Visible;
-
-        _taskBarService.SetState(this, TaskBarProgressState.Indeterminate);
-
-        Task.Run(async () =>
-        {
-            await Dispatcher.InvokeAsync(() =>
-            {
-                Navigate(typeof(Pages.Page1));
-
-                _taskBarService.SetState(this, TaskBarProgressState.None);
-            });
-
-            return true;
-        });
-    }
-
+    // Theme
     private void NavigationButtonTheme_OnClick(object sender, RoutedEventArgs e)
     {
         _themeService.SetTheme(_themeService.GetTheme() == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark);
     }
 
+    // Settings
     private void OpenSettings_OnClick(object sender, RoutedEventArgs e)
     {
-        _testWindowService.Show<Views.Windows.SettingsWindow>();
+        _windowService.Show<Views.Windows.SettingsWindow>();
     }
 
-    private void TrayMenuItem_OnClick(object sender, RoutedEventArgs e)
+
+    // Settings
+    private void SaveSettings()
     {
-        if (sender is not MenuItem menuItem)
-            return;
-
-        System.Diagnostics.Debug.WriteLine($"DEBUG | WPF UI Tray clicked: {menuItem.Tag}", "FileManager");
+        SearchFilters settings = new()
+        {
+            MainPath = ViewModel.MainPath,
+            SearchOptionsCaseSensitive = ViewModel.SearchOptionsCaseSensitive,
+            SearchOptionsFileContent = ViewModel.SearchOptionsFileContent,
+            SearchOptionsFileName = ViewModel.SearchOptionsFileName,
+            SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
+        };
+        settings.Save();
     }
+    private void LoadSettings()
+    {
+        SearchFilters settings = new();
+        ViewModel.MainPath = settings.MainPath;
+        ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
+        ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
+        ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;
+        ViewModel.SearchOptionsSubdirectories = settings.SearchOptionsSubdirectories;
+        //RenameInsertCountUp = settings.RenameInsertCountUp;
+        //CopyNameRemoveCopied = settings.CopyNameRemoveCopied;
+        //CopyNameSingle = settings.CopyNameSingle;
+        //CopyNameWithExtension = settings.CopyNameWithExtension;
+    }
+
+
+
+
+    // Checkboxes
+    private void CheckBox_Checked(object sender, RoutedEventArgs e)
+    {
+        ViewModel.FileCountSelected++;
+    }
+    private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ViewModel.FileCountSelected--;
+    }
+
+    //Click and Drag over Checkboxes
+    private void Checkbox_OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        System.Windows.Controls.CheckBox checkbox = sender as System.Windows.Controls.CheckBox;
+
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            if (checkbox != null)
+            {
+                checkbox.IsChecked = !checkbox.IsChecked;
+            }
+        }
+    }
+    private void Checkbox_OnGotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Controls.CheckBox checkbox = sender as System.Windows.Controls.CheckBox;
+            if (checkbox != null)
+            {
+                checkbox.IsChecked = !checkbox.IsChecked;
+                checkbox.ReleaseMouseCapture();
+            }
+        }
+    }
+
+    //Search Input
+    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == Key.Return || e.Key == Key.Tab)
+        {
+            await ViewModel.SearchingAsync();
+        }
+    }
+
+    // Search Filter
+    private async void CheckBox_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.SearchingAsync();
+    }
+
+
+    private void ClickTimer_Tick(object sender, EventArgs e)
+    {
+        // Clear double click watcher and timer
+        InDoubleClick = false;
+        ClickTimer.Stop();
+
+        SingleClickAction();
+    }
+    // Item TextBlock
+    private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        ToOpenFile = ViewModel.MainPath + ((TextBlock)sender).Text;
+        MouseDownChange();
+    }
+    // Main Path
+    private void Path_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        ToOpenFile = ViewModel.MainPath;
+        MouseDownChange();
+    }
+    private void MouseDownChange()
+    {
+        if (InDoubleClick)
+        {
+            InDoubleClick = false;
+
+            TimeSpan length = DateTime.Now - LastClick;
+
+            // If double click is valid, respond
+            if (length < DoubleClickMaxTime)
+            {
+                ClickTimer.Stop();
+                DoubleClickAction();
+            }
+
+            return;
+        }
+
+        // Double click was invalid, restart 
+        ClickTimer.Stop();
+        ClickTimer.Start();
+        LastClick = DateTime.Now;
+        InDoubleClick = true;
+    }
+
+
 }

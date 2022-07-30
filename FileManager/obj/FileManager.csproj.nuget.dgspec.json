@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\debednaj\\source\\repos\\FileManager\\FileManager\\FileManager.csproj": {}
+    "C:\\Users\\Jan-E\\source\\repos\\FileManager\\FileManager\\FileManager.csproj": {}
   },
   "projects": {
-    "C:\\Users\\debednaj\\source\\repos\\FileManager\\FileManager\\FileManager.csproj": {
+    "C:\\Users\\Jan-E\\source\\repos\\FileManager\\FileManager\\FileManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\debednaj\\source\\repos\\FileManager\\FileManager\\FileManager.csproj",
+        "projectUniqueName": "C:\\Users\\Jan-E\\source\\repos\\FileManager\\FileManager\\FileManager.csproj",
         "projectName": "WPF UI - Demo App",
-        "projectPath": "C:\\Users\\debednaj\\source\\repos\\FileManager\\FileManager\\FileManager.csproj",
-        "packagesPath": "C:\\Users\\debednaj\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\debednaj\\source\\repos\\FileManager\\FileManager\\obj\\",
+        "projectPath": "C:\\Users\\Jan-E\\source\\repos\\FileManager\\FileManager\\FileManager.csproj",
+        "packagesPath": "C:\\Users\\Jan-E\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Jan-E\\source\\repos\\FileManager\\FileManager\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\debednaj\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Jan-E\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,8 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://devnexus.krohne.com/repository/nuget-group/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0-windows10.0.22000": {
@@ -53,6 +52,10 @@
               "target": "Package",
               "version": "[7.1.2, )"
             },
+            "Ookii.Dialogs.Wpf": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
             "WPF-UI": {
               "target": "Package",
               "version": "[2.0.2, )"
@@ -71,7 +74,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.22000.26, 10.0.22000.26]"
+              "version": "[10.0.22000.25, 10.0.22000.25]"
             }
           ],
           "frameworkReferences": {
@@ -85,7 +88,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
