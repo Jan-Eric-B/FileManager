@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\debednaj\Source\Repos\FileManager\FileManager\obj\Release\net6.0-windows10.0.22000.0\
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Release\net6.0-windows10.0.22000.0\
 FileManager
 none
 false
 TRACE;RELEASE;NET;NET6_0;NETCOREAPP
-C:\Users\debednaj\Source\Repos\FileManager\FileManager\App.xaml
+C:\Users\Jan-E\source\repos\FileManager\FileManager\App.xaml
 7-1048299171
 11001301542
 192002686627
-224-247179663
+224-1685782476
 Views\Container.xaml;Views\Pages\Page1.xaml;Views\Pages\Page2.xaml;Views\Pages\Page3.xaml;Views\Pages\SettingsPageControls.xaml;Views\Pages\SettingsPageDashboard.xaml;Views\Windows\SettingsWindow.xaml;
 
 True
