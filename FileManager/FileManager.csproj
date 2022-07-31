@@ -46,6 +46,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SearchFilters.settings</DependentUpon>
     </Compile>
+    <Compile Update="Resources\ThemeSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ThemeSettings.settings</DependentUpon>
+    </Compile>
     <Compile Update="Views\Pages\Page3.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -58,6 +63,10 @@
     <None Update="Resources\SearchFilters.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SearchFilters.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\ThemeSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ThemeSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

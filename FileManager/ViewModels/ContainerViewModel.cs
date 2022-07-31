@@ -37,7 +37,11 @@ public class ContainerViewModel : ObservableObject
     }
 
     private ICommand _openFolderDialog;
+    private ICommand _directoryScopeOut;
+
     public ICommand OpenFolderDialog => _openFolderDialog ??= new RelayCommand<string>(FolderDialog);
+
+    public ICommand DirectoryScopeOut => _directoryScopeOut ??= new RelayCommand<string>(ScopeOut);
 
     private async void FolderDialog(string parameter)
     {
@@ -65,7 +69,23 @@ public class ContainerViewModel : ObservableObject
     }
 
 
+    private async void ScopeOut(string parameter)
+    {
+        DirectoryInfo directoryInfoMainPath =  System.IO.Directory.GetParent(MainPath);
 
+        if(directoryInfoMainPath != null)
+        {
+            DirectoryInfo directoryInfoMainPathParent = directoryInfoMainPath.Parent;
+
+            if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
+            {
+                MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
+                await SearchingAsync();
+            }
+        }
+
+
+    }
 
 
     public ObservableCollection<FileModel> Files = new();
@@ -242,62 +262,60 @@ public class ContainerViewModel : ObservableObject
     {
         //Clear previous search
         ClearSearch();
-
         await Task.Run(new Action(LoadFiles)).ConfigureAwait(false);
     }
 
-    private void LoadFiles()
+    private async void LoadFiles()
     {
-        Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
-            {
-                SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
+        {
+            SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-                foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+            foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+            {
+                if (string.IsNullOrWhiteSpace(SearchInput))
                 {
-                    if (string.IsNullOrWhiteSpace(SearchInput))
+                    await AddFileAsync(filePath);
+                    FileCount++;
+                }
+                else
+                {
+                    //Get Filename
+                    string fileName = System.IO.Path.GetFileName(filePath);
+
+                    //If Case Sensitive
+                    if (!SearchOptionsCaseSensitive)
+                    {
+                        searchInput = searchInput.ToUpper();
+                        fileName = fileName.ToUpper();
+                    }
+
+                    //Search in Name
+                    if (SearchOptionsFileName && fileName.Contains(searchInput))
                     {
                         await AddFileAsync(filePath);
                         FileCount++;
                     }
-                    else
+
+                    //Search in File
+                    if (SearchOptionsFileContent)
                     {
-                        //Get Filename
-                        string fileName = System.IO.Path.GetFileName(filePath);
-
+                        string content = File.ReadAllText(filePath);
                         //If Case Sensitive
-                        if (!SearchOptionsCaseSensitive)
-                        {
-                            searchInput = searchInput.ToUpper();
-                            fileName = fileName.ToUpper();
-                        }
+                        if (!SearchOptionsCaseSensitive) content = content.ToUpper();
 
-                        //Search in Name
-                        if (SearchOptionsFileName && fileName.Contains(searchInput))
+                        if (content.Contains(searchInput))
                         {
                             await AddFileAsync(filePath);
                             FileCount++;
                         }
-
-                        //Search in File
-                        if (SearchOptionsFileContent)
-                        {
-                            string content = File.ReadAllText(filePath);
-                            //If Case Sensitive
-                            if (!SearchOptionsCaseSensitive) content = content.ToUpper();
-
-                            if (content.Contains(searchInput))
-                            {
-                                await AddFileAsync(filePath);
-                                FileCount++;
-                            }
-                        }
                     }
                 }
-            }));
+            }
 
+        }));
     }
-
-
+  
     public async Task AddFileAsync(string filePath)
     {
         await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
@@ -310,6 +328,7 @@ public class ContainerViewModel : ObservableObject
                 DirectoryName = Path.GetDirectoryName(filePath),
                 FilePath = filePath,
                 FileNameWithSubdirectory = Path.GetFileName(filePath),
+                FileSize = SizeSuffix(new FileInfo(filePath).Length, 1),
                 IsChecked = false
             };
             //if file is in subdirectory, save subdirectories to filename
@@ -321,4 +340,35 @@ public class ContainerViewModel : ObservableObject
             Files.Add(file);
         }));
     }
+
+
+
+
+    static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+    static string SizeSuffix(long value, int decimalPlaces = 1)
+    {
+        if (decimalPlaces < 0) { throw new ArgumentOutOfRangeException("decimalPlaces"); }
+        if (value < 0) { return "-" + SizeSuffix(-value, decimalPlaces); }
+        if (value == 0) { return string.Format("{0:n" + decimalPlaces + "} bytes", 0); }
+
+        // mag is 0 for bytes, 1 for KB, 2, for MB, etc.
+        int mag = (int)Math.Log(value, 1024);
+
+        // 1L << (mag * 10) == 2 ^ (10 * mag) 
+        // [i.e. the number of bytes in the unit corresponding to mag]
+        decimal adjustedSize = (decimal)value / (1L << (mag * 10));
+
+        // make adjustment when the value is large enough that
+        // it would round up to 1000 or more
+        if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
+        {
+            mag += 1;
+            adjustedSize /= 1024;
+        }
+
+        return string.Format("{0:n" + decimalPlaces + "} {1}",
+            adjustedSize,
+            SizeSuffixes[mag]);
+    }
+
 }

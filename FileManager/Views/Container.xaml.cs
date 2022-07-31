@@ -1,18 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.TaskBar;
+﻿using FileManager.Resources;
 using FileManager.Services;
 using FileManager.ViewModels;
-using System.Windows.Input;
-using FileManager.Views.Windows;
-using FileManager.Resources;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace FileManager.Views;
 
@@ -21,19 +17,12 @@ namespace FileManager.Views;
 /// </summary>
 public partial class Container : INavigationWindow
 {
-    private readonly ITaskBarService _taskBarService;
-    private readonly IWindowService _windowService;
-    private readonly IThemeService _themeService;
     private readonly bool _initialized = false;
+    private readonly ITaskBarService _taskBarService;
+    private readonly IThemeService _themeService;
+    private readonly IWindowService _windowService;
 
-    private DateTime LastClick;
-    private bool InDoubleClick;
-    private TimeSpan DoubleClickMaxTime;
-    private Action DoubleClickAction;
-    private Action SingleClickAction;
-    private Timer ClickTimer;
 
-    private string ToOpenFile = string.Empty;
     public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ITaskBarService taskBarService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
         // Assign the view model
@@ -65,15 +54,11 @@ public partial class Container : INavigationWindow
         // Wpf.Ui.Appearance.Watcher.Watch(this, Appearance.BackgroundType.Mica, true, false);
         _windowService = windowService;
 
-        LoadSettings();
+        SettingsLoad();
 
         ItemsControl.ItemsSource = ViewModel.Files;
-        
+
         ViewModel.SearchingAsync().Wait();
-
-
-
-
 
         DoubleClickMaxTime = TimeSpan.FromMilliseconds(SystemInformation.DoubleClickTime);
 
@@ -86,11 +71,6 @@ public partial class Container : INavigationWindow
         DoubleClickAction = () => StartProcess.Start(ToOpenFile, true);
     }
 
-
-
-
-
-
     public ContainerViewModel ViewModel
     {
         get;
@@ -99,7 +79,7 @@ public partial class Container : INavigationWindow
     // Close Event
     protected override void OnClosed(EventArgs e)
     {
-        SaveSettings();
+        SettingsSave();
 
         base.OnClosed(e);
 
@@ -129,51 +109,28 @@ public partial class Container : INavigationWindow
 
     #endregion INavigationWindow methods
 
-
     // Theme
     private void NavigationButtonTheme_OnClick(object sender, RoutedEventArgs e)
     {
         _themeService.SetTheme(_themeService.GetTheme() == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark);
     }
 
-    // Settings
+    // Settings Window
     private void OpenSettings_OnClick(object sender, RoutedEventArgs e)
     {
         _windowService.Show<Views.Windows.SettingsWindow>();
     }
 
+    // Checkbox
+    #region Checkboxes
 
-    // Settings
-    private void SaveSettings()
+    // Search Filter, Refresh search
+    private async void CheckBox_Click(object sender, RoutedEventArgs e)
     {
-        SearchFilters settings = new()
-        {
-            MainPath = ViewModel.MainPath,
-            SearchOptionsCaseSensitive = ViewModel.SearchOptionsCaseSensitive,
-            SearchOptionsFileContent = ViewModel.SearchOptionsFileContent,
-            SearchOptionsFileName = ViewModel.SearchOptionsFileName,
-            SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
-        };
-        settings.Save();
-    }
-    private void LoadSettings()
-    {
-        SearchFilters settings = new();
-        ViewModel.MainPath = settings.MainPath;
-        ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
-        ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
-        ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;
-        ViewModel.SearchOptionsSubdirectories = settings.SearchOptionsSubdirectories;
-        //RenameInsertCountUp = settings.RenameInsertCountUp;
-        //CopyNameRemoveCopied = settings.CopyNameRemoveCopied;
-        //CopyNameSingle = settings.CopyNameSingle;
-        //CopyNameWithExtension = settings.CopyNameWithExtension;
+        await ViewModel.SearchingAsync();
     }
 
-
-
-
-    // Checkboxes
+    // Items selected count
     private void CheckBox_Checked(object sender, RoutedEventArgs e)
     {
         ViewModel.FileCountSelected++;
@@ -209,7 +166,9 @@ public partial class Container : INavigationWindow
         }
     }
 
-    //Search Input
+    #endregion
+    
+    // Search Input
     private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == Key.Return || e.Key == Key.Tab)
@@ -218,12 +177,66 @@ public partial class Container : INavigationWindow
         }
     }
 
-    // Search Filter
-    private async void CheckBox_Click(object sender, RoutedEventArgs e)
+    // Settings
+    private void SettingsSave()
     {
-        await ViewModel.SearchingAsync();
+        SearchFilters settings = new()
+        {
+            MainPath = ViewModel.MainPath,
+            SearchOptionsCaseSensitive = ViewModel.SearchOptionsCaseSensitive,
+            SearchOptionsFileContent = ViewModel.SearchOptionsFileContent,
+            SearchOptionsFileName = ViewModel.SearchOptionsFileName,
+            SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
+        };
+
+        ThemeSettings theme = new();
+        if (_themeService.GetTheme() == ThemeType.Dark)
+        {
+            theme.DarkMode = true;
+        }
+        else
+        {
+            theme.DarkMode = false;
+        }
+
+        theme.Save();
+        settings.Save();
+    }
+    private void SettingsLoad()
+    {
+        SearchFilters settings = new();
+        ViewModel.MainPath = settings.MainPath;
+        ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
+        ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
+        ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;
+        ViewModel.SearchOptionsSubdirectories = settings.SearchOptionsSubdirectories;
+        //RenameInsertCountUp = settings.RenameInsertCountUp;
+        //CopyNameRemoveCopied = settings.CopyNameRemoveCopied;
+        //CopyNameSingle = settings.CopyNameSingle;
+        //CopyNameWithExtension = settings.CopyNameWithExtension;
+        ThemeSettings theme = new();
+
+        if (theme.DarkMode)
+        {
+            _themeService.SetTheme(ThemeType.Dark);
+        }
+        else
+        {
+            _themeService.SetTheme(ThemeType.Light);
+        }
+
     }
 
+    // Click and Doubleclick on Path and Items
+    #region MouseDown
+
+    private Timer ClickTimer;
+    private Action DoubleClickAction;
+    private TimeSpan DoubleClickMaxTime;
+    private bool InDoubleClick;
+    private DateTime LastClick;
+    private Action SingleClickAction;
+    private string ToOpenFile = string.Empty;
 
     private void ClickTimer_Tick(object sender, EventArgs e)
     {
@@ -232,18 +245,6 @@ public partial class Container : INavigationWindow
         ClickTimer.Stop();
 
         SingleClickAction();
-    }
-    // Item TextBlock
-    private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        ToOpenFile = ViewModel.MainPath + ((TextBlock)sender).Text;
-        MouseDownChange();
-    }
-    // Main Path
-    private void Path_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        ToOpenFile = ViewModel.MainPath;
-        MouseDownChange();
     }
     private void MouseDownChange()
     {
@@ -263,12 +264,33 @@ public partial class Container : INavigationWindow
             return;
         }
 
-        // Double click was invalid, restart 
+        // Double click was invalid, restart
         ClickTimer.Stop();
         ClickTimer.Start();
         LastClick = DateTime.Now;
         InDoubleClick = true;
     }
 
+    // Main Path
+    private void Path_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        ToOpenFile = ViewModel.MainPath;
+        MouseDownChange();
+    }
+    // Item TextBlock
+    private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        ToOpenFile = ViewModel.MainPath + ((TextBlock)sender).Text;
+        MouseDownChange();
+    }
+    #endregion
 
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+    }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+
+    }
 }

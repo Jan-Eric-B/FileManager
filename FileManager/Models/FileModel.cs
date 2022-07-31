@@ -84,6 +84,18 @@ namespace FileManager.Models
             }
         }
 
+        //3 Mb
+        private string fileSize;
+        public string FileSize
+        {
+            get => fileSize;
+            set
+            {
+                fileSize = value;
+                OnPropertyChanged(nameof(FileSize));
+            }
+        }
+
 
         private bool isChecked;
         public bool IsChecked
