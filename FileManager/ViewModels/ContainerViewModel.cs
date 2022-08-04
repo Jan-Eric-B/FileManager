@@ -1,9 +1,4 @@
-﻿// This Source Code Form is subject to the terms of the MIT License.
-// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-// All Rights Reserved.
-
-using FileManager.Models;
+﻿using FileManager.Models;
 using FileManager.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -25,6 +20,12 @@ namespace FileManager.ViewModels;
 
 public class ContainerViewModel : ObservableObject
 {
+    private ICommand _openFolderDialog;
+    private ICommand _directoryScopeOut;
+
+    public ICommand OpenFolderDialog => _openFolderDialog ??= new RelayCommand<string>(FolderDialog);
+    public ICommand DirectoryScopeOut => _directoryScopeOut ??= new RelayCommand<string>(ScopeOut);
+
     private string mainPath;
     public string MainPath
     {
@@ -35,60 +36,6 @@ public class ContainerViewModel : ObservableObject
             OnPropertyChanged(nameof(MainPath));
         }
     }
-
-    private ICommand _openFolderDialog;
-    private ICommand _directoryScopeOut;
-
-    public ICommand OpenFolderDialog => _openFolderDialog ??= new RelayCommand<string>(FolderDialog);
-
-    public ICommand DirectoryScopeOut => _directoryScopeOut ??= new RelayCommand<string>(ScopeOut);
-
-    private async void FolderDialog(string parameter)
-    {
-        VistaFolderBrowserDialog dialog = new();
-
-        if (CheckExistenceService.Check(MainPath))
-        {
-            dialog.SelectedPath = MainPath;
-        }
-        else 
-        { 
-            dialog.SelectedPath = "c:\\"; 
-        }
-
-
-        dialog.Description = "Choose the main directory";
-        dialog.UseDescriptionForTitle = true;
-        dialog.ShowNewFolderButton = true;
-
-        if (dialog.ShowDialog() == true)
-        {
-            MainPath = dialog.SelectedPath + Path.DirectorySeparatorChar;
-            await SearchingAsync();
-        }
-    }
-
-
-    private async void ScopeOut(string parameter)
-    {
-        DirectoryInfo directoryInfoMainPath =  System.IO.Directory.GetParent(MainPath);
-
-        if(directoryInfoMainPath != null)
-        {
-            DirectoryInfo directoryInfoMainPathParent = directoryInfoMainPath.Parent;
-
-            if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
-            {
-                MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
-                await SearchingAsync();
-            }
-        }
-
-
-    }
-
-
-    public ObservableCollection<FileModel> Files = new();
 
     #region Search Options
     private bool searchOptionsCaseSensitive = false;
@@ -133,8 +80,7 @@ public class ContainerViewModel : ObservableObject
     }
     #endregion Search Options
 
-    private string searchInput = "";
-
+    private string searchInput = string.Empty;
     public string SearchInput
     {
         get { return searchInput; }
@@ -165,9 +111,6 @@ public class ContainerViewModel : ObservableObject
             OnPropertyChanged(nameof(FileCountSelected));
         }
     }
-
-
-
 
     private bool selectAll = false;
     private bool selectEverySecondFirst = false;
@@ -245,7 +188,7 @@ public class ContainerViewModel : ObservableObject
         }
     }
 
-
+    public ObservableCollection<FileModel> Files = new();
 
     private void ClearSearch()
     {
@@ -315,7 +258,7 @@ public class ContainerViewModel : ObservableObject
 
         }));
     }
-  
+
     public async Task AddFileAsync(string filePath)
     {
         await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
@@ -341,8 +284,48 @@ public class ContainerViewModel : ObservableObject
         }));
     }
 
+    private async void FolderDialog(string parameter)
+    {
+        VistaFolderBrowserDialog dialog = new();
+
+        if (CheckExistenceService.Check(MainPath))
+        {
+            dialog.SelectedPath = MainPath;
+        }
+        else
+        {
+            dialog.SelectedPath = "c:\\";
+        }
 
 
+        dialog.Description = "Choose the main directory";
+        dialog.UseDescriptionForTitle = true;
+        dialog.ShowNewFolderButton = true;
+
+        if (dialog.ShowDialog() == true)
+        {
+            MainPath = dialog.SelectedPath + Path.DirectorySeparatorChar;
+            await SearchingAsync();
+        }
+    }
+
+    private async void ScopeOut(string parameter)
+    {
+        DirectoryInfo directoryInfoMainPath = System.IO.Directory.GetParent(MainPath);
+
+        if (directoryInfoMainPath != null)
+        {
+            DirectoryInfo directoryInfoMainPathParent = directoryInfoMainPath.Parent;
+
+            if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
+            {
+                MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
+                await SearchingAsync();
+            }
+        }
+
+
+    }
 
     static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
     static string SizeSuffix(long value, int decimalPlaces = 1)
@@ -354,7 +337,7 @@ public class ContainerViewModel : ObservableObject
         // mag is 0 for bytes, 1 for KB, 2, for MB, etc.
         int mag = (int)Math.Log(value, 1024);
 
-        // 1L << (mag * 10) == 2 ^ (10 * mag) 
+        // 1L << (mag * 10) == 2 ^ (10 * mag)
         // [i.e. the number of bytes in the unit corresponding to mag]
         decimal adjustedSize = (decimal)value / (1L << (mag * 10));
 
@@ -362,13 +345,10 @@ public class ContainerViewModel : ObservableObject
         // it would round up to 1000 or more
         if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
         {
-            mag += 1;
+            mag++;
             adjustedSize /= 1024;
         }
 
-        return string.Format("{0:n" + decimalPlaces + "} {1}",
-            adjustedSize,
-            SizeSuffixes[mag]);
+        return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, SizeSuffixes[mag]);
     }
-
 }

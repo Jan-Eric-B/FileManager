@@ -2,18 +2,18 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="Views\Pages\Page1.xaml.cs">
+    <Compile Update="Views\Pages\GeneralPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Pages\Page3.xaml">
+    <Page Update="Views\Pages\VideoPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\Page2.xaml">
+    <Page Update="Views\Pages\ImagePage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\Page1.xaml">
+    <Page Update="Views\Pages\GeneralPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Pages\SettingsPageControls.xaml">

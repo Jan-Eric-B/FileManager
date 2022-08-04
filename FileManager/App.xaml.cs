@@ -52,14 +52,14 @@ public partial class App
             services.AddScoped<ContainerViewModel>();
 
             // Views and ViewModels
-            services.AddScoped<Views.Pages.Page1>();
-            services.AddScoped<Page1ViewModel>();
+            services.AddScoped<Views.Pages.GeneralPage>();
+            services.AddScoped<GeneralPageViewModel>();
 
-            services.AddScoped<Views.Pages.Page2>();
-            services.AddScoped<Page2ViewModel>();
+            services.AddScoped<Views.Pages.ImagePage>();
+            services.AddScoped<ImagePageViewModel>();
 
-            services.AddScoped<Views.Pages.Page3>();
-            services.AddScoped<Page3ViewModel>();
+            services.AddScoped<Views.Pages.VideoPage>();
+            services.AddScoped<VideoPageViewModel>();
 
             // Windows
             services.AddTransient<Views.Windows.SettingsWindow>();

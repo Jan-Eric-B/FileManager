@@ -64,7 +64,7 @@ public class ApplicationHostService : IHostedService
             // _navigationWindow.SetPageService(_pageService);
 
             // NOTICE: In the case of this window, we navigate to the Dashboard after loading with Container.InitializeUi()
-            _navigationWindow.Navigate(typeof(Views.Pages.Page1));
+            _navigationWindow.Navigate(typeof(Views.Pages.GeneralPage));
         }
 
         await Task.CompletedTask;

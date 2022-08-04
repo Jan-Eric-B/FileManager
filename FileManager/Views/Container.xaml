@@ -71,18 +71,18 @@
                         Content="General"
                         Icon="Home24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:Page1}" />
+                        PageType="{x:Type pages:GeneralPage}" />
                     <ui:NavigationSeparator />
                     <ui:NavigationItem
                         Content="Images"
                         Icon="Image24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:Page2}" />
+                        PageType="{x:Type pages:ImagePage}" />
                     <ui:NavigationItem
                         Content="Videos"
                         Icon="Video24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:Page3}" />
+                        PageType="{x:Type pages:VideoPage}" />
                 </ui:NavigationCompact.Items>
                 <ui:NavigationCompact.Footer>
                     <!--  A navigation element that does not point to the page can be used as a button.  -->

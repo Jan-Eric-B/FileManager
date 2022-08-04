@@ -51,10 +51,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ThemeSettings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Pages\Page3.xaml.cs">
+    <Compile Update="Views\Pages\VideoPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\Page2.xaml.cs">
+    <Compile Update="Views\Pages\ImagePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -71,11 +71,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Pages\Page3.xaml">
+    <Page Update="Views\Pages\VideoPage.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\Page2.xaml">
+    <Page Update="Views\Pages\ImagePage.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

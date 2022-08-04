@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\debednaj\source\repos\FileManager\FileManager\App.xaml
-7-1048299171
+72087740872
 11001301542
-29-1098110621
+29-1183000568
 233-879456302
-Views\Container.xaml;Views\Pages\Page1.xaml;Views\Pages\Page2.xaml;Views\Pages\Page3.xaml;Views\Pages\SettingsPageControls.xaml;Views\Pages\SettingsPageDashboard.xaml;Views\Windows\SettingsWindow.xaml;
+Views\Container.xaml;Views\Pages\GeneralPage.xaml;Views\Pages\ImagePage.xaml;Views\Pages\SettingsPageControls.xaml;Views\Pages\SettingsPageDashboard.xaml;Views\Pages\VideoPage.xaml;Views\Windows\SettingsWindow.xaml;
 
 True
 
