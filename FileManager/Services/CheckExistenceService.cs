@@ -13,5 +13,10 @@ namespace FileManager.Services
         {
             return Directory.Exists(path) || File.Exists(path);
         }
+
+        public static bool IsDirectory(string path)
+        {
+            return Directory.Exists(path);
+        }
     }
 }

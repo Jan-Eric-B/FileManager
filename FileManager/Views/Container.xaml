@@ -68,18 +68,18 @@
                 TransitionType="FadeInWithSlide">
                 <ui:NavigationCompact.Items>
                     <ui:NavigationItem
-                        Content="Page 1"
+                        Content="General"
                         Icon="Home24"
                         Cursor="Hand"
                         PageType="{x:Type pages:Page1}" />
                     <ui:NavigationSeparator />
                     <ui:NavigationItem
-                        Content="Page2"
+                        Content="Images"
                         Icon="Image24"
                         Cursor="Hand"
                         PageType="{x:Type pages:Page2}" />
                     <ui:NavigationItem
-                        Content="Page3"
+                        Content="Videos"
                         Icon="Video24"
                         Cursor="Hand"
                         PageType="{x:Type pages:Page3}" />
@@ -92,7 +92,7 @@
                         Icon="DarkTheme24" Cursor="Hand" />
                     <ui:NavigationItem
                         Click="OpenSettings_OnClick"
-                        Content="Theme"
+                        Content="Settings"
                         Icon="Settings24" Cursor="Hand" />
                 </ui:NavigationCompact.Footer>
             </ui:NavigationCompact>
@@ -118,7 +118,7 @@
                         </Grid.ColumnDefinitions>
                         <ui:Button Grid.Column="0" Margin="5,0" Command="{Binding ViewModel.DirectoryScopeOut}" >↩</ui:Button>
                         <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Path=ViewModel.MainPath, StringFormat='Path: {0} '}" ToolTip="{Binding Path=MainPath}" MouseDown="Path_MouseDown"/>
-                        <ProgressBar Grid.Column="1" Height="33" />
+                        <ProgressBar Grid.Column="1" Height="33" AllowDrop="True" Drop="ProgressBar_Drop" DragOver="ProgressBar_DragOver"/>
                         <ui:Button Grid.Column="2" Margin="5,0,0,0" Command="{Binding ViewModel.OpenFolderDialog}" >...</ui:Button>
                     </Grid>
 

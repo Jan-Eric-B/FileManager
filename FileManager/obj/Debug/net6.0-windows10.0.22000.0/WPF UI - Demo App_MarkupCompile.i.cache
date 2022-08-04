@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\
+C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\
 FileManager
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\Users\Jan-E\source\repos\FileManager\FileManager\App.xaml
+C:\Users\debednaj\source\repos\FileManager\FileManager\App.xaml
 7-1048299171
 11001301542
 29-1098110621
-2331932060633
+233-879456302
 Views\Container.xaml;Views\Pages\Page1.xaml;Views\Pages\Page2.xaml;Views\Pages\Page3.xaml;Views\Pages\SettingsPageControls.xaml;Views\Pages\SettingsPageDashboard.xaml;Views\Windows\SettingsWindow.xaml;
 
-False
+True
 

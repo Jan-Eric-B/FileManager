@@ -12,21 +12,21 @@
           "Microsoft.Toolkit.Mvvm": "7.1.2",
           "Ookii.Dialogs.Wpf": "5.0.1",
           "WPF-UI": "2.0.2",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.25"
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.26"
         },
         "runtime": {
           "WPF UI - Demo App.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.25": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.26": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
             "assemblyVersion": "10.0.22000.24",
-            "fileVersion": "10.0.22000.25"
+            "fileVersion": "10.0.22000.26"
           },
           "WinRT.Runtime.dll": {
             "assemblyVersion": "1.6.0.0",
-            "fileVersion": "1.6.2.38681"
+            "fileVersion": "1.6.4.39141"
           }
         }
       },
@@ -436,7 +436,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.25": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.26": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""

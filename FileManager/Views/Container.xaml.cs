@@ -2,6 +2,7 @@
 using FileManager.Services;
 using FileManager.ViewModels;
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -167,7 +168,7 @@ public partial class Container : INavigationWindow
     }
 
     #endregion
-    
+
     // Search Input
     private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
@@ -292,5 +293,50 @@ public partial class Container : INavigationWindow
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
 
+    }
+
+
+    private void ProgressBar_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        string[] directories = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
+        if(directories.Length == 1)
+        {
+            ViewModel.MainPath = directories[0] + Path.DirectorySeparatorChar;
+            ViewModel.SearchingAsync().Wait();
+        }
+    }
+
+    // Drag over event - only accepts one directory
+    private void ProgressBar_DragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        bool dropEnabled = true;
+        if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true))
+        {
+            string[] items = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
+
+            if(items.Length >= 2)
+            {
+                dropEnabled = false;
+            }
+
+            foreach (string filename in items)
+            {
+                if (!CheckExistenceService.IsDirectory(filename))
+                {
+                    dropEnabled = false;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            dropEnabled = false;
+        }
+
+        if (!dropEnabled)
+        {
+            e.Effects = System.Windows.DragDropEffects.None;
+            e.Handled = true;
+        }
     }
 }
