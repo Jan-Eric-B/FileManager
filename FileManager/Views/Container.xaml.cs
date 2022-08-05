@@ -203,10 +203,22 @@ public partial class Container : INavigationWindow
         theme.Save();
         settings.Save();
     }
+
+
+
+    // FIXEN
     private void SettingsLoad()
     {
         SearchFilters settings = new();
-        ViewModel.MainPath = settings.MainPath;
+
+        if (CheckExistenceService.Check(settings.MainPath))
+        {
+            ViewModel.MainPath = settings.MainPath;
+        }
+        else
+        {
+            ViewModel.MainPath = Environment.SpecialFolder.Desktop.ToString();
+        }
         ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
         ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
         ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;

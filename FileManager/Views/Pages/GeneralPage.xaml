@@ -30,6 +30,8 @@
 
         <ui:Button Content="Move to main path"/>
 
+        <ui:NavigationSeparator/>
+
         <ui:Card Margin="0,8,0,0">
             <VirtualizingStackPanel>
                 <TextBlock Margin="0,10,0,20" FontSize="16" Text="Move" />
