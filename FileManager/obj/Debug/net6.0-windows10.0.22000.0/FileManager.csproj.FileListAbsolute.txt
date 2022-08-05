@@ -119,9 +119,6 @@ C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\SettingsPageDashboard.baml
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\App.baml
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Container.g.cs
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page1.g.cs
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page2.g.cs
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page3.g.cs
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\SettingsPageControls.g.cs
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\SettingsPageDashboard.g.cs
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Windows\SettingsWindow.g.cs
@@ -131,9 +128,6 @@ C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\WPF UI - Demo App_MarkupCompile.cache
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\WPF UI - Demo App_MarkupCompile.lref
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Container.baml
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page1.baml
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page2.baml
-C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\Page3.baml
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Windows\SettingsWindow.baml
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\WPF UI - Demo App.g.resources
 C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\FileManager.GeneratedMSBuildEditorConfig.editorconfig
@@ -153,3 +147,9 @@ C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows1
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\ImagePage.baml
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\VideoPage.g.cs
 C:\Users\debednaj\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\VideoPage.baml
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\GeneralPage.g.cs
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\ImagePage.g.cs
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\VideoPage.g.cs
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\GeneralPage.baml
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\ImagePage.baml
+C:\Users\Jan-E\source\repos\FileManager\FileManager\obj\Debug\net6.0-windows10.0.22000.0\Views\Pages\VideoPage.baml
