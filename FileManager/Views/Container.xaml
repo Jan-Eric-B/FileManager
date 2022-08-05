@@ -24,27 +24,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Dialogue is above all controls except the navigation buttons. So it covers all the content, but allows you to close or move the application.  -->
-        <ui:Dialog
-            x:Name="RootDialog"
-            Title="WPF UI"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            ButtonLeftName="Click me if you can!" />
 
-        <!-- Title (Row 0)-->
-        <ui:TitleBar
-            Title="FileManager"
-            Grid.Row="0"
-            ForceShutdown="False"
-            Icon="pack://application:,,,/Resources/FileManager.png"
-            Padding="16,0"
-            MinimizeToTray="False"
-            ShowHelp="False"
-            ShowMaximize="True"
-            ShowMinimize="True"
-            UseSnapLayout="True">
-        </ui:TitleBar>
+
+
 
         <!-- RootMainGrid (Row 1)-->
         <Grid
@@ -125,19 +107,22 @@
                     <!-- Bottom Page -->
                     <Grid Grid.Row="1" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="500" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <!-- Left -->
-                        <StackPanel Orientation="Vertical" Grid.Column="0" >
-                            <ui:Breadcrumb
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                            <StackPanel Orientation="Vertical" Grid.Column="0">
+                                <ui:Breadcrumb
                                 Margin="18"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 FontSize="24"
                                 Navigation="{Binding ElementName=RootNavigation}" />
-                            <Frame x:Name="RootFrame" />
-                        </StackPanel>
+                                <Frame x:Name="RootFrame" />
+                            </StackPanel>
+                        </ScrollViewer>
+
                         <!-- Right -->
                         <Grid Grid.Column="1" >
                             <Grid.RowDefinitions>
@@ -220,5 +205,29 @@
                 </Grid>
             </Border>
         </Grid>
+
+        <!--  Dialogue is above all controls except the navigation buttons. So it covers all the content, but allows you to close or move the application.  -->
+        <ui:Dialog
+            x:Name="RootDialog"
+            Title="WPF UI"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            ButtonLeftName="Click me if you can!" />
+
+
+        <!-- Title (Row 0)-->
+        <ui:TitleBar
+            Title="FileManager"
+            Grid.Row="0"
+            ForceShutdown="False"
+            Icon="pack://application:,,,/Resources/FileManager.png"
+            Padding="16,0"
+            MinimizeToTray="False"
+            ShowHelp="False"
+            ShowMaximize="True"
+            ShowMinimize="True"
+            UseSnapLayout="True">
+        </ui:TitleBar>
+
     </Grid>
 </ui:UiWindow>

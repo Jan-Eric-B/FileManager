@@ -23,5 +23,32 @@
 
         </ui:Card>
 
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
+        <ui:Card Margin="0,8,0,0">
+
+        </ui:Card>
     </VirtualizingStackPanel>
 </ui:UiPage>

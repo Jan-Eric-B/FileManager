@@ -29,6 +29,14 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     }
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        RootPanel.ScrollOwner = ScrollHost;
+        //RootPanel.ScrollOwner = ScrollHost;
+
     }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+    }
+
+
+
 }
