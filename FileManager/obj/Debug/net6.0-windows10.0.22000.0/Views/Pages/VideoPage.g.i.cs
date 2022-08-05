@@ -68,7 +68,7 @@ namespace FileManager.Views.Pages {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/WPF UI - Demo App;V1.0.0.0;component/views/pages/videopage.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/WPF UI - Demo App;component/views/pages/videopage.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Views\Pages\VideoPage.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

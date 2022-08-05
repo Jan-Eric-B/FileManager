@@ -141,8 +141,8 @@
                         <!-- Right -->
                         <Grid Grid.Column="1" >
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="10*"/>
-                                <RowDefinition Height="90*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
