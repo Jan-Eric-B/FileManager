@@ -114,7 +114,7 @@
                         <ScrollViewer VerticalScrollBarVisibility="Hidden">
                             <StackPanel Orientation="Vertical" Grid.Column="0">
                                 <ui:Breadcrumb
-                                Margin="18"
+                                Margin="18,5,0,5"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 FontSize="24"
@@ -209,10 +209,10 @@
         <!--  Dialogue is above all controls except the navigation buttons. So it covers all the content, but allows you to close or move the application.  -->
         <ui:Dialog
             x:Name="RootDialog"
-            Title="WPF UI"
+            Title="Dialog"
             Grid.Row="0"
             Grid.RowSpan="2"
-            ButtonLeftName="Click me if you can!" />
+            ButtonLeftVisibility="Hidden"/>
 
 
         <!-- Title (Row 0)-->

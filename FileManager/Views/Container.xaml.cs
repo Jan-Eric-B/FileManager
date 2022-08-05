@@ -351,4 +351,6 @@ public partial class Container : INavigationWindow
             e.Handled = true;
         }
     }
+
+
 }

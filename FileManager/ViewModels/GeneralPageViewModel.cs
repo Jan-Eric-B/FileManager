@@ -9,6 +9,42 @@ namespace FileManager.ViewModels;
 
 public class GeneralPageViewModel : ObservableObject, INavigationAware
 {
+
+    private bool cardExpanderMove = true;
+    private bool cardExpanderRename = false;
+    private bool cardExpanderDelete = false;
+    public bool CardExpanderMove
+    {
+        get { return cardExpanderMove; }
+        set
+        {
+            cardExpanderMove = value;
+            OnPropertyChanged(nameof(CardExpanderMove));
+        }
+    }
+    public bool CardExpanderRename
+    {
+        get { return cardExpanderRename; }
+        set
+        {
+            cardExpanderRename = value;
+            OnPropertyChanged(nameof(CardExpanderRename));
+        }
+    }
+    public bool CardExpanderDelete
+    {
+        get { return cardExpanderDelete; }
+        set
+        {
+            cardExpanderDelete = value;
+            OnPropertyChanged(nameof(CardExpanderDelete));
+        }
+    }
+
+
+
+
+
     private bool _dataInitialized = false;
 
     private IEnumerable<string> _listBoxItemCollection = Array.Empty<string>();
