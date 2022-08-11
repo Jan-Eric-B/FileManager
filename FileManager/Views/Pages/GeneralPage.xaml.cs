@@ -23,7 +23,11 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     public GeneralPage(GeneralPageViewModel viewModel, IDialogService dialogService)
     {
         ViewModel = viewModel;
+        this.DataContext = ViewModel;
+
         Loaded += OnLoaded;
+
+
 
         InitializeComponent();
 
@@ -36,29 +40,39 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        //RootPanel.ScrollOwner = ScrollHost;
         _dialogControl.ButtonRightClick += DialogOnButtonClickRightSide;
     }
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
     }
 
-
-
-    private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenDialog("The Title", "The Text");
-    }
-
+    // Open Dialog
     private async void OpenDialog(string title, string text)
     {
         await _dialogControl.ShowAndWaitAsync(title,text);
     }
+    // Dialog Right Click
     private static void DialogOnButtonClickRightSide(object sender, RoutedEventArgs e)
     {
         var dialogControl = (IDialogControl)sender;
         dialogControl.Hide();
     }
+
+
+    #region Move
+    private void btnMoveToMainPath_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.MoveToMainPath();
+    }
+
+    //Info Button
+    private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
+    {
+        OpenDialog("The Title", "The Text");
+    }
+
+
+    #endregion
 
 
 }

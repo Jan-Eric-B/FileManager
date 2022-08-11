@@ -57,7 +57,7 @@ public partial class Container : INavigationWindow
 
         SettingsLoad();
 
-        ItemsControl.ItemsSource = ViewModel.Files;
+        ItemsControl.ItemsSource = ViewModel.FileModel.Files;
 
         ViewModel.SearchingAsync().Wait();
 
@@ -217,7 +217,7 @@ public partial class Container : INavigationWindow
         }
         else
         {
-            ViewModel.MainPath = Environment.SpecialFolder.Desktop.ToString();
+            ViewModel.MainPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
         ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
         ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;

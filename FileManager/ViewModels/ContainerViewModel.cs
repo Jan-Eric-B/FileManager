@@ -15,6 +15,9 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Threading;
+using FileManager.Models.Data;
+using System.Collections.Specialized;
+using FileManager.Views.Pages;
 
 namespace FileManager.ViewModels;
 
@@ -124,14 +127,14 @@ public class ContainerViewModel : ObservableObject
 
             if (selectAll)
             {
-                foreach (FileModel file in Files)
+                foreach (FileData file in FileModel.Files)
                 {
                     file.IsChecked = true;
                 }
             }
             else
             {
-                foreach (FileModel file in Files)
+                foreach (FileData file in FileModel.Files)
                 {
                     file.IsChecked = false;
                 }
@@ -147,14 +150,14 @@ public class ContainerViewModel : ObservableObject
         {
             if (selectEverySecondFirst)
             {
-                foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
+                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 0))
                 {
                     file.IsChecked = false;
                 }
             }
             else
             {
-                foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
+                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 0))
                 {
                     file.IsChecked = true;
                 }
@@ -171,14 +174,14 @@ public class ContainerViewModel : ObservableObject
         {
             if (selectEverySecondLast)
             {
-                foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
+                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 1))
                 {
                     file.IsChecked = false;
                 }
             }
             else
             {
-                foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
+                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 1))
                 {
                     file.IsChecked = true;
                 }
@@ -188,11 +191,36 @@ public class ContainerViewModel : ObservableObject
         }
     }
 
-    public ObservableCollection<FileModel> Files = new();
+    //public ObservableCollection<FileModel> Files = new();
+
+    public FileModel FileModel { get; set; }
+    GeneralPageViewModel GeneralPageViewModel { get; set; }
+    ImagePageViewModel ImagePageViewModel { get; set; }
+    VideoPageViewModel VideoPageViewModel { get; set; }
+
+    public ContainerViewModel()
+    {
+        FileModel = new FileModel();
+        FileModel.Files.CollectionChanged += this.OnCollectionChanged;
+
+        GeneralPageViewModel = new GeneralPageViewModel(FileModel);
+        ImagePageViewModel = new ImagePageViewModel(FileModel);
+        VideoPageViewModel = new VideoPageViewModel(FileModel);
+    }
+
+    void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        //Get the sender observable collection
+        ObservableCollection<string> obsSender = sender as ObservableCollection<string>;
+
+
+        //Get the action which raised the collection changed event
+        NotifyCollectionChangedAction action = e.Action;
+    }
 
     private void ClearSearch()
     {
-        Files.Clear();
+        FileModel.Files.Clear();
         FileCount = 0;
         FileCountSelected = 0;
 
@@ -214,48 +242,50 @@ public class ContainerViewModel : ObservableObject
         {
             SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-            foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+            if (CheckExistenceService.Check(MainPath))
             {
-                if (string.IsNullOrWhiteSpace(SearchInput))
+                foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
                 {
-                    await AddFileAsync(filePath);
-                    FileCount++;
-                }
-                else
-                {
-                    //Get Filename
-                    string fileName = System.IO.Path.GetFileName(filePath);
-
-                    //If Case Sensitive
-                    if (!SearchOptionsCaseSensitive)
-                    {
-                        searchInput = searchInput.ToUpper();
-                        fileName = fileName.ToUpper();
-                    }
-
-                    //Search in Name
-                    if (SearchOptionsFileName && fileName.Contains(searchInput))
+                    if (string.IsNullOrWhiteSpace(SearchInput))
                     {
                         await AddFileAsync(filePath);
                         FileCount++;
                     }
-
-                    //Search in File
-                    if (SearchOptionsFileContent)
+                    else
                     {
-                        string content = File.ReadAllText(filePath);
-                        //If Case Sensitive
-                        if (!SearchOptionsCaseSensitive) content = content.ToUpper();
+                        //Get Filename
+                        string fileName = System.IO.Path.GetFileName(filePath);
 
-                        if (content.Contains(searchInput))
+                        //If Case Sensitive
+                        if (!SearchOptionsCaseSensitive)
+                        {
+                            searchInput = searchInput.ToUpper();
+                            fileName = fileName.ToUpper();
+                        }
+
+                        //Search in Name
+                        if (SearchOptionsFileName && fileName.Contains(searchInput))
                         {
                             await AddFileAsync(filePath);
                             FileCount++;
                         }
+
+                        //Search in File
+                        if (SearchOptionsFileContent)
+                        {
+                            string content = File.ReadAllText(filePath);
+                            //If Case Sensitive
+                            if (!SearchOptionsCaseSensitive) content = content.ToUpper();
+
+                            if (content.Contains(searchInput))
+                            {
+                                await AddFileAsync(filePath);
+                                FileCount++;
+                            }
+                        }
                     }
                 }
             }
-
         }));
     }
 
@@ -263,7 +293,7 @@ public class ContainerViewModel : ObservableObject
     {
         await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
         {
-            FileModel file = new()
+            FileData file = new()
             {
                 FileName = Path.GetFileName(filePath),
                 FileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath),
@@ -280,7 +310,7 @@ public class ContainerViewModel : ObservableObject
                 file.FileNameWithSubdirectory = filePath[MainPath.Length..];
             }
 
-            Files.Add(file);
+            FileModel.Files.Add(file);
         }));
     }
 

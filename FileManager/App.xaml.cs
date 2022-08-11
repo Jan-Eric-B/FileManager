@@ -51,6 +51,9 @@ public partial class App
             services.AddScoped<INavigationWindow, Views.Container>();
             services.AddScoped<ContainerViewModel>();
 
+            services.AddSingleton<FileModel>();
+
+
             // Views and ViewModels
             services.AddScoped<Views.Pages.GeneralPage>();
             services.AddScoped<GeneralPageViewModel>();

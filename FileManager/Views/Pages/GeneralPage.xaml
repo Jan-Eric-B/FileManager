@@ -19,9 +19,9 @@
         <!-- Move -->
         <ui:CardExpander IsExpanded="{Binding ViewModel.CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" >
                 <VirtualizingStackPanel Height="auto">
-                    <ui:Button Content="To main path"/>
+                    <ui:Button x:Name="btnMoveToMainPath" Content="To main path" Click="btnMoveToMainPath_Click"/>
                     <VirtualizingStackPanel Orientation="Horizontal" Margin="0,10">
-                        <ui:TextBox Width="255" Margin="0,0,10,0"/>
+                    <ui:TextBox Text="{Binding Path=MoveDirectoryName}" Width="255" Margin="0,0,10,0"/>
                         <ui:Card Padding="5,0,0,0">
                             <VirtualizingStackPanel Orientation="Horizontal">
                                 <CheckBox Margin="0,0,-22,0">Count up</CheckBox>
