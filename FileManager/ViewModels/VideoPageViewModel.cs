@@ -11,11 +11,11 @@ namespace FileManager.ViewModels;
 
 public class VideoPageViewModel : ObservableObject, INavigationAware
 {
-    ObservableCollection<FileData> Files { get; set; }
+    public ContainerViewModel Container { get; set; }
 
-    public VideoPageViewModel(FileModel fileModel)
+    public VideoPageViewModel(ContainerViewModel container)
     {
-        Files = new ObservableCollection<FileData>();
+        Container = container;
     }
 
 

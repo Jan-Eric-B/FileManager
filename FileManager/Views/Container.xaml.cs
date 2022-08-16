@@ -57,7 +57,7 @@ public partial class Container : INavigationWindow
 
         SettingsLoad();
 
-        ItemsControl.ItemsSource = ViewModel.FileModel.Files;
+        ItemsControl.ItemsSource = ViewModel.Files;
 
         ViewModel.SearchingAsync().Wait();
 

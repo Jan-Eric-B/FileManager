@@ -6,17 +6,20 @@ using Wpf.Ui.Common.Interfaces;
 using FileManager.Models.Data;
 using FileManager.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using FileManager.Services;
 
 namespace FileManager.ViewModels;
 
-public class GeneralPageViewModel : ObservableObject, INavigationAware
+public class GeneralPageViewModel : ObservableObject
 {
+    public ContainerViewModel Container { get; set; }
 
-    ObservableCollection<FileData> Files { get; set; }
-
-    public GeneralPageViewModel(FileModel fileModel)
+    public GeneralPageViewModel(ContainerViewModel container)
     {
-        Files = fileModel.Files;
+        Container = container;
+
     }
 
 
@@ -81,16 +84,18 @@ public class GeneralPageViewModel : ObservableObject, INavigationAware
 
     #region Move
 
-    public bool MoveToMainPath()
-    {
-        foreach (FileData file in Files)
-        {
-            if (file.IsChecked)
-            {
 
+
+    public void MoveToMainPath()
+    {
+        foreach (FileData file in Container.Files)
+        {
+            if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
+            {
+                File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
             }
         }
-        return false;
+
     }
 
     #endregion

@@ -11,11 +11,11 @@ namespace FileManager.ViewModels;
 
 public class ImagePageViewModel : ObservableObject, INavigationAware
 {
-    ObservableCollection<FileData> Files { get; set; }
+    public ContainerViewModel Container { get; set; }
 
-    public ImagePageViewModel(FileModel fileModel)
+    public ImagePageViewModel(ContainerViewModel container)
     {
-        Files = new ObservableCollection<FileData>();
+        Container = container;
     }
 
     private bool _dataInitialized = false;

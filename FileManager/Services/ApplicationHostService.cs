@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using FileManager.Views;
+using FileManager.Models;
 
 namespace FileManager.Services;
 

@@ -18,6 +18,7 @@ using System.Threading;
 using FileManager.Models.Data;
 using System.Collections.Specialized;
 using FileManager.Views.Pages;
+using System.ComponentModel;
 
 namespace FileManager.ViewModels;
 
@@ -127,14 +128,14 @@ public class ContainerViewModel : ObservableObject
 
             if (selectAll)
             {
-                foreach (FileData file in FileModel.Files)
+                foreach (FileData file in Files)
                 {
                     file.IsChecked = true;
                 }
             }
             else
             {
-                foreach (FileData file in FileModel.Files)
+                foreach (FileData file in Files)
                 {
                     file.IsChecked = false;
                 }
@@ -150,14 +151,14 @@ public class ContainerViewModel : ObservableObject
         {
             if (selectEverySecondFirst)
             {
-                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 0))
+                foreach (FileData file in Files.Where((_, i) => i % 2 == 0))
                 {
                     file.IsChecked = false;
                 }
             }
             else
             {
-                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 0))
+                foreach (FileData file in Files.Where((_, i) => i % 2 == 0))
                 {
                     file.IsChecked = true;
                 }
@@ -174,14 +175,14 @@ public class ContainerViewModel : ObservableObject
         {
             if (selectEverySecondLast)
             {
-                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 1))
+                foreach (FileData file in Files.Where((_, i) => i % 2 == 1))
                 {
                     file.IsChecked = false;
                 }
             }
             else
             {
-                foreach (FileData file in FileModel.Files.Where((_, i) => i % 2 == 1))
+                foreach (FileData file in Files.Where((_, i) => i % 2 == 1))
                 {
                     file.IsChecked = true;
                 }
@@ -191,36 +192,16 @@ public class ContainerViewModel : ObservableObject
         }
     }
 
-    //public ObservableCollection<FileModel> Files = new();
-
-    public FileModel FileModel { get; set; }
-    GeneralPageViewModel GeneralPageViewModel { get; set; }
-    ImagePageViewModel ImagePageViewModel { get; set; }
-    VideoPageViewModel VideoPageViewModel { get; set; }
+    public ObservableCollection<FileData> Files { get; set; }
 
     public ContainerViewModel()
     {
-        FileModel = new FileModel();
-        FileModel.Files.CollectionChanged += this.OnCollectionChanged;
-
-        GeneralPageViewModel = new GeneralPageViewModel(FileModel);
-        ImagePageViewModel = new ImagePageViewModel(FileModel);
-        VideoPageViewModel = new VideoPageViewModel(FileModel);
-    }
-
-    void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        //Get the sender observable collection
-        ObservableCollection<string> obsSender = sender as ObservableCollection<string>;
-
-
-        //Get the action which raised the collection changed event
-        NotifyCollectionChangedAction action = e.Action;
+        Files = new ObservableCollection<FileData>();
     }
 
     private void ClearSearch()
     {
-        FileModel.Files.Clear();
+        Files.Clear();
         FileCount = 0;
         FileCountSelected = 0;
 
@@ -310,7 +291,7 @@ public class ContainerViewModel : ObservableObject
                 file.FileNameWithSubdirectory = filePath[MainPath.Length..];
             }
 
-            FileModel.Files.Add(file);
+            Files.Add(file);
         }));
     }
 

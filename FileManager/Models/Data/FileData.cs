@@ -96,7 +96,7 @@ namespace FileManager.Models.Data
             }
         }
 
-
+        //Is checked
         private bool isChecked;
         public bool IsChecked
         {
@@ -107,6 +107,5 @@ namespace FileManager.Models.Data
                 OnPropertyChanged(nameof(IsChecked));
             }
         }
-
     }
 }
