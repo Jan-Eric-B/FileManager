@@ -68,11 +68,34 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     //Info Button
     private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
     {
-        OpenDialog("The Title", "The Text");
+        OpenDialog("Count up", "If name of new subdirectories contains a '0', it counts up (1,2,3,4,..9).\r\nIf it contains '00', it counts up and depending on the amount of selected items, it will count up like this 01,02,03,04,... 001,002,003,004,...");
     }
+
 
 
     #endregion
 
+    private void btnMoveToSamePath_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+        {
+            ViewModel.MoveToSamePath();
+        }
+        else
+        {
+            OpenDialog("Empty Textbox", "Please fill out the textbox");
+        }
+    }
 
+    private void btnMoveToSinglePath_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.MoveDirectoryNameCountUp && string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+        {
+            OpenDialog("Empty Textbox", "Please fill out the textbox");
+        }
+        else
+        {
+            ViewModel.MoveToSinglePath();
+        }
+    }
 }

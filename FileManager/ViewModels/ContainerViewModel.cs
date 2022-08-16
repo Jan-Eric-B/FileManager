@@ -308,7 +308,6 @@ public class ContainerViewModel : ObservableObject
             dialog.SelectedPath = "c:\\";
         }
 
-
         dialog.Description = "Choose the main directory";
         dialog.UseDescriptionForTitle = true;
         dialog.ShowNewFolderButton = true;

@@ -21,18 +21,36 @@
                 <VirtualizingStackPanel Height="auto">
                     <ui:Button x:Name="btnMoveToMainPath" Content="To main path" Click="btnMoveToMainPath_Click"/>
                     <VirtualizingStackPanel Orientation="Horizontal" Margin="0,10">
-                    <ui:TextBox Text="{Binding Path=MoveDirectoryName}" Width="255" Margin="0,0,10,0"/>
-                        <ui:Card Padding="5,0,0,0">
+                    <ui:TextBox Text="{Binding Path=MoveDirectoryName}" Width="255" Margin="0,0,10,0" Cursor="IBeam"/>
+                        <!--<ui:Card Padding="5,0,0,0">
                             <VirtualizingStackPanel Orientation="Horizontal">
-                                <CheckBox Margin="0,0,-22,0">Count up</CheckBox>
-                                <ui:Button Content="?" Click="MoveCountUpExplanation_OnClick"/>
+                            <CheckBox IsChecked="{Binding Path=MoveDirectoryNameCountUp, Mode=TwoWay}" Margin="0,0,-22,0" Content="Count up"/>
+                            <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="MoveCountUpExplanation_OnClick"/>
                             </VirtualizingStackPanel>
-                        </ui:Card>
+                        </ui:Card>-->
                     </VirtualizingStackPanel>
                     <VirtualizingStackPanel Orientation="Horizontal">
-                        <ui:Button Margin="0,0,10,0" Content="To same subdirectory"/>
-                        <ui:Button Margin="0,0,10,0" Content="To single subdirectory"/>
-                    </VirtualizingStackPanel>
+                    <ui:Button x:Name="btnMoveToSamePath" Margin="0,0,10,0" Content="To same subdirectory" Click="btnMoveToSamePath_Click"/>
+
+                    <ui:Card Padding="5,0,0,0" Background="Transparent">
+                        <VirtualizingStackPanel Orientation="Horizontal">
+                            <ui:Button x:Name="btnMoveToSinglePath" Margin="0,0,10,0" Content="To single subdirectory" Click="btnMoveToSinglePath_Click"/>
+                            <Menu Grid.Column="2" Margin="-5,0,0,0" Background="Transparent" HorizontalAlignment="Right" Height="45">
+                                <ui:MenuItem SymbolIcon="Filter24">
+                                    <StackPanel>
+                                        <RadioButton Content="Name of file" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryUseFileName, Mode=TwoWay}"/>
+                                        <VirtualizingStackPanel Orientation="Horizontal">
+                                            <RadioButton Content="Count up" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryNameCountUp, Mode=TwoWay}"/>
+                                            <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="MoveCountUpExplanation_OnClick"/>
+                                        </VirtualizingStackPanel>
+                                    </StackPanel>
+                                </ui:MenuItem>
+                            </Menu>
+                        </VirtualizingStackPanel>
+                    </ui:Card>
+                        
+
+                </VirtualizingStackPanel>
                 </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Delete -->

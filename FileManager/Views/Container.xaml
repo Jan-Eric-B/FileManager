@@ -24,10 +24,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-
-
-
         <!-- RootMainGrid (Row 1)-->
         <Grid
             x:Name="RootMainGrid"

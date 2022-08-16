@@ -23,6 +23,17 @@ public partial class Container : INavigationWindow
     private readonly IThemeService _themeService;
     private readonly IWindowService _windowService;
 
+    #region MouseDown Variables
+
+    private Timer ClickTimer;
+    private Action DoubleClickAction;
+    private TimeSpan DoubleClickMaxTime;
+    private bool InDoubleClick;
+    private DateTime LastClick;
+    private Action SingleClickAction;
+    private string ToOpenFile = string.Empty;
+
+    #endregion
 
     public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ITaskBarService taskBarService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
@@ -63,8 +74,10 @@ public partial class Container : INavigationWindow
 
         DoubleClickMaxTime = TimeSpan.FromMilliseconds(SystemInformation.DoubleClickTime);
 
-        ClickTimer = new Timer();
-        ClickTimer.Interval = SystemInformation.DoubleClickTime;
+        ClickTimer = new Timer
+        {
+            Interval = SystemInformation.DoubleClickTime
+        };
         ClickTimer.Tick += ClickTimer_Tick;
 
         // Click to copy Path to Clipboard and Doubleclick on Item, tries to open it
@@ -88,6 +101,92 @@ public partial class Container : INavigationWindow
         System.Windows.Application.Current.Shutdown();
     }
 
+    // Theme
+    private void NavigationButtonTheme_OnClick(object sender, RoutedEventArgs e)
+    {
+        _themeService.SetTheme(_themeService.GetTheme() == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark);
+    }
+
+    // Settings Window
+    private void OpenSettings_OnClick(object sender, RoutedEventArgs e)
+    {
+        _windowService.Show<Views.Windows.SettingsWindow>();
+    }
+
+    // Search Input
+    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == Key.Return || e.Key == Key.Tab)
+        {
+            await ViewModel.SearchingAsync();
+        }
+    }
+
+    //Need to be fixed!!!!!!
+    #region Settings
+
+    //Save
+    private void SettingsSave()
+    {
+        SearchFilters settings = new()
+        {
+            MainPath = ViewModel.MainPath,
+            SearchOptionsCaseSensitive = ViewModel.SearchOptionsCaseSensitive,
+            SearchOptionsFileContent = ViewModel.SearchOptionsFileContent,
+            SearchOptionsFileName = ViewModel.SearchOptionsFileName,
+            SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
+        };
+
+        ThemeSettings theme = new();
+        if (_themeService.GetTheme() == ThemeType.Dark)
+        {
+            theme.DarkMode = true;
+        }
+        else
+        {
+            theme.DarkMode = false;
+        }
+
+        theme.Save();
+        settings.Save();
+    }
+
+    //Load
+    private void SettingsLoad()
+    {
+        SearchFilters settings = new();
+
+        if (CheckExistenceService.Check(settings.MainPath))
+        {
+            ViewModel.MainPath = settings.MainPath;
+        }
+        else
+        {
+            ViewModel.MainPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        }
+        ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
+        ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
+        ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;
+        ViewModel.SearchOptionsSubdirectories = settings.SearchOptionsSubdirectories;
+        //RenameInsertCountUp = settings.RenameInsertCountUp;
+        //CopyNameRemoveCopied = settings.CopyNameRemoveCopied;
+        //CopyNameSingle = settings.CopyNameSingle;
+        //CopyNameWithExtension = settings.CopyNameWithExtension;
+        ThemeSettings theme = new();
+
+        if (theme.DarkMode)
+        {
+            _themeService.SetTheme(ThemeType.Dark);
+        }
+        else
+        {
+            _themeService.SetTheme(ThemeType.Light);
+        }
+
+    }
+
+    #endregion
+
     #region INavigationWindow methods
 
     public void CloseWindow()
@@ -109,18 +208,6 @@ public partial class Container : INavigationWindow
         => Show();
 
     #endregion INavigationWindow methods
-
-    // Theme
-    private void NavigationButtonTheme_OnClick(object sender, RoutedEventArgs e)
-    {
-        _themeService.SetTheme(_themeService.GetTheme() == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark);
-    }
-
-    // Settings Window
-    private void OpenSettings_OnClick(object sender, RoutedEventArgs e)
-    {
-        _windowService.Show<Views.Windows.SettingsWindow>();
-    }
 
     // Checkbox
     #region Checkboxes
@@ -169,87 +256,8 @@ public partial class Container : INavigationWindow
 
     #endregion
 
-    // Search Input
-    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-    {
-        if (e.Key == Key.Return || e.Key == Key.Tab)
-        {
-            await ViewModel.SearchingAsync();
-        }
-    }
-
-    // Settings
-    private void SettingsSave()
-    {
-        SearchFilters settings = new()
-        {
-            MainPath = ViewModel.MainPath,
-            SearchOptionsCaseSensitive = ViewModel.SearchOptionsCaseSensitive,
-            SearchOptionsFileContent = ViewModel.SearchOptionsFileContent,
-            SearchOptionsFileName = ViewModel.SearchOptionsFileName,
-            SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
-        };
-
-        ThemeSettings theme = new();
-        if (_themeService.GetTheme() == ThemeType.Dark)
-        {
-            theme.DarkMode = true;
-        }
-        else
-        {
-            theme.DarkMode = false;
-        }
-
-        theme.Save();
-        settings.Save();
-    }
-
-
-
-    // FIXEN
-    private void SettingsLoad()
-    {
-        SearchFilters settings = new();
-
-        if (CheckExistenceService.Check(settings.MainPath))
-        {
-            ViewModel.MainPath = settings.MainPath;
-        }
-        else
-        {
-            ViewModel.MainPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        }
-        ViewModel.SearchOptionsCaseSensitive = settings.SearchOptionsCaseSensitive;
-        ViewModel.SearchOptionsFileContent = settings.SearchOptionsFileContent;
-        ViewModel.SearchOptionsFileName = settings.SearchOptionsFileName;
-        ViewModel.SearchOptionsSubdirectories = settings.SearchOptionsSubdirectories;
-        //RenameInsertCountUp = settings.RenameInsertCountUp;
-        //CopyNameRemoveCopied = settings.CopyNameRemoveCopied;
-        //CopyNameSingle = settings.CopyNameSingle;
-        //CopyNameWithExtension = settings.CopyNameWithExtension;
-        ThemeSettings theme = new();
-
-        if (theme.DarkMode)
-        {
-            _themeService.SetTheme(ThemeType.Dark);
-        }
-        else
-        {
-            _themeService.SetTheme(ThemeType.Light);
-        }
-
-    }
-
     // Click and Doubleclick on Path and Items
     #region MouseDown
-
-    private Timer ClickTimer;
-    private Action DoubleClickAction;
-    private TimeSpan DoubleClickMaxTime;
-    private bool InDoubleClick;
-    private DateTime LastClick;
-    private Action SingleClickAction;
-    private string ToOpenFile = string.Empty;
 
     private void ClickTimer_Tick(object sender, EventArgs e)
     {
@@ -296,29 +304,12 @@ public partial class Container : INavigationWindow
         ToOpenFile = ViewModel.MainPath + ((TextBlock)sender).Text;
         MouseDownChange();
     }
+
     #endregion
 
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-    }
-
-    private void Button_Click_1(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-
-    private void ProgressBar_Drop(object sender, System.Windows.DragEventArgs e)
-    {
-        string[] directories = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
-        if(directories.Length == 1)
-        {
-            ViewModel.MainPath = directories[0] + Path.DirectorySeparatorChar;
-            ViewModel.SearchingAsync().Wait();
-        }
-    }
-
     // Drag over event - only accepts one directory
+    #region Path drag over
+
     private void ProgressBar_DragOver(object sender, System.Windows.DragEventArgs e)
     {
         bool dropEnabled = true;
@@ -352,5 +343,15 @@ public partial class Container : INavigationWindow
         }
     }
 
+    private void ProgressBar_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        string[] directories = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
+        if (directories.Length == 1)
+        {
+            ViewModel.MainPath = directories[0] + Path.DirectorySeparatorChar;
+            ViewModel.SearchingAsync().Wait();
+        }
+    }
 
+    #endregion
 }
