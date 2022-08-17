@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using FileManager.Services;
+using System.Windows.Shapes;
+using Windows.Storage;
 
 namespace FileManager.ViewModels;
 
@@ -177,7 +179,6 @@ public class GeneralPageViewModel : ObservableObject
         Container.SearchingAsync().Wait();
     }
 
-
     private string NameCount(int count)
     {
         if (MoveDirectoryName.Contains("0"))
@@ -206,6 +207,26 @@ public class GeneralPageViewModel : ObservableObject
             return MoveDirectoryName.Replace("0", count.ToString());
         }
         return MoveDirectoryName;
+    }
+
+    #endregion
+
+    #region Delete
+
+    public void DeleteItem()
+    {
+        foreach (FileData file in Container.Files) if (file.IsChecked)
+        {
+
+        }
+    }
+
+    public void DeleteItemPermanently()
+    {
+        //foreach (FileData file in Container.Files) if (file.IsChecked)
+        //{
+        //        Directory.Delete(file.FilePath, true);
+        //    }
     }
 
     #endregion

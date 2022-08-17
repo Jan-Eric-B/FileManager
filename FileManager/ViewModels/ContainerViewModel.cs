@@ -192,6 +192,7 @@ public class ContainerViewModel : ObservableObject
         }
     }
 
+
     public ObservableCollection<FileData> Files { get; set; }
 
     public ContainerViewModel()

@@ -11,6 +11,7 @@ using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using System.Windows.Input;
 using System.Windows.Media;
+using Wpf.Ui.Mvvm.Services;
 
 namespace FileManager.Views.Pages;
 
@@ -39,7 +40,6 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        _dialogControl.ButtonRightClick += DialogOnButtonClickRightSide;
     }
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
@@ -50,13 +50,25 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     {
         await _dialogControl.ShowAndWaitAsync(title,text);
     }
-    // Dialog Right Click
-    private static void DialogOnButtonClickRightSide(object sender, RoutedEventArgs e)
+    // Dialog Right Click Close
+    private static void DialogOnButtonClickRightSideClose(object sender, RoutedEventArgs e)
+    {
+        var dialogControl = (IDialogControl)sender;
+        dialogControl.Hide();
+
+    }
+    // Dialog Right Click No
+    private static void DialogOnButtonClickRightSideNo(object sender, RoutedEventArgs e)
     {
         var dialogControl = (IDialogControl)sender;
         dialogControl.Hide();
     }
-
+    // Dialog Left Click Yes
+    private static void DialogOnButtonClickYesSideYes(object sender, RoutedEventArgs e)
+    {
+        var dialogControl = (IDialogControl)sender;
+        dialogControl.Hide();
+    }
 
     #region Move
 
@@ -75,6 +87,7 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
         }
         else
         {
+            _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
             OpenDialog("Empty Textbox", "Please fill out the textbox");
         }
     }
@@ -84,6 +97,7 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     {
         if (ViewModel.MoveDirectoryNameCountUp && string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
         {
+            _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
             OpenDialog("Empty Textbox", "Please fill out the textbox");
         }
         else
@@ -94,6 +108,7 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     //Info Button
     private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
     {
+        _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
         OpenDialog("Count up", "If name of new subdirectories contains a '0', it counts up (1,2,3,4,..9).\r\nIf it contains '00', it counts up and depending on the amount of selected items, it will count up like this 01,02,03,04,... 001,002,003,004,...");
     }
 
@@ -116,12 +131,16 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
         btn.Focus();
     }
 
+
     #endregion
 
+    private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
+    {
+        OpenDialog("Test", "Test");
+    }
 
+    private void btnDeleteItemPermanently_Click(object sender, RoutedEventArgs e)
+    {
 
-
-
-
-
+    }
 }

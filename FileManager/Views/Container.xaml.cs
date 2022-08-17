@@ -60,7 +60,7 @@ public partial class Container : INavigationWindow
         snackbarService.SetSnackbarControl(RootSnackbar);
 
         // Allows you to use the Dialog control defined in this window in other pages or windows
-        dialogService.SetDialogControl(RootDialog);
+        dialogService.SetDialogControl(RootDialogOK);
 
         // We register a window in the Watcher class, which changes the application's theme if the system theme changes.
         // Wpf.Ui.Appearance.Watcher.Watch(this, Appearance.BackgroundType.Mica, true, false);

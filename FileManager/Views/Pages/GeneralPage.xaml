@@ -46,8 +46,9 @@
         </ui:CardExpander>
         <!-- Delete -->
         <ui:CardExpander IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" >
-            <VirtualizingStackPanel Height="auto">
-
+            <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
+                <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="btnDeleteItem_Click"/>
+                <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="btnDeleteItemPermanently_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->
