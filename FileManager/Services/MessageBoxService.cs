@@ -26,7 +26,6 @@ namespace FileManager.Services
             (sender as Wpf.Ui.Controls.MessageBox)?.Close();
         }
 
-
         public static bool? MessageBoxYesNo(string title, string text)
         {
             Wpf.Ui.Controls.MessageBox messageBox = new()
