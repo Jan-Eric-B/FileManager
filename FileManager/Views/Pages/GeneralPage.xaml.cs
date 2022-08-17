@@ -10,6 +10,7 @@ using FileManager.ViewModels;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace FileManager.Views.Pages;
 
@@ -58,21 +59,14 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
 
     #region Move
+
+    //MainDirectory
     private void btnMoveToMainPath_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.MoveToMainPath();
     }
 
-    //Info Button
-    private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenDialog("Count up", "If name of new subdirectories contains a '0', it counts up (1,2,3,4,..9).\r\nIf it contains '00', it counts up and depending on the amount of selected items, it will count up like this 01,02,03,04,... 001,002,003,004,...");
-    }
-
-
-
-    #endregion
-
+    //Same Subdirectory
     private void btnMoveToSamePath_Click(object sender, RoutedEventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
@@ -85,6 +79,7 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
         }
     }
 
+    //Single Subdirectory
     private void btnMoveToSinglePath_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.MoveDirectoryNameCountUp && string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
@@ -96,4 +91,37 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
             ViewModel.MoveToSinglePath();
         }
     }
+    //Info Button
+    private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
+    {
+        OpenDialog("Count up", "If name of new subdirectories contains a '0', it counts up (1,2,3,4,..9).\r\nIf it contains '00', it counts up and depending on the amount of selected items, it will count up like this 01,02,03,04,... 001,002,003,004,...");
+    }
+
+    //Highlight TextBox when using Buttons who depend on it
+    private void btnHighlightRequiredTextBox_MouseEnter(object sender, MouseEventArgs e)
+    {
+        Button btn = sender as Button;
+        if (btn.Name == "btnMoveToSinglePath" && ViewModel.MoveDirectoryNameCountUp)
+        {
+            txSubdirectoryName.Focus();
+        }
+        if (btn.Name == "btnMoveToSamePath")
+        {
+            txSubdirectoryName.Focus();
+        }
+    }
+    private void btnHighlightRequiredTextBox_MouseLeave(object sender, MouseEventArgs e)
+    {
+        Button btn = sender as Button;
+        btn.Focus();
+    }
+
+    #endregion
+
+
+
+
+
+
+
 }

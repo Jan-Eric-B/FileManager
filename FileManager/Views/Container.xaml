@@ -103,7 +103,7 @@
                     <!-- Bottom Page -->
                     <Grid Grid.Row="1" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500" />
+                            <ColumnDefinition Width="520" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <!-- Left -->
