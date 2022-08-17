@@ -19,7 +19,6 @@ public class GeneralPageViewModel : ObservableObject
     public GeneralPageViewModel(ContainerViewModel container)
     {
         Container = container;
-
     }
 
 
@@ -80,9 +79,7 @@ public class GeneralPageViewModel : ObservableObject
     {
         _dataInitialized = true;
     }
-    
-    
-    
+
     private bool moveDirectoryNameCountUp = false;
     public bool MoveDirectoryNameCountUp
     {

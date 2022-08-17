@@ -66,9 +66,22 @@ public partial class Container : INavigationWindow
         // Wpf.Ui.Appearance.Watcher.Watch(this, Appearance.BackgroundType.Mica, true, false);
         _windowService = windowService;
 
+        ItemsControl.ItemsSource = ViewModel.Files;
+
+
         SettingsLoad();
 
-        ItemsControl.ItemsSource = ViewModel.Files;
+        string[] args = App.Args;
+
+        if(args.Length > 0)
+        {
+            string newMainPath = args[0] + Path.DirectorySeparatorChar;
+
+            if (CheckExistenceService.IsDirectory(newMainPath))
+            {
+                ViewModel.MainPath = newMainPath;
+            }
+        }
 
         ViewModel.SearchingAsync().Wait();
 

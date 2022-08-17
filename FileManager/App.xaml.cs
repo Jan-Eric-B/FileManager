@@ -10,6 +10,7 @@ using Wpf.Ui.Mvvm.Services;
 using FileManager.Models;
 using FileManager.Services;
 using FileManager.ViewModels;
+using System;
 
 namespace FileManager;
 
@@ -97,11 +98,14 @@ public partial class App
         _host.Dispose();
     }
 
+    public static string[] Args;
     /// <summary>
     /// Occurs when the application is loading.
     /// </summary>
     private async void OnStartup(object sender, StartupEventArgs e)
     {
+        Args = e.Args;
+
         await _host.StartAsync();
     }
 }

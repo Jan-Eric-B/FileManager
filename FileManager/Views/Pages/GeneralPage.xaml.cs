@@ -27,8 +27,6 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
         Loaded += OnLoaded;
 
-
-
         InitializeComponent();
 
         _dialogControl = dialogService.GetDialogControl();
