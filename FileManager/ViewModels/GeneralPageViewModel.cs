@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using FileManager.Services;
-using System.Windows.Shapes;
 using Windows.Storage;
 
 namespace FileManager.ViewModels;
@@ -26,9 +25,9 @@ public class GeneralPageViewModel : ObservableObject
 
     private bool _dataInitialized = false;
 
-    private bool cardExpanderMove = true;
-    private bool cardExpanderRename = false;
-    private bool cardExpanderDelete = false;
+    private bool cardExpanderMove;
+    private bool cardExpanderRename;
+    private bool cardExpanderDelete;
     public bool CardExpanderMove
     {
         get { return cardExpanderMove; }

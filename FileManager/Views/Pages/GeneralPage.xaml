@@ -17,7 +17,7 @@
 
     <VirtualizingStackPanel x:Name="RootPanel" Margin="10,0,10,18" IsVirtualizing="True" VirtualizationMode="Recycling">
         <!-- Move -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" >
+        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto">
                 <!-- TextBox Input -->
                 <ui:TextBox x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" HorizontalAlignment="Stretch" Cursor="IBeam"/>
@@ -45,14 +45,14 @@
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Delete -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" >
+        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
                 <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="btnDeleteItem_Click"/>
                 <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="btnDeleteItemPermanently_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" >
+        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto">
 
             </VirtualizingStackPanel>

@@ -12,6 +12,10 @@ using Wpf.Ui.Mvvm.Contracts;
 using System.Windows.Input;
 using System.Windows.Media;
 using Wpf.Ui.Mvvm.Services;
+using FileManager.Resources;
+using FileManager.Services;
+using System;
+using Wpf.Ui.Appearance;
 
 namespace FileManager.Views.Pages;
 
@@ -40,9 +44,11 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        SettingsLoad();
     }
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        SettingsSave();
     }
 
     // Open Dialog
@@ -142,5 +148,34 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     private void btnDeleteItemPermanently_Click(object sender, RoutedEventArgs e)
     {
 
+    }
+
+
+
+
+    //Save
+    private void SettingsSave()
+    {
+        GeneralPageSettings settings = new()
+        {
+            CardExpanderMove = ViewModel.CardExpanderMove,
+            CardExpanderDelete = ViewModel.CardExpanderDelete,
+            CardExpanderRename = ViewModel.CardExpanderRename,
+        };
+        settings.Save();
+    }
+
+    //Load
+    private void SettingsLoad()
+    {
+        GeneralPageSettings settings = new();
+        ViewModel.CardExpanderMove = settings.CardExpanderMove;
+        ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
+        ViewModel.CardExpanderRename = settings.CardExpanderRename;
+    }
+
+    private void CardExpander_SaveSettings(object sender, RoutedEventArgs e)
+    {
+        SettingsSave();
     }
 }
