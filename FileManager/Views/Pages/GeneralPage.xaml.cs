@@ -16,6 +16,7 @@ using FileManager.Resources;
 using FileManager.Services;
 using System;
 using Wpf.Ui.Appearance;
+using Microsoft.VisualBasic.FileIO;
 
 namespace FileManager.Views.Pages;
 
@@ -142,12 +143,18 @@ public partial class GeneralPage : INavigableView<GeneralPageViewModel>
 
     private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
     {
-        OpenDialog("Test", "Test");
+        if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files?") == true)
+        {
+            ViewModel.DeleteItem();
+        }
     }
 
     private void btnDeleteItemPermanently_Click(object sender, RoutedEventArgs e)
     {
-
+        if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files permanently?") == true)
+        {
+            ViewModel.DeleteItemPermanently();
+        }
     }
 
 

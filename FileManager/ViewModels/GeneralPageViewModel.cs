@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using FileManager.Services;
 using Windows.Storage;
+using Microsoft.VisualBasic.FileIO;
 
 namespace FileManager.ViewModels;
 
@@ -216,16 +217,18 @@ public class GeneralPageViewModel : ObservableObject
     {
         foreach (FileData file in Container.Files) if (file.IsChecked)
         {
-
+            FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
+        Container.SearchingAsync().Wait();
     }
 
     public void DeleteItemPermanently()
     {
-        //foreach (FileData file in Container.Files) if (file.IsChecked)
-        //{
-        //        Directory.Delete(file.FilePath, true);
-        //    }
+        foreach (FileData file in Container.Files) if (file.IsChecked)
+        {
+            FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently); 
+        }
+        Container.SearchingAsync().Wait();
     }
 
     #endregion
