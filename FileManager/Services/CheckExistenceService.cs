@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.IO;
 
 namespace FileManager.Services
 {
@@ -18,7 +13,6 @@ namespace FileManager.Services
         {
             return Directory.Exists(path);
         }
-
 
         public static string RenameIfExists(string file)
         {

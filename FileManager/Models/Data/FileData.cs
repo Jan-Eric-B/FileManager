@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.IO;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace FileManager.Models.Data
 {
     public class FileData : ObservableObject
     {
-
         //C:\Windows\System32\file.png
         private string filePath;
         public string FilePath

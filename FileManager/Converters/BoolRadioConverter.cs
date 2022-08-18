@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace FileManager.Converters
@@ -16,7 +12,7 @@ namespace FileManager.Converters
         {
             bool boolValue = (bool)value;
 
-            return this.Inverse ? !boolValue : boolValue;
+            return Inverse ? !boolValue : boolValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -25,11 +21,10 @@ namespace FileManager.Converters
 
             if (!boolValue)
             {
-                // We only care when the user clicks a radio button to select it.
                 return null;
             }
 
-            return !this.Inverse;
+            return !Inverse;
         }
     }
 }

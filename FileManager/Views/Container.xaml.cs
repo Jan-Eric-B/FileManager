@@ -1,12 +1,12 @@
 ﻿using FileManager.Resources;
 using FileManager.Services;
 using FileManager.ViewModels;
-using System;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows;
+using System;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
@@ -18,24 +18,30 @@ namespace FileManager.Views;
 /// </summary>
 public partial class Container : INavigationWindow
 {
-    private readonly bool _initialized = false;
-    private readonly ITaskBarService _taskBarService;
+    #region Services
+
     private readonly IThemeService _themeService;
     private readonly IWindowService _windowService;
 
+    #endregion
+
     #region MouseDown Variables
 
-    private Timer ClickTimer;
-    private Action DoubleClickAction;
-    private TimeSpan DoubleClickMaxTime;
     private bool InDoubleClick;
     private DateTime LastClick;
-    private Action SingleClickAction;
+    private readonly Action DoubleClickAction;
+    private readonly Action SingleClickAction;
+    private readonly Timer ClickTimer;
+    private readonly TimeSpan DoubleClickMaxTime;
     private string ToOpenFile = string.Empty;
 
     #endregion
 
-    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ITaskBarService taskBarService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
+    //____________________________________________________________
+
+    #region Main
+
+    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
         // Assign the view model
         ViewModel = viewModel;
@@ -43,9 +49,6 @@ public partial class Container : INavigationWindow
 
         // Attach the theme service
         _themeService = themeService;
-
-        // Attach the taskbar service
-        _taskBarService = taskBarService;
 
         // Initial preparation of the window.
         InitializeComponent();
@@ -68,12 +71,11 @@ public partial class Container : INavigationWindow
 
         ItemsControl.ItemsSource = ViewModel.Files;
 
-
         SettingsLoad();
 
         string[] args = App.Args;
 
-        if(args.Length > 0)
+        if (args.Length > 0)
         {
             string newMainPath = args[0] + Path.DirectorySeparatorChar;
 
@@ -97,7 +99,6 @@ public partial class Container : INavigationWindow
         SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
         DoubleClickAction = () => StartProcess.Start(ToOpenFile, true);
     }
-
     public ContainerViewModel ViewModel
     {
         get;
@@ -126,19 +127,22 @@ public partial class Container : INavigationWindow
         _windowService.Show<Views.Windows.SettingsWindow>();
     }
 
-    // Search Input
-    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-    {
-        if (e.Key == Key.Return || e.Key == Key.Tab)
-        {
-            await ViewModel.SearchingAsync();
-        }
-    }
+    #endregion
+
+    #region INavigationWindow methods
+
+    public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+    public Frame GetFrame() => RootFrame;
+    public INavigation GetNavigation() => RootNavigation;
+    public void CloseWindow() => Close();
+    public void SetPageService(IPageService pageService) => RootNavigation.PageService = pageService;
+    public void ShowWindow() => Show();
+
+    #endregion INavigationWindow methods
 
     //Need to be fixed!!!!!!
     #region Settings
 
-    //Save
     private void SettingsSave()
     {
         SearchFilters settings = new()
@@ -150,21 +154,14 @@ public partial class Container : INavigationWindow
             SearchOptionsSubdirectories = ViewModel.SearchOptionsSubdirectories,
         };
 
-        ThemeSettings theme = new();
-        if (_themeService.GetTheme() == ThemeType.Dark)
+        ThemeSettings theme = new()
         {
-            theme.DarkMode = true;
-        }
-        else
-        {
-            theme.DarkMode = false;
-        }
+            DarkMode = _themeService.GetTheme() == ThemeType.Dark
+        };
 
         theme.Save();
         settings.Save();
     }
-
-    //Load
     private void SettingsLoad()
     {
         SearchFilters settings = new();
@@ -195,41 +192,30 @@ public partial class Container : INavigationWindow
         {
             _themeService.SetTheme(ThemeType.Light);
         }
-
     }
 
     #endregion
 
-    #region INavigationWindow methods
+    // Search
+    #region Search
 
-    public void CloseWindow()
-        => Close();
+    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == Key.Return || e.Key == Key.Tab)
+        {
+            await ViewModel.SearchingAsync();
+        }
+    }
 
-    public Frame GetFrame()
-            => RootFrame;
-
-    public INavigation GetNavigation()
-        => RootNavigation;
-
-    public bool Navigate(Type pageType)
-        => RootNavigation.Navigate(pageType);
-
-    public void SetPageService(IPageService pageService)
-        => RootNavigation.PageService = pageService;
-
-    public void ShowWindow()
-        => Show();
-
-    #endregion INavigationWindow methods
-
-    // Checkbox
-    #region Checkboxes
-
-    // Search Filter, Refresh search
     private async void CheckBox_Click(object sender, RoutedEventArgs e)
     {
         await ViewModel.SearchingAsync();
     }
+
+    #endregion
+
+    // Itemlist
+    #region Itemlist
 
     // Items selected count
     private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -241,14 +227,12 @@ public partial class Container : INavigationWindow
         ViewModel.FileCountSelected--;
     }
 
-    //Click and Drag over Checkboxes
+    //Click and Drag-Over Checkboxes
     private void Checkbox_OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        System.Windows.Controls.CheckBox checkbox = sender as System.Windows.Controls.CheckBox;
-
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            if (checkbox != null)
+            if (sender is System.Windows.Controls.CheckBox checkbox)
             {
                 checkbox.IsChecked = !checkbox.IsChecked;
             }
@@ -258,8 +242,7 @@ public partial class Container : INavigationWindow
     {
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            System.Windows.Controls.CheckBox checkbox = sender as System.Windows.Controls.CheckBox;
-            if (checkbox != null)
+            if (sender is System.Windows.Controls.CheckBox checkbox)
             {
                 checkbox.IsChecked = !checkbox.IsChecked;
                 checkbox.ReleaseMouseCapture();
@@ -320,7 +303,7 @@ public partial class Container : INavigationWindow
 
     #endregion
 
-    // Drag over event - only accepts one directory
+    // Drag-Over-Event - only accepts one directory
     #region Path drag over
 
     private void ProgressBar_DragOver(object sender, System.Windows.DragEventArgs e)

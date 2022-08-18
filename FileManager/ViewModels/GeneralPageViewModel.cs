@@ -1,236 +1,265 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Windows.Media;
-using Wpf.Ui.Common.Interfaces;
-using FileManager.Models.Data;
-using FileManager.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
+﻿using FileManager.Models.Data;
 using FileManager.Services;
-using Windows.Storage;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic.FileIO;
+using System.IO;
 
-namespace FileManager.ViewModels;
-
-public class GeneralPageViewModel : ObservableObject
+namespace FileManager.ViewModels
 {
-    public ContainerViewModel Container { get; set; }
-
-    public GeneralPageViewModel(ContainerViewModel container)
+    public class GeneralPageViewModel : ObservableObject
     {
-        Container = container;
-    }
+        #region Main
 
+        private bool _dataInitialized;
 
-    private bool _dataInitialized = false;
+        public ContainerViewModel Container { get; set; }
 
-    private bool cardExpanderMove;
-    private bool cardExpanderRename;
-    private bool cardExpanderDelete;
-    public bool CardExpanderMove
-    {
-        get { return cardExpanderMove; }
-        set
+        #region Cards Expander
+
+        private bool cardExpanderMove;
+        public bool CardExpanderMove
         {
-            cardExpanderMove = value;
-            OnPropertyChanged(nameof(CardExpanderMove));
-        }
-    }
-    public bool CardExpanderRename
-    {
-        get { return cardExpanderRename; }
-        set
-        {
-            cardExpanderRename = value;
-            OnPropertyChanged(nameof(CardExpanderRename));
-        }
-    }
-    public bool CardExpanderDelete
-    {
-        get { return cardExpanderDelete; }
-        set
-        {
-            cardExpanderDelete = value;
-            OnPropertyChanged(nameof(CardExpanderDelete));
-        }
-    }
-
-    private string moveDirectoryName;
-    public string MoveDirectoryName
-    {
-        get => moveDirectoryName;
-        set
-        {
-            moveDirectoryName = value;
-            OnPropertyChanged(nameof(MoveDirectoryName));
-        }
-    }
-
-    public void OnNavigatedFrom()
-    {
-    }
-
-    public void OnNavigatedTo()
-    {
-        if (!_dataInitialized)
-            InitializeData();
-    }
-    private void InitializeData()
-    {
-        _dataInitialized = true;
-    }
-
-    private bool moveDirectoryNameCountUp = false;
-    public bool MoveDirectoryNameCountUp
-    {
-        get { return moveDirectoryNameCountUp; }
-        set
-        {
-            moveDirectoryNameCountUp = value;
-            OnPropertyChanged(nameof(MoveDirectoryNameCountUp));
-        }
-    }
-
-
-    private bool moveDirectoryUseFileName = true;
-    public bool MoveDirectoryUseFileName
-    {
-        get { return moveDirectoryUseFileName; }
-        set
-        {
-            moveDirectoryUseFileName = value;
-            OnPropertyChanged(nameof(MoveDirectoryUseFileName));
-        }
-    }
-
-
-
-
-    #region Move
-
-    public void MoveToMainPath()
-    {
-        foreach (FileData file in Container.Files)
-        {
-            if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
+            get { return cardExpanderMove; }
+            set
             {
-                File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
+                cardExpanderMove = value;
+                OnPropertyChanged(nameof(CardExpanderMove));
             }
         }
-        Container.SearchingAsync().Wait();
-    }
 
-    public void MoveToSamePath()
-    {
-        string newdir = Container.MainPath + MoveDirectoryName + Path.DirectorySeparatorChar;
-
-        if (!Directory.Exists(newdir))
+        private bool cardExpanderRename;
+        public bool CardExpanderRename
         {
-            Directory.CreateDirectory(newdir);
-        }
-
-        foreach (FileData file in Container.Files) if (file.IsChecked)
-        {
-            File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
-        }
-        Container.SearchingAsync().Wait();
-    }
-
-    public void MoveToSinglePath()
-    {
-        if (MoveDirectoryUseFileName)
-        {
-            foreach(FileData file in Container.Files) if (file.IsChecked)
+            get { return cardExpanderRename; }
+            set
             {
-                string newdir = Container.MainPath + file.FileNameWithoutExtension + Path.DirectorySeparatorChar;
+                cardExpanderRename = value;
+                OnPropertyChanged(nameof(CardExpanderRename));
+            }
+        }
 
-                if (!Directory.Exists(newdir))
+        private bool cardExpanderDelete;
+        public bool CardExpanderDelete
+        {
+            get { return cardExpanderDelete; }
+            set
+            {
+                cardExpanderDelete = value;
+                OnPropertyChanged(nameof(CardExpanderDelete));
+            }
+        }
+
+        #endregion Cards Expander
+
+        #endregion Main
+
+        #region Move
+
+        private bool moveDirectoryNameCountUp = false;
+        public bool MoveDirectoryNameCountUp
+        {
+            get { return moveDirectoryNameCountUp; }
+            set
+            {
+                moveDirectoryNameCountUp = value;
+                OnPropertyChanged(nameof(MoveDirectoryNameCountUp));
+            }
+        }
+
+        private bool moveDirectoryUseFileName = true;
+        public bool MoveDirectoryUseFileName
+        {
+            get { return moveDirectoryUseFileName; }
+            set
+            {
+                moveDirectoryUseFileName = value;
+                OnPropertyChanged(nameof(MoveDirectoryUseFileName));
+            }
+        }
+
+        private string moveDirectoryName;
+        public string MoveDirectoryName
+        {
+            get => moveDirectoryName;
+            set
+            {
+                moveDirectoryName = value;
+                OnPropertyChanged(nameof(MoveDirectoryName));
+            }
+        }
+
+        #endregion Move
+
+        //____________________________________________________________
+
+        #region Main
+
+        public GeneralPageViewModel(ContainerViewModel container)
+        {
+            Container = container;
+        }
+
+        public static void OnNavigatedFrom()
+        {
+        }
+
+        public void OnNavigatedTo()
+        {
+            if (!_dataInitialized)
+                InitializeData();
+        }
+
+        private void InitializeData()
+        {
+            _dataInitialized = true;
+        }
+
+        #endregion Main
+
+        #region Move
+
+        public void MoveToMainPath()
+        {
+            foreach (FileData file in Container.Files)
+            {
+                if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
                 {
-                    Directory.CreateDirectory(newdir);
+                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
                 }
-                //else
-                //{
-                //    newdir = CheckExistenceService.RenameIfExists(newdir);
-                //}
-
-                File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
             }
+            Container.SearchingAsync().Wait();
         }
-        else
-        {
-            int count = 0;
 
-            foreach (FileData file in Container.Files) if (file.IsChecked)
+        public void MoveToSamePath()
+        {
+            string newdir = Container.MainPath + MoveDirectoryName + Path.DirectorySeparatorChar;
+
+            if (!Directory.Exists(newdir))
             {
-                count++;
-
-                string newdir = Container.MainPath + NameCount(count) + Path.DirectorySeparatorChar;
-
-                if (!Directory.Exists(newdir))
-                {
-                    Directory.CreateDirectory(newdir);
-                }
-
-                File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                Directory.CreateDirectory(newdir);
             }
-        }
-        Container.SearchingAsync().Wait();
-    }
 
-    private string NameCount(int count)
-    {
-        if (MoveDirectoryName.Contains("0"))
-        {
-            string countString = string.Empty;
-
-            if (MoveDirectoryName.Contains("00"))
+            foreach (FileData file in Container.Files)
             {
-                switch (Container.FileCountSelected)
+                if (file.IsChecked)
                 {
-                    case <= 99:
-                        countString = count.ToString("D" + 2);
-                        break;
-                    case >= 100 and <= 999:
-                        countString = count.ToString("D" + 3);
-                        break;
-                    case >= 1000 and <= 9999:
-                        countString = count.ToString("D" + 4);
-                        break;
-                    case >= 10000 and <= 99999:
-                        countString = count.ToString("D" + 5);
-                        break;
+                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
                 }
-                return MoveDirectoryName.Replace("00", countString);
             }
-            return MoveDirectoryName.Replace("0", count.ToString());
+
+            Container.SearchingAsync().Wait();
         }
-        return MoveDirectoryName;
-    }
 
-    #endregion
-
-    #region Delete
-
-    public void DeleteItem()
-    {
-        foreach (FileData file in Container.Files) if (file.IsChecked)
+        public void MoveToSinglePath()
         {
-            FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-        }
-        Container.SearchingAsync().Wait();
-    }
+            if (MoveDirectoryUseFileName)
+            {
+                foreach (FileData file in Container.Files)
+                {
+                    if (file.IsChecked)
+                    {
+                        string newdir = Container.MainPath + file.FileNameWithoutExtension + Path.DirectorySeparatorChar;
 
-    public void DeleteItemPermanently()
-    {
-        foreach (FileData file in Container.Files) if (file.IsChecked)
+                        if (!Directory.Exists(newdir))
+                        {
+                            Directory.CreateDirectory(newdir);
+                        }
+                        //else
+                        //{
+                        //    newdir = CheckExistenceService.RenameIfExists(newdir);
+                        //}
+
+                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                    }
+                }
+            }
+            else
+            {
+                int count = 0;
+
+                foreach (FileData file in Container.Files)
+                {
+                    if (file.IsChecked)
+                    {
+                        count++;
+
+                        string newdir = Container.MainPath + NameCount(count) + Path.DirectorySeparatorChar;
+
+                        if (!Directory.Exists(newdir))
+                        {
+                            Directory.CreateDirectory(newdir);
+                        }
+
+                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                    }
+                }
+            }
+            Container.SearchingAsync().Wait();
+        }
+
+        private string NameCount(int count)
         {
-            FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently); 
+            if (MoveDirectoryName.Contains('0'))
+            {
+                string countString = string.Empty;
+
+                if (MoveDirectoryName.Contains("00"))
+                {
+                    switch (Container.FileCountSelected)
+                    {
+                        case <= 99:
+                            countString = count.ToString("D" + 2);
+                            break;
+
+                        case >= 100 and <= 999:
+                            countString = count.ToString("D" + 3);
+                            break;
+
+                        case >= 1000 and <= 9999:
+                            countString = count.ToString("D" + 4);
+                            break;
+
+                        case >= 10000 and <= 99999:
+                            countString = count.ToString("D" + 5);
+                            break;
+                    }
+                    return MoveDirectoryName.Replace("00", countString);
+                }
+                return MoveDirectoryName.Replace("0", count.ToString());
+            }
+            return MoveDirectoryName;
         }
-        Container.SearchingAsync().Wait();
+
+        #endregion Move
+
+        #region Delete
+
+        public void DeleteItem()
+        {
+            foreach (FileData file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                }
+            }
+
+            Container.SearchingAsync().Wait();
+        }
+
+        public void DeleteItemPermanently()
+        {
+            foreach (FileData file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently);
+                }
+            }
+
+            Container.SearchingAsync().Wait();
+        }
+
+        #endregion Delete
     }
-
-    #endregion
-
 }

@@ -23,19 +23,19 @@
                 <ui:TextBox x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" HorizontalAlignment="Stretch" Cursor="IBeam"/>
                 <VirtualizingStackPanel Orientation="Horizontal">
                     <!-- To Main Directory -->
-                    <ui:Button x:Name="btnMoveToMainPath" Margin="0,0,10,0" Content="To main path" Click="btnMoveToMainPath_Click"/>
+                    <ui:Button x:Name="btnMoveToMainPath" Margin="0,0,10,0" Content="To main path" Click="BtnMoveToMainPath_Click"/>
                     <!-- To Same Subdirectory -->
-                    <ui:Button x:Name="btnMoveToSamePath" Margin="0,0,10,0" Content="To same subdirectory" Click="btnMoveToSamePath_Click" MouseEnter="btnHighlightRequiredTextBox_MouseEnter" MouseLeave="btnHighlightRequiredTextBox_MouseLeave" />
+                    <ui:Button x:Name="btnMoveToSamePath" Margin="0,0,10,0" Content="To same subdirectory" Click="BtnMoveToSamePath_Click" MouseEnter="BtnHighlightRequiredTextBox_MouseEnter" MouseLeave="BtnHighlightRequiredTextBox_MouseLeave" />
                     <!-- To Single Subdirectory -->
                     <VirtualizingStackPanel Orientation="Horizontal">
-                        <ui:Button x:Name="btnMoveToSinglePath" Margin="0,0,0,0" Content="To single subdirectory" Click="btnMoveToSinglePath_Click" MouseEnter="btnHighlightRequiredTextBox_MouseEnter" MouseLeave="btnHighlightRequiredTextBox_MouseLeave"/>
+                        <ui:Button x:Name="btnMoveToSinglePath" Margin="0,0,0,0" Content="To single subdirectory" Click="BtnMoveToSinglePath_Click" MouseEnter="BtnHighlightRequiredTextBox_MouseEnter" MouseLeave="BtnHighlightRequiredTextBox_MouseLeave"/>
                         <Menu Grid.Column="2" Margin="-5,0,0,0" Background="Transparent" HorizontalAlignment="Right" Height="45">
                             <ui:MenuItem SymbolIcon="Filter24">
                                 <VirtualizingStackPanel>
                                     <RadioButton Content="Name of file" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryUseFileName, Mode=TwoWay}"/>
                                     <VirtualizingStackPanel Orientation="Horizontal">
                                         <RadioButton Content="Count up" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryNameCountUp, Mode=TwoWay}"/>
-                                        <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="MoveCountUpExplanation_OnClick"/>
+                                        <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="BtnMoveCountUpExplanation_OnClick"/>
                                     </VirtualizingStackPanel>
                                 </VirtualizingStackPanel>
                             </ui:MenuItem>
@@ -47,8 +47,8 @@
         <!-- Delete -->
         <ui:CardExpander IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
-                <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="btnDeleteItem_Click"/>
-                <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="btnDeleteItemPermanently_Click"/>
+                <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="BtnDeleteItem_Click"/>
+                <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->

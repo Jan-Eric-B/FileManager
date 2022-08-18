@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
 
 namespace FileManager.Services
 {
@@ -26,7 +24,7 @@ namespace FileManager.Services
             }
             catch (Exception ex)
             {
-                MessageHandling.PrintException(path, ex);
+                MessageBoxService.MessageBoxOK("Error starting process", $"'{path}'" + Environment.NewLine + ex);
                 return false;
             }
         }

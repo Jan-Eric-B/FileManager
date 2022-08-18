@@ -1,188 +1,158 @@
-﻿// This Source Code Form is subject to the terms of the MIT License.
-// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-// All Rights Reserved.
-
+﻿using FileManager.Resources;
+using FileManager.Services;
+using FileManager.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Common.Interfaces;
-using FileManager.ViewModels;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
 using System.Windows.Input;
-using System.Windows.Media;
-using Wpf.Ui.Mvvm.Services;
-using FileManager.Resources;
-using FileManager.Services;
-using System;
-using Wpf.Ui.Appearance;
-using Microsoft.VisualBasic.FileIO;
+using Wpf.Ui.Common.Interfaces;
 
-namespace FileManager.Views.Pages;
-
-/// <summary>
-/// Interaction logic for GeneralPage.xaml
-/// </summary>
-public partial class GeneralPage : INavigableView<GeneralPageViewModel>
+namespace FileManager.Views.Pages
 {
-    private readonly IDialogControl _dialogControl;
-
-    public GeneralPage(GeneralPageViewModel viewModel, IDialogService dialogService)
+    /// <summary>
+    /// Interaction logic for GeneralPage.xaml
+    /// </summary>
+    public partial class GeneralPage : INavigableView<GeneralPageViewModel>
     {
-        ViewModel = viewModel;
-        this.DataContext = ViewModel;
+        //____________________________________________________________
 
-        Loaded += OnLoaded;
+        #region Main
 
-        InitializeComponent();
-
-        _dialogControl = dialogService.GetDialogControl();
-    }
-    public GeneralPageViewModel ViewModel
-    {
-        get;
-    }
-
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        SettingsLoad();
-    }
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        SettingsSave();
-    }
-
-    // Open Dialog
-    private async void OpenDialog(string title, string text)
-    {
-        await _dialogControl.ShowAndWaitAsync(title,text);
-    }
-    // Dialog Right Click Close
-    private static void DialogOnButtonClickRightSideClose(object sender, RoutedEventArgs e)
-    {
-        var dialogControl = (IDialogControl)sender;
-        dialogControl.Hide();
-
-    }
-    // Dialog Right Click No
-    private static void DialogOnButtonClickRightSideNo(object sender, RoutedEventArgs e)
-    {
-        var dialogControl = (IDialogControl)sender;
-        dialogControl.Hide();
-    }
-    // Dialog Left Click Yes
-    private static void DialogOnButtonClickYesSideYes(object sender, RoutedEventArgs e)
-    {
-        var dialogControl = (IDialogControl)sender;
-        dialogControl.Hide();
-    }
-
-    #region Move
-
-    //MainDirectory
-    private void btnMoveToMainPath_Click(object sender, RoutedEventArgs e)
-    {
-        ViewModel.MoveToMainPath();
-    }
-
-    //Same Subdirectory
-    private void btnMoveToSamePath_Click(object sender, RoutedEventArgs e)
-    {
-        if (!string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+        public GeneralPage(GeneralPageViewModel viewModel)
         {
-            ViewModel.MoveToSamePath();
+            ViewModel = viewModel;
+            this.DataContext = ViewModel;
+
+            Loaded += OnLoaded;
+
+            InitializeComponent();
         }
-        else
+
+        public GeneralPageViewModel ViewModel
         {
-            _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
-            OpenDialog("Empty Textbox", "Please fill out the textbox");
+            get;
         }
-    }
 
-    //Single Subdirectory
-    private void btnMoveToSinglePath_Click(object sender, RoutedEventArgs e)
-    {
-        if (ViewModel.MoveDirectoryNameCountUp && string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+        private void CardExpander_SaveSettings(object sender, RoutedEventArgs e)
         {
-            _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
-            OpenDialog("Empty Textbox", "Please fill out the textbox");
+            SettingsSave();
         }
-        else
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.MoveToSinglePath();
+            SettingsLoad();
         }
-    }
-    //Info Button
-    private void MoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
-    {
-        _dialogControl.ButtonRightClick += DialogOnButtonClickRightSideClose;
-        OpenDialog("Count up", "If name of new subdirectories contains a '0', it counts up (1,2,3,4,..9).\r\nIf it contains '00', it counts up and depending on the amount of selected items, it will count up like this 01,02,03,04,... 001,002,003,004,...");
-    }
 
-    //Highlight TextBox when using Buttons who depend on it
-    private void btnHighlightRequiredTextBox_MouseEnter(object sender, MouseEventArgs e)
-    {
-        Button btn = sender as Button;
-        if (btn.Name == "btnMoveToSinglePath" && ViewModel.MoveDirectoryNameCountUp)
+        private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            txSubdirectoryName.Focus();
+            SettingsSave();
         }
-        if (btn.Name == "btnMoveToSamePath")
+
+        #region Settings
+
+        private void SettingsLoad()
         {
-            txSubdirectoryName.Focus();
+            GeneralPageSettings settings = new();
+            ViewModel.CardExpanderMove = settings.CardExpanderMove;
+            ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
+            ViewModel.CardExpanderRename = settings.CardExpanderRename;
         }
-    }
-    private void btnHighlightRequiredTextBox_MouseLeave(object sender, MouseEventArgs e)
-    {
-        Button btn = sender as Button;
-        btn.Focus();
-    }
 
-
-    #endregion
-
-    private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
-    {
-        if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files?") == true)
+        private void SettingsSave()
         {
-            ViewModel.DeleteItem();
+            GeneralPageSettings settings = new()
+            {
+                CardExpanderMove = ViewModel.CardExpanderMove,
+                CardExpanderDelete = ViewModel.CardExpanderDelete,
+                CardExpanderRename = ViewModel.CardExpanderRename,
+            };
+            settings.Save();
         }
-    }
 
-    private void btnDeleteItemPermanently_Click(object sender, RoutedEventArgs e)
-    {
-        if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files permanently?") == true)
+        #endregion
+
+        #endregion Main
+
+        #region Move
+
+        //Highlight TextBox when using Buttons who depend on it
+        private void BtnHighlightRequiredTextBox_MouseEnter(object sender, MouseEventArgs e)
         {
-            ViewModel.DeleteItemPermanently();
+            Button btn = sender as Button;
+            if (btn.Name == "btnMoveToSinglePath" && ViewModel.MoveDirectoryNameCountUp)
+            {
+                txSubdirectoryName.Focus();
+            }
+            if (btn.Name == "btnMoveToSamePath")
+            {
+                txSubdirectoryName.Focus();
+            }
         }
-    }
 
-
-
-
-    //Save
-    private void SettingsSave()
-    {
-        GeneralPageSettings settings = new()
+        private void BtnHighlightRequiredTextBox_MouseLeave(object sender, MouseEventArgs e)
         {
-            CardExpanderMove = ViewModel.CardExpanderMove,
-            CardExpanderDelete = ViewModel.CardExpanderDelete,
-            CardExpanderRename = ViewModel.CardExpanderRename,
-        };
-        settings.Save();
-    }
+            Button btn = sender as Button;
+            btn.Focus();
+        }
 
-    //Load
-    private void SettingsLoad()
-    {
-        GeneralPageSettings settings = new();
-        ViewModel.CardExpanderMove = settings.CardExpanderMove;
-        ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
-        ViewModel.CardExpanderRename = settings.CardExpanderRename;
-    }
+        //MainDirectory
+        private void BtnMoveToMainPath_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.MoveToMainPath();
+        }
 
-    private void CardExpander_SaveSettings(object sender, RoutedEventArgs e)
-    {
-        SettingsSave();
+        //Same Subdirectory
+        private void BtnMoveToSamePath_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+            {
+                ViewModel.MoveToSamePath();
+            }
+            else
+            {
+                MessageBoxService.MessageBoxOK("Empty Textbox", "Please fill out the textbox");
+            }
+        }
+
+        //Single Subdirectory
+        private void BtnMoveToSinglePath_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.MoveDirectoryNameCountUp && string.IsNullOrWhiteSpace(ViewModel.MoveDirectoryName))
+            {
+                MessageBoxService.MessageBoxOK("Empty Textbox", "Please fill out the textbox");
+            }
+            else
+            {
+                ViewModel.MoveToSinglePath();
+            }
+        }
+
+        //Info Button
+        private void BtnMoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBoxService.MessageBoxOK("Counting-Up description", "If containing a '0' it will be replaced with the counted up number\r\n(1,2,3,4,...17,18,...)\r\nIf containing a '00' it will be replaced with leading zeros depending on count of selected items\r\n(01,02,03,04,.../001,002,003,004,...)", 0,600);
+        }
+
+        #endregion Move
+
+        #region Delete
+
+        private void BtnDeleteItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files?", 150, 0) == true)
+            {
+                ViewModel.DeleteItem();
+            }
+        }
+
+        private void BtnDeleteItemPermanently_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete these files permanently?", 150, 0) == true)
+            {
+                ViewModel.DeleteItemPermanently();
+            }
+        }
+
+        #endregion Delete
+
     }
 }

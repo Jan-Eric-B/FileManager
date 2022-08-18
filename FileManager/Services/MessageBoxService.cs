@@ -1,40 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Interop;
 
 namespace FileManager.Services
 {
     internal static class MessageBoxService
     {
-        public static void MessageBoxOK(string title, string text)
+        #region MessageBox OK
+
+        public static void MessageBoxOK(string title, string text, int height = 0, int width = 0)
         {
             Wpf.Ui.Controls.MessageBox messageBox = new()
             {
-                ButtonRightName = "OK"
+                ButtonRightName = "OK",
+                ButtonLeftName = "",
+                ButtonLeftAppearance = Wpf.Ui.Common.ControlAppearance.Transparent,
             };
-            messageBox.ButtonRightClick += MessageBox_RightButtonClickClose;
+
+            if (height > 0)
+            {
+                messageBox.Height = height;
+            }
+
+            if (width > 0)
+            {
+                messageBox.Width = width;
+            }
+
+            messageBox.ButtonRightClick += MessageBoxOK_ButtonRightClickClose;
             messageBox.Show(title, text);
         }
 
-        private static void MessageBox_RightButtonClickClose(object sender, System.Windows.RoutedEventArgs e)
+        private static void MessageBoxOK_ButtonRightClickClose(object sender, RoutedEventArgs e)
         {
             (sender as Wpf.Ui.Controls.MessageBox)?.Close();
         }
 
-        public static bool? MessageBoxYesNo(string title, string text)
+        #endregion
+
+        #region MessageBox Yes/No
+
+        public static bool? MessageBoxYesNo(string title, string text, int height = 0, int width = 0)
         {
             Wpf.Ui.Controls.MessageBox messageBox = new()
             {
                 ButtonLeftName = "Yes",
                 ButtonRightName = "No",
+                ButtonRightAppearance = Wpf.Ui.Common.ControlAppearance.Primary,
+                ButtonLeftAppearance = Wpf.Ui.Common.ControlAppearance.Secondary
             };
-            messageBox.ButtonLeftClick += MessageBox_LeftButtonClick;
-            messageBox.ButtonRightClick += MessageBox_RightButtonClick;
+            messageBox.ButtonLeftClick += MessageBox_ButtonLeftClickYes;
+            messageBox.ButtonRightClick += MessageBox_ButtonRightClickNo;
+
+            if (height > 0)
+            {
+                messageBox.Height = height;
+            }
+
+            if (width > 0)
+            {
+                messageBox.Width = width;
+            }
 
             messageBox.Title = title;
             messageBox.Content = text;
@@ -42,23 +67,19 @@ namespace FileManager.Services
             return messageBox.ShowDialog();
         }
 
-        private static void MessageBox_LeftButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        private static void MessageBox_ButtonLeftClickYes(object sender, RoutedEventArgs e)
         {
-            Wpf.Ui.Controls.MessageBox mb = (sender as Wpf.Ui.Controls.MessageBox);
-            mb.DialogResult = true;
-            mb.Close();
+            Wpf.Ui.Controls.MessageBox messageBox = sender as Wpf.Ui.Controls.MessageBox;
+            messageBox.DialogResult = true;
+            messageBox.Close();
+        }
+        private static void MessageBox_ButtonRightClickNo(object sender, RoutedEventArgs e)
+        {
+            Wpf.Ui.Controls.MessageBox messageBox = sender as Wpf.Ui.Controls.MessageBox;
+            messageBox.DialogResult = false;
+            messageBox.Close();
         }
 
-        private static void MessageBox_RightButtonClick(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Wpf.Ui.Controls.MessageBox mb = (sender as Wpf.Ui.Controls.MessageBox);
-            mb.DialogResult = false;
-            mb.Close();
-        }
-
-
-
-
-
+        #endregion
     }
 }

@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FileManager.Models;
+using FileManager.Services;
+using FileManager.ViewModels;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Threading;
+using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
-using FileManager.Models;
-using FileManager.Services;
-using FileManager.ViewModels;
-using System;
 
 namespace FileManager;
 

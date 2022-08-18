@@ -1,37 +1,32 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Windows.Media;
 using Wpf.Ui.Common.Interfaces;
-using FileManager.Models.Data;
-using System.Collections.ObjectModel;
-using FileManager.Models;
 
-namespace FileManager.ViewModels;
-
-public class VideoPageViewModel : ObservableObject, INavigationAware
+namespace FileManager.ViewModels
 {
-    public ContainerViewModel Container { get; set; }
-
-    public VideoPageViewModel(ContainerViewModel container)
+    public class VideoPageViewModel : ObservableObject, INavigationAware
     {
-        Container = container;
-    }
+        private bool _dataInitialized;
 
+        public VideoPageViewModel(ContainerViewModel container)
+        {
+            Container = container;
+        }
 
-    private bool _dataInitialized = false;
+        public ContainerViewModel Container { get; set; }
 
-    public void OnNavigatedFrom()
-    {
-    }
+        public void OnNavigatedFrom()
+        {
+        }
 
-    public void OnNavigatedTo()
-    {
-        if (!_dataInitialized)
-            InitializeData();
-    }
-    private void InitializeData()
-    {
-        _dataInitialized = true;
+        public void OnNavigatedTo()
+        {
+            if (!_dataInitialized)
+                InitializeData();
+        }
+
+        private void InitializeData()
+        {
+            _dataInitialized = true;
+        }
     }
 }
