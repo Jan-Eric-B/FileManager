@@ -345,6 +345,224 @@ namespace FileManager.ViewModels
         }
 
         // Add File to ObservableCollection
+        
+
+        #endregion Search
+
+
+        //CancellationTokenSource _tokenSource;
+
+        //public async void SearchAsync()
+        //{
+        //    // Cancels Task if its running
+        //    if(_tokenSource != null)
+        //    {
+        //            _tokenSource.Cancel();
+        //    }
+
+        //    // Create new Cancellation Token
+        //    _tokenSource = new CancellationTokenSource();
+        //    CancellationToken token = _tokenSource.Token;
+
+        //    try
+        //    {
+        //        //Starts Task
+        //        await Task.Run(() => FindFiles(token));
+        //    }
+        //    catch (OperationCanceledException ex)
+        //    {
+        //        //When Canceled
+        //        MessageBoxService.MessageBoxOK("Test", "Test");
+        //    }
+        //    finally
+        //    {
+        //        _tokenSource.Dispose();
+        //    }
+
+        //}
+
+        //private async Task FindFiles(CancellationToken token)
+        //{
+        //    SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+        //    if (CheckExistenceService.Check(MainPath))
+        //    {
+        //        foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+        //        {
+        //            // If SearchInput is empty, display all files
+        //            if (string.IsNullOrWhiteSpace(SearchInput))
+        //            {
+        //                await AddFileAsync(filePath);
+        //                FileCount++;
+        //            }
+        //            else
+        //            {
+        //                // Get Filename
+        //                string fileName = Path.GetFileName(filePath);
+
+        //                // If Case Sensitive
+        //                if (!SearchOptionsCaseSensitive)
+        //                {
+        //                    searchInput = searchInput.ToUpper();
+        //                    fileName = fileName.ToUpper();
+        //                }
+
+        //                // Search in Name
+        //                if (SearchOptionsFileName && fileName.Contains(searchInput))
+        //                {
+        //                    await AddFileAsync(filePath);
+        //                    FileCount++;
+        //                }
+
+        //                // Search in File
+        //                if (SearchOptionsFileContent)
+        //                {
+        //                    string content = File.ReadAllText(filePath);
+        //                    // Case Sensitivity
+        //                    if (!SearchOptionsCaseSensitive)
+        //                    {
+        //                        content = content.ToUpper();
+        //                    }
+
+        //                    if (content.Contains(searchInput))
+        //                    {
+        //                        await AddFileAsync(filePath);
+        //                        FileCount++;
+        //                    }
+        //                }
+        //            }
+
+        //            if (token.IsCancellationRequested)
+        //            {
+        //                Files.Clear();
+        //                FileCount = 0;
+        //                FileCountSelected = 0;
+
+        //                SelectAll = false;
+        //                SelectEverySecondFirst = false;
+        //                SelectEverySecondLast = false;
+        //                token.ThrowIfCancellationRequested();
+        //            }
+        //        }
+        //    }
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+        // Initialized here to avoid null checks.
+        private CancellationTokenSource _tokenSource = new();
+
+        public async Task SearchAsync()
+        {
+            Files.Clear();
+            FileCount = 0;
+            FileCountSelected = 0;
+
+            SelectAll = false;
+            SelectEverySecondFirst = false;
+            SelectEverySecondLast = false;
+
+            CancellationTokenSource newTokenSource = new CancellationTokenSource();
+
+            CancellationTokenSource oldTokenSource = Interlocked.Exchange(ref _tokenSource, newTokenSource);
+
+            if (!oldTokenSource.IsCancellationRequested)
+            {
+                oldTokenSource.Cancel();
+            }
+
+            try
+            {
+                //Starts Task
+                await Task.Run(() => FindFiles(newTokenSource.Token));
+            }
+            catch (OperationCanceledException)
+            {
+                //When Canceled
+            }
+        }
+
+        //private async Task FindFiles(CancellationToken token)
+        //{
+        //    await Task.Delay(1000, token);
+        //}
+
+
+        private async Task FindFiles(CancellationToken token)
+        {
+            SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            if (CheckExistenceService.Check(MainPath))
+            {
+                foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+                {
+                    // If SearchInput is empty, display all files
+                    if (string.IsNullOrWhiteSpace(SearchInput))
+                    {
+                        await AddFileAsync(filePath);
+                        await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => FileCount++));
+                    }
+                    else
+                    {
+                        // Get Filename
+                        string fileName = Path.GetFileName(filePath);
+
+                        // If Case Sensitive
+                        if (!SearchOptionsCaseSensitive)
+                        {
+                            searchInput = searchInput.ToUpper();
+                            fileName = fileName.ToUpper();
+                        }
+
+                        // Search in Name
+                        if (SearchOptionsFileName && fileName.Contains(searchInput))
+                        {
+                            await AddFileAsync(filePath);
+                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
+                        }
+
+                        // Search in File
+                        if (SearchOptionsFileContent)
+                        {
+                            string content = File.ReadAllText(filePath);
+                            // Case Sensitivity
+                            if (!SearchOptionsCaseSensitive)
+                            {
+                                content = content.ToUpper();
+                            }
+
+                            if (content.Contains(searchInput))
+                            {
+                                await AddFileAsync(filePath);
+                                await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
+                            }
+                        }
+                    }
+
+                    if (token.IsCancellationRequested)
+                    {
+                        //Files.Clear();
+                        //FileCount = 0;
+                        //FileCountSelected = 0;
+
+                        //SelectAll = false;
+                        //SelectEverySecondFirst = false;
+                        //SelectEverySecondLast = false;
+                        token.ThrowIfCancellationRequested();
+                    }
+                }
+            }
+        }
+
         private async Task AddFileAsync(string filePath)
         {
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
@@ -371,107 +589,10 @@ namespace FileManager.ViewModels
             }));
         }
 
-        #endregion Search
-
-
-        CancellationTokenSource _tokenSource;
 
 
 
-        public async void SearchAsync()
-        {
-            // Cancels Task if its running
-            if(_tokenSource != null)
-            {
-                    _tokenSource.Cancel();
-            }
 
-            // Create new Cancellation Token
-            _tokenSource = new CancellationTokenSource();
-            CancellationToken token = _tokenSource.Token;
-
-            try
-            {
-                //Starts Task
-                await Task.Run(() => FindFiles(token));
-            }
-            catch (OperationCanceledException ex)
-            {
-                //When Canceled
-                MessageBoxService.MessageBoxOK("Test", "Test");
-            }
-            finally
-            {
-                _tokenSource.Dispose();
-            }
-
-        }
-
-        private async Task FindFiles(CancellationToken token)
-        {
-            SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-            if (CheckExistenceService.Check(MainPath))
-            {
-                foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
-                {
-                    // If SearchInput is empty, display all files
-                    if (string.IsNullOrWhiteSpace(SearchInput))
-                    {
-                        await AddFileAsync(filePath);
-                        FileCount++;
-                    }
-                    else
-                    {
-                        // Get Filename
-                        string fileName = Path.GetFileName(filePath);
-
-                        // If Case Sensitive
-                        if (!SearchOptionsCaseSensitive)
-                        {
-                            searchInput = searchInput.ToUpper();
-                            fileName = fileName.ToUpper();
-                        }
-
-                        // Search in Name
-                        if (SearchOptionsFileName && fileName.Contains(searchInput))
-                        {
-                            await AddFileAsync(filePath);
-                            FileCount++;
-                        }
-
-                        // Search in File
-                        if (SearchOptionsFileContent)
-                        {
-                            string content = File.ReadAllText(filePath);
-                            // Case Sensitivity
-                            if (!SearchOptionsCaseSensitive)
-                            {
-                                content = content.ToUpper();
-                            }
-
-                            if (content.Contains(searchInput))
-                            {
-                                await AddFileAsync(filePath);
-                                FileCount++;
-                            }
-                        }
-                    }
-
-                    if (token.IsCancellationRequested)
-                    {
-                        Files.Clear();
-                        FileCount = 0;
-                        FileCountSelected = 0;
-
-                        SelectAll = false;
-                        SelectEverySecondFirst = false;
-                        SelectEverySecondLast = false;
-                        token.ThrowIfCancellationRequested();
-                    }
-                }
-            }
-        }
 
 
 
