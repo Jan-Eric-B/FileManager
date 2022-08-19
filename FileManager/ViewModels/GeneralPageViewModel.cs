@@ -93,6 +93,8 @@ namespace FileManager.ViewModels
 
         #region Rename
 
+        #region Replace
+
         private bool renameReplaceByString = true;
         public bool RenameReplaceByString
         {
@@ -126,7 +128,32 @@ namespace FileManager.ViewModels
                 OnPropertyChanged(nameof(RenameReplaceInputString));
             }
         }
-        // Output (String)
+
+        // Start (Index)
+        private int renameReplaceInputStartInt;
+        public int RenameReplaceInputStartInt
+        {
+            get => renameReplaceInputStartInt;
+            set
+            {
+                renameReplaceInputStartInt = value;
+                OnPropertyChanged(nameof(RenameReplaceInputStartInt));
+            }
+        }
+        // Lenght (Index)
+        private int renameReplaceInputLengthInt;
+        public int RenameReplaceInputLengthInt
+        {
+            get => renameReplaceInputLengthInt;
+            set
+            {
+                renameReplaceInputLengthInt = value;
+                OnPropertyChanged(nameof(RenameReplaceInputLengthInt));
+            }
+        }
+
+
+        // Output
         private string renameReplaceOutputString;
         public string RenameReplaceOutputString
         {
@@ -137,6 +164,12 @@ namespace FileManager.ViewModels
                 OnPropertyChanged(nameof(RenameReplaceOutputString));
             }
         }
+
+
+
+        #endregion
+
+
 
 
         #endregion

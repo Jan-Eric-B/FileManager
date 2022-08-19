@@ -70,18 +70,23 @@
 
                     <!-- By Index -->
                     <VirtualizingStackPanel Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByIndex,Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal">
-                        <ui:TextBox Width="87.5" Margin="0,0,5,0"/>
-                        <ui:TextBox Width="87.5" Margin="0,0,0,0"/>
+                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputStartInt}" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
+                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputLengthInt}" Width="87.5" Height="32" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
                     </VirtualizingStackPanel>
 
+                    <!-- Output -->
                     <ui:TextBox x:Name="txtRenameReplaceOutputString" Text="{Binding Path=RenameReplaceOutputString}" Margin="5,0" Width="180" Height="32"/>
+
                     <ui:Button x:Name="btnRenameReplace" Content="Replace" Click="BtnRenameReplace_Click"/>
                     <Menu Grid.Column="2" Margin="-5,0,0,0" Background="Transparent" HorizontalAlignment="Right" Height="45">
                         <ui:MenuItem SymbolIcon="Filter24">
                             <VirtualizingStackPanel>
+                                <!-- Radiobutton - By Name -->
                                 <RadioButton x:Name="rbRenameReplaceByString" Content="By string" GroupName="RenameReplaceType" IsChecked="{Binding Path=RenameReplaceByString, Converter={StaticResource BoolRadioConverter}}"/>
+
+                                <!-- Radiobutton - By Index -->
                                 <VirtualizingStackPanel Orientation="Horizontal">
-                                    <RadioButton x:Name="rbRenameReplaceByIndex" Content="By index" GroupName="RenameReplaceType" IsChecked="{Binding Path=RenameReplaceByIndex, Converter={StaticResource InverseBoolRadioConverter}}"/>
+                                    <RadioButton x:Name="rbRenameReplaceByIndex" Content="By index" GroupName="RenameReplaceType" IsChecked="{Binding Path=RenameReplaceByString, Converter={StaticResource InverseBoolRadioConverter}}"/>
                                     <ui:Button x:Name="btnRenameReplaceByIndexExplanation" Content="?" Click="BtnRenameReplaceByIndexExplanation_OnClick"/>
                                 </VirtualizingStackPanel>
                             </VirtualizingStackPanel>

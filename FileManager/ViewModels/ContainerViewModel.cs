@@ -28,6 +28,8 @@ namespace FileManager.ViewModels
 
         #region Search
 
+        private CancellationTokenSource _tokenSource = new();
+
         private string mainPath;
         public string MainPath
         {
@@ -268,199 +270,6 @@ namespace FileManager.ViewModels
         #region Search
 
         // Start of Searching
-        public async Task SearchingAsync()
-        {
-            ClearSearch();
-            await Task.Run(new Action(LoadFiles)).ConfigureAwait(false);
-        }
-
-        // Clears files
-        private void ClearSearch()
-        {
-            Files.Clear();
-            FileCount = 0;
-            FileCountSelected = 0;
-
-            SelectAll = false;
-            SelectEverySecondFirst = false;
-            SelectEverySecondLast = false;
-        }
-
-        // Searches through MainPath
-        private async void LoadFiles()
-        {
-            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
-            {
-                SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-                if (CheckExistenceService.Check(MainPath))
-                {
-                    foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
-                    {
-                        // If SearchInput is empty, display all files
-                        if (string.IsNullOrWhiteSpace(SearchInput))
-                        {
-                            await AddFileAsync(filePath);
-                            FileCount++;
-                        }
-                        else
-                        {
-                            // Get Filename
-                            string fileName = Path.GetFileName(filePath);
-
-                            // If Case Sensitive
-                            if (!SearchOptionsCaseSensitive)
-                            {
-                                searchInput = searchInput.ToUpper();
-                                fileName = fileName.ToUpper();
-                            }
-
-                            // Search in Name
-                            if (SearchOptionsFileName && fileName.Contains(searchInput))
-                            {
-                                await AddFileAsync(filePath);
-                                FileCount++;
-                            }
-
-                            // Search in File
-                            if (SearchOptionsFileContent)
-                            {
-                                string content = File.ReadAllText(filePath);
-                                // Case Sensitivity
-                                if (!SearchOptionsCaseSensitive)
-                                {
-                                    content = content.ToUpper();
-                                }
-
-                                if (content.Contains(searchInput))
-                                {
-                                    await AddFileAsync(filePath);
-                                    FileCount++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }));
-        }
-
-        // Add File to ObservableCollection
-        
-
-        #endregion Search
-
-
-        //CancellationTokenSource _tokenSource;
-
-        //public async void SearchAsync()
-        //{
-        //    // Cancels Task if its running
-        //    if(_tokenSource != null)
-        //    {
-        //            _tokenSource.Cancel();
-        //    }
-
-        //    // Create new Cancellation Token
-        //    _tokenSource = new CancellationTokenSource();
-        //    CancellationToken token = _tokenSource.Token;
-
-        //    try
-        //    {
-        //        //Starts Task
-        //        await Task.Run(() => FindFiles(token));
-        //    }
-        //    catch (OperationCanceledException ex)
-        //    {
-        //        //When Canceled
-        //        MessageBoxService.MessageBoxOK("Test", "Test");
-        //    }
-        //    finally
-        //    {
-        //        _tokenSource.Dispose();
-        //    }
-
-        //}
-
-        //private async Task FindFiles(CancellationToken token)
-        //{
-        //    SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-        //    if (CheckExistenceService.Check(MainPath))
-        //    {
-        //        foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
-        //        {
-        //            // If SearchInput is empty, display all files
-        //            if (string.IsNullOrWhiteSpace(SearchInput))
-        //            {
-        //                await AddFileAsync(filePath);
-        //                FileCount++;
-        //            }
-        //            else
-        //            {
-        //                // Get Filename
-        //                string fileName = Path.GetFileName(filePath);
-
-        //                // If Case Sensitive
-        //                if (!SearchOptionsCaseSensitive)
-        //                {
-        //                    searchInput = searchInput.ToUpper();
-        //                    fileName = fileName.ToUpper();
-        //                }
-
-        //                // Search in Name
-        //                if (SearchOptionsFileName && fileName.Contains(searchInput))
-        //                {
-        //                    await AddFileAsync(filePath);
-        //                    FileCount++;
-        //                }
-
-        //                // Search in File
-        //                if (SearchOptionsFileContent)
-        //                {
-        //                    string content = File.ReadAllText(filePath);
-        //                    // Case Sensitivity
-        //                    if (!SearchOptionsCaseSensitive)
-        //                    {
-        //                        content = content.ToUpper();
-        //                    }
-
-        //                    if (content.Contains(searchInput))
-        //                    {
-        //                        await AddFileAsync(filePath);
-        //                        FileCount++;
-        //                    }
-        //                }
-        //            }
-
-        //            if (token.IsCancellationRequested)
-        //            {
-        //                Files.Clear();
-        //                FileCount = 0;
-        //                FileCountSelected = 0;
-
-        //                SelectAll = false;
-        //                SelectEverySecondFirst = false;
-        //                SelectEverySecondLast = false;
-        //                token.ThrowIfCancellationRequested();
-        //            }
-        //        }
-        //    }
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-        // Initialized here to avoid null checks.
-        private CancellationTokenSource _tokenSource = new();
-
         public async Task SearchAsync()
         {
             Files.Clear();
@@ -471,7 +280,7 @@ namespace FileManager.ViewModels
             SelectEverySecondFirst = false;
             SelectEverySecondLast = false;
 
-            CancellationTokenSource newTokenSource = new CancellationTokenSource();
+            CancellationTokenSource newTokenSource = new();
 
             CancellationTokenSource oldTokenSource = Interlocked.Exchange(ref _tokenSource, newTokenSource);
 
@@ -491,12 +300,7 @@ namespace FileManager.ViewModels
             }
         }
 
-        //private async Task FindFiles(CancellationToken token)
-        //{
-        //    await Task.Delay(1000, token);
-        //}
-
-
+        // Find file
         private async Task FindFiles(CancellationToken token)
         {
             SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -509,7 +313,7 @@ namespace FileManager.ViewModels
                     if (string.IsNullOrWhiteSpace(SearchInput))
                     {
                         await AddFileAsync(filePath);
-                        await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() => FileCount++));
+                        await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
                     }
                     else
                     {
@@ -550,19 +354,13 @@ namespace FileManager.ViewModels
 
                     if (token.IsCancellationRequested)
                     {
-                        //Files.Clear();
-                        //FileCount = 0;
-                        //FileCountSelected = 0;
-
-                        //SelectAll = false;
-                        //SelectEverySecondFirst = false;
-                        //SelectEverySecondLast = false;
                         token.ThrowIfCancellationRequested();
                     }
                 }
             }
         }
 
+        // Add file to ObservableCollection
         private async Task AddFileAsync(string filePath)
         {
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
@@ -589,12 +387,7 @@ namespace FileManager.ViewModels
             }));
         }
 
-
-
-
-
-
-
+        #endregion Search
 
     }
 }
