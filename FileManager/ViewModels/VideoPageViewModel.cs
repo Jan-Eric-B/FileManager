@@ -5,14 +5,22 @@ namespace FileManager.ViewModels
 {
     public class VideoPageViewModel : ObservableObject, INavigationAware
     {
+        #region Main
+
         private bool _dataInitialized;
+
+        public ContainerViewModel Container { get; set; }
+
+        #endregion
+
+        //____________________________________________________________
+
+        #region Main
 
         public VideoPageViewModel(ContainerViewModel container)
         {
             Container = container;
         }
-
-        public ContainerViewModel Container { get; set; }
 
         public void OnNavigatedFrom()
         {
@@ -28,5 +36,8 @@ namespace FileManager.ViewModels
         {
             _dataInitialized = true;
         }
+
+        #endregion
+
     }
 }

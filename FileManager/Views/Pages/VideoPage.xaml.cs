@@ -1,33 +1,74 @@
-﻿// This Source Code Form is subject to the terms of the MIT License.
-// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-// All Rights Reserved.
-
+﻿using FileManager.Resources.Settings;
+using FileManager.ViewModels;
 using System.Windows;
 using Wpf.Ui.Common.Interfaces;
-using FileManager.ViewModels;
 
-namespace FileManager.Views.Pages;
-
-/// <summary>
-/// Interaction logic for VideoPage.xaml
-/// </summary>
-public partial class VideoPage : INavigableView<VideoPageViewModel>
+namespace FileManager.Views.Pages
 {
-    public VideoPage(VideoPageViewModel viewModel)
+    /// <summary>
+    /// Interaction logic for VideoPage.xaml
+    /// </summary>
+    public partial class VideoPage : INavigableView<VideoPageViewModel>
     {
-        ViewModel = viewModel;
-        Loaded += OnLoaded;
+        //____________________________________________________________
 
-        InitializeComponent();
-    }
+        #region Main
 
-    public VideoPageViewModel ViewModel
-    {
-        get;
-    }
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        RootPanel.ScrollOwner = ScrollHost;
+        public VideoPage(VideoPageViewModel viewModel)
+        {
+            ViewModel = viewModel;
+            DataContext = ViewModel;
+
+            Loaded += OnLoaded;
+
+            InitializeComponent();
+        }
+
+        public VideoPageViewModel ViewModel
+        {
+            get;
+        }
+
+        //Maybe
+        private void CardExpander_SaveSettings(object sender, RoutedEventArgs e)
+        {
+            SettingsSave();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            SettingsLoad();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            SettingsSave();
+        }
+
+        #region Settings
+
+        private void SettingsLoad()
+        {
+            GeneralPageSettings settings = new();
+            //ViewModel.CardExpanderMove = settings.CardExpanderMove;
+            //ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
+            //ViewModel.CardExpanderRename = settings.CardExpanderRename;
+        }
+
+        private void SettingsSave()
+        {
+            GeneralPageSettings settings = new()
+            {
+                //CardExpanderMove = ViewModel.CardExpanderMove,
+                //CardExpanderDelete = ViewModel.CardExpanderDelete,
+                //CardExpanderRename = ViewModel.CardExpanderRename,
+            };
+            settings.Save();
+        }
+
+        #endregion
+
+        #endregion
+
     }
 }

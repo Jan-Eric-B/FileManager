@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FileManager.Resources {
+namespace FileManager.Resources.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

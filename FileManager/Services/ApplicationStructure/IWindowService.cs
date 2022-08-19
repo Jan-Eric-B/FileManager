@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileManager.Services
+namespace FileManager.Services.ApplicationStructure
 {
     public interface IWindowService
     {

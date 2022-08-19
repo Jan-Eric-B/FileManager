@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 
-namespace FileManager.Services
+namespace FileManager.Services.ApplicationStructure
 {
     /// <summary>
     /// Managed host of the application.

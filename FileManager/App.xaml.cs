@@ -1,5 +1,4 @@
 ﻿using FileManager.Models;
-using FileManager.Services;
 using FileManager.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using System.Windows.Threading;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
+using FileManager.Services.ApplicationStructure;
 
 namespace FileManager;
 

@@ -1,10 +1,15 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace FileManager.Models.Data
+namespace FileManager.Models
 {
-    public class FileData : ObservableObject
+    /// <summary>
+    /// Model for holding information of files
+    /// </summary>
+    public class FileModel : ObservableObject
     {
-        //C:\Windows\System32\file.png
+        /// <summary>
+        /// Path of file: 'C:\Windows\System32\file.png'
+        /// </summary>
         private string filePath;
         public string FilePath
         {
@@ -16,7 +21,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //file.png
+        /// <summary>
+        /// Name of file: 'file.png'
+        /// </summary>
         private string fileName;
         public string FileName
         {
@@ -28,7 +35,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //file
+        /// <summary>
+        /// Name of file without extension: 'file'
+        /// </summary>
         private string fileNameWithoutExtension;
         public string FileNameWithoutExtension
         {
@@ -40,7 +49,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //.png
+        /// <summary>
+        /// Extension of filename: '.png'
+        /// </summary>
         private string extension;
         public string Extension
         {
@@ -52,7 +63,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //C:\Windows\System32\
+        /// <summary>
+        /// The name of the directory: 'C:\Windows\System32\'
+        /// </summary>
         private string directoryName;
         public string DirectoryName
         {
@@ -64,7 +77,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //System32\file.png
+        /// <summary>
+        /// Difference from the MainPath and the file path (subdirectories and filename): 'System32\file.png'
+        /// </summary>
         private string fileNameWithSubdirectory;
         public string FileNameWithSubdirectory
         {
@@ -76,7 +91,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //3 Mb
+        /// <summary>
+        /// Size of the file: '3 Mb'
+        /// </summary>
         private string fileSize;
         public string FileSize
         {
@@ -88,7 +105,9 @@ namespace FileManager.Models.Data
             }
         }
 
-        //Is checked
+        /// <summary>
+        /// Is checked in the file list
+        /// </summary>
         private bool isChecked;
         public bool IsChecked
         {

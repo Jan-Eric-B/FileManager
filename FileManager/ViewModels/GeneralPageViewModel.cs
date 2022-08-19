@@ -1,8 +1,9 @@
-﻿using FileManager.Models.Data;
+﻿using FileManager.Models;
 using FileManager.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic.FileIO;
 using System.IO;
+using Wpf.Ui.Common.Interfaces;
 
 namespace FileManager.ViewModels
 {
@@ -90,6 +91,57 @@ namespace FileManager.ViewModels
 
         #endregion Move
 
+        #region Rename
+
+        private bool renameReplaceByString = true;
+        public bool RenameReplaceByString
+        {
+            get { return renameReplaceByString; }
+            set
+            {
+                renameReplaceByString = value;
+                OnPropertyChanged(nameof(RenameReplaceByString));
+            }
+        }
+
+        private bool renameReplaceByIndex = false;
+        public bool RenameReplaceByIndex
+        {
+            get { return renameReplaceByIndex; }
+            set
+            {
+                renameReplaceByIndex = value;
+                OnPropertyChanged(nameof(RenameReplaceByIndex));
+            }
+        }
+
+        // Input (String)
+        private string renameReplaceInputString;
+        public string RenameReplaceInputString
+        {
+            get => renameReplaceInputString;
+            set
+            {
+                renameReplaceInputString = value;
+                OnPropertyChanged(nameof(RenameReplaceInputString));
+            }
+        }
+        // Output (String)
+        private string renameReplaceOutputString;
+        public string RenameReplaceOutputString
+        {
+            get => renameReplaceOutputString;
+            set
+            {
+                renameReplaceOutputString = value;
+                OnPropertyChanged(nameof(RenameReplaceOutputString));
+            }
+        }
+
+
+        #endregion
+
+
         //____________________________________________________________
 
         #region Main
@@ -120,14 +172,14 @@ namespace FileManager.ViewModels
 
         public void MoveToMainPath()
         {
-            foreach (FileData file in Container.Files)
+            foreach (FileModel file in Container.Files)
             {
                 if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
                 {
                     File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
                 }
             }
-            Container.SearchingAsync().Wait();
+            Container.SearchAsync();
         }
 
         public void MoveToSamePath()
@@ -139,7 +191,7 @@ namespace FileManager.ViewModels
                 Directory.CreateDirectory(newdir);
             }
 
-            foreach (FileData file in Container.Files)
+            foreach (FileModel file in Container.Files)
             {
                 if (file.IsChecked)
                 {
@@ -147,14 +199,14 @@ namespace FileManager.ViewModels
                 }
             }
 
-            Container.SearchingAsync().Wait();
+            Container.SearchAsync();
         }
 
         public void MoveToSinglePath()
         {
             if (MoveDirectoryUseFileName)
             {
-                foreach (FileData file in Container.Files)
+                foreach (FileModel file in Container.Files)
                 {
                     if (file.IsChecked)
                     {
@@ -177,7 +229,7 @@ namespace FileManager.ViewModels
             {
                 int count = 0;
 
-                foreach (FileData file in Container.Files)
+                foreach (FileModel file in Container.Files)
                 {
                     if (file.IsChecked)
                     {
@@ -194,7 +246,7 @@ namespace FileManager.ViewModels
                     }
                 }
             }
-            Container.SearchingAsync().Wait();
+            Container.SearchAsync();
         }
 
         private string NameCount(int count)
@@ -236,28 +288,28 @@ namespace FileManager.ViewModels
 
         public void DeleteItem()
         {
-            foreach (FileData file in Container.Files)
+            foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked)
+                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
                 {
                     FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
                 }
             }
 
-            Container.SearchingAsync().Wait();
+            Container.SearchAsync();
         }
 
         public void DeleteItemPermanently()
         {
-            foreach (FileData file in Container.Files)
+            foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked)
+                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
                 {
                     FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently);
                 }
             }
 
-            Container.SearchingAsync().Wait();
+            Container.SearchAsync();
         }
 
         #endregion Delete

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace FileManager.Services
+namespace FileManager.Services.ApplicationStructure
 {
     public class WindowService : IWindowService
     {

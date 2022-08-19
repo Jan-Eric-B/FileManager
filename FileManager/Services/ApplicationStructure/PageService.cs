@@ -4,7 +4,7 @@ using System;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 
-namespace FileManager.Services
+namespace FileManager.Services.ApplicationStructure
 {
     /// <summary>
     /// Service that provides pages for navigation.

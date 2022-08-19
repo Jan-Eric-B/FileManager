@@ -1,4 +1,4 @@
-﻿using FileManager.Resources;
+﻿using FileManager.Resources.Settings;
 using FileManager.Services;
 using FileManager.ViewModels;
 using System.IO;
@@ -10,6 +10,7 @@ using System;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
+using FileManager.Services.ApplicationStructure;
 
 namespace FileManager.Views;
 
@@ -85,7 +86,7 @@ public partial class Container : INavigationWindow
             }
         }
 
-        ViewModel.SearchingAsync().Wait();
+        ViewModel.SearchAsync();
 
         DoubleClickMaxTime = TimeSpan.FromMilliseconds(SystemInformation.DoubleClickTime);
 
@@ -97,7 +98,7 @@ public partial class Container : INavigationWindow
 
         // Click to copy Path to Clipboard and Doubleclick on Item, tries to open it
         SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
-        DoubleClickAction = () => StartProcess.Start(ToOpenFile, true);
+        DoubleClickAction = () => StartProcessService.Start(ToOpenFile, true);
     }
     public ContainerViewModel ViewModel
     {
@@ -203,13 +204,13 @@ public partial class Container : INavigationWindow
     {
         if (e.Key == Key.Return || e.Key == Key.Tab)
         {
-            await ViewModel.SearchingAsync();
+            ViewModel.SearchAsync();
         }
     }
 
     private async void CheckBox_Click(object sender, RoutedEventArgs e)
     {
-        await ViewModel.SearchingAsync();
+        ViewModel.SearchAsync();
     }
 
     #endregion
@@ -345,7 +346,7 @@ public partial class Container : INavigationWindow
         if (directories.Length == 1)
         {
             ViewModel.MainPath = directories[0] + Path.DirectorySeparatorChar;
-            ViewModel.SearchingAsync().Wait();
+            ViewModel.SearchAsync();
         }
     }
 

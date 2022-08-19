@@ -1,4 +1,4 @@
-﻿using FileManager.Models.Data;
+﻿using FileManager.Models;
 using FileManager.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -48,8 +49,6 @@ namespace FileManager.ViewModels
                 OnPropertyChanged(nameof(SearchInput));
             }
         }
-
-        private static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
 
         #region Options
 
@@ -103,7 +102,7 @@ namespace FileManager.ViewModels
 
         #region ItemList
 
-        public ObservableCollection<FileData> Files { get; set; }
+        public ObservableCollection<FileModel> Files { get; set; }
 
         #region Selection
 
@@ -117,14 +116,14 @@ namespace FileManager.ViewModels
 
                 if (selectAll)
                 {
-                    foreach (FileData file in Files)
+                    foreach (FileModel file in Files)
                     {
                         file.IsChecked = true;
                     }
                 }
                 else
                 {
-                    foreach (FileData file in Files)
+                    foreach (FileModel file in Files)
                     {
                         file.IsChecked = false;
                     }
@@ -142,14 +141,14 @@ namespace FileManager.ViewModels
             {
                 if (selectEverySecondFirst)
                 {
-                    foreach (FileData file in Files.Where((_, i) => i % 2 == 0))
+                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
                     {
                         file.IsChecked = false;
                     }
                 }
                 else
                 {
-                    foreach (FileData file in Files.Where((_, i) => i % 2 == 0))
+                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
                     {
                         file.IsChecked = true;
                     }
@@ -168,14 +167,14 @@ namespace FileManager.ViewModels
             {
                 if (selectEverySecondLast)
                 {
-                    foreach (FileData file in Files.Where((_, i) => i % 2 == 1))
+                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
                     {
                         file.IsChecked = false;
                     }
                 }
                 else
                 {
-                    foreach (FileData file in Files.Where((_, i) => i % 2 == 1))
+                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
                     {
                         file.IsChecked = true;
                     }
@@ -221,7 +220,7 @@ namespace FileManager.ViewModels
 
         public ContainerViewModel()
         {
-            Files = new ObservableCollection<FileData>();
+            Files = new ObservableCollection<FileModel>();
         }
 
         private async void FolderDialog(string parameter)
@@ -244,7 +243,7 @@ namespace FileManager.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 MainPath = dialog.SelectedPath + Path.DirectorySeparatorChar;
-                await SearchingAsync();
+                SearchAsync();
             }
         }
 
@@ -259,7 +258,7 @@ namespace FileManager.ViewModels
                 if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
                 {
                     MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
-                    await SearchingAsync();
+                    SearchAsync();
                 }
             }
         }
@@ -268,6 +267,14 @@ namespace FileManager.ViewModels
 
         #region Search
 
+        // Start of Searching
+        public async Task SearchingAsync()
+        {
+            ClearSearch();
+            await Task.Run(new Action(LoadFiles)).ConfigureAwait(false);
+        }
+
+        // Clears files
         private void ClearSearch()
         {
             Files.Clear();
@@ -279,12 +286,7 @@ namespace FileManager.ViewModels
             SelectEverySecondLast = false;
         }
 
-        public async Task SearchingAsync()
-        {
-            ClearSearch();
-            await Task.Run(new Action(LoadFiles)).ConfigureAwait(false);
-        }
-
+        // Searches through MainPath
         private async void LoadFiles()
         {
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
@@ -295,6 +297,7 @@ namespace FileManager.ViewModels
                 {
                     foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
                     {
+                        // If SearchInput is empty, display all files
                         if (string.IsNullOrWhiteSpace(SearchInput))
                         {
                             await AddFileAsync(filePath);
@@ -302,29 +305,32 @@ namespace FileManager.ViewModels
                         }
                         else
                         {
-                            //Get Filename
-                            string fileName = System.IO.Path.GetFileName(filePath);
+                            // Get Filename
+                            string fileName = Path.GetFileName(filePath);
 
-                            //If Case Sensitive
+                            // If Case Sensitive
                             if (!SearchOptionsCaseSensitive)
                             {
                                 searchInput = searchInput.ToUpper();
                                 fileName = fileName.ToUpper();
                             }
 
-                            //Search in Name
+                            // Search in Name
                             if (SearchOptionsFileName && fileName.Contains(searchInput))
                             {
                                 await AddFileAsync(filePath);
                                 FileCount++;
                             }
 
-                            //Search in File
+                            // Search in File
                             if (SearchOptionsFileContent)
                             {
                                 string content = File.ReadAllText(filePath);
-                                //If Case Sensitive
-                                if (!SearchOptionsCaseSensitive) content = content.ToUpper();
+                                // Case Sensitivity
+                                if (!SearchOptionsCaseSensitive)
+                                {
+                                    content = content.ToUpper();
+                                }
 
                                 if (content.Contains(searchInput))
                                 {
@@ -338,11 +344,12 @@ namespace FileManager.ViewModels
             }));
         }
 
-        public async Task AddFileAsync(string filePath)
+        // Add File to ObservableCollection
+        private async Task AddFileAsync(string filePath)
         {
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
             {
-                FileData file = new()
+                FileModel file = new()
                 {
                     FileName = Path.GetFileName(filePath),
                     FileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath),
@@ -350,9 +357,10 @@ namespace FileManager.ViewModels
                     DirectoryName = Path.GetDirectoryName(filePath),
                     FilePath = filePath,
                     FileNameWithSubdirectory = Path.GetFileName(filePath),
-                    FileSize = SizeSuffix(new FileInfo(filePath).Length, 1),
+                    FileSize = FileSizeConverterService.SizeSuffix(new FileInfo(filePath).Length, 1),
                     IsChecked = false
                 };
+
                 //if file is in subdirectory, save subdirectories to filename
                 if (filePath.Length > MainPath.Length + file.FileName.Length)
                 {
@@ -363,30 +371,109 @@ namespace FileManager.ViewModels
             }));
         }
 
-        private static string SizeSuffix(long value, int decimalPlaces = 1)
+        #endregion Search
+
+
+        CancellationTokenSource _tokenSource;
+
+
+
+        public async void SearchAsync()
         {
-            if (decimalPlaces < 0) { throw new ArgumentOutOfRangeException(nameof(decimalPlaces)); }
-            if (value < 0) { return "-" + SizeSuffix(-value, decimalPlaces); }
-            if (value == 0) { return string.Format("{0:n" + decimalPlaces + "} bytes", 0); }
-
-            // mag is 0 for bytes, 1 for KB, 2, for MB, etc.
-            int mag = (int)Math.Log(value, 1024);
-
-            // 1L << (mag * 10) == 2 ^ (10 * mag)
-            // [i.e. the number of bytes in the unit corresponding to mag]
-            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
-
-            // make adjustment when the value is large enough that
-            // it would round up to 1000 or more
-            if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
+            // Cancels Task if its running
+            if(_tokenSource != null)
             {
-                mag++;
-                adjustedSize /= 1024;
+                    _tokenSource.Cancel();
             }
 
-            return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, SizeSuffixes[mag]);
+            // Create new Cancellation Token
+            _tokenSource = new CancellationTokenSource();
+            CancellationToken token = _tokenSource.Token;
+
+            try
+            {
+                //Starts Task
+                await Task.Run(() => FindFiles(token));
+            }
+            catch (OperationCanceledException ex)
+            {
+                //When Canceled
+                MessageBoxService.MessageBoxOK("Test", "Test");
+            }
+            finally
+            {
+                _tokenSource.Dispose();
+            }
+
         }
 
-        #endregion Search
+        private async Task FindFiles(CancellationToken token)
+        {
+            SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            if (CheckExistenceService.Check(MainPath))
+            {
+                foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
+                {
+                    // If SearchInput is empty, display all files
+                    if (string.IsNullOrWhiteSpace(SearchInput))
+                    {
+                        await AddFileAsync(filePath);
+                        FileCount++;
+                    }
+                    else
+                    {
+                        // Get Filename
+                        string fileName = Path.GetFileName(filePath);
+
+                        // If Case Sensitive
+                        if (!SearchOptionsCaseSensitive)
+                        {
+                            searchInput = searchInput.ToUpper();
+                            fileName = fileName.ToUpper();
+                        }
+
+                        // Search in Name
+                        if (SearchOptionsFileName && fileName.Contains(searchInput))
+                        {
+                            await AddFileAsync(filePath);
+                            FileCount++;
+                        }
+
+                        // Search in File
+                        if (SearchOptionsFileContent)
+                        {
+                            string content = File.ReadAllText(filePath);
+                            // Case Sensitivity
+                            if (!SearchOptionsCaseSensitive)
+                            {
+                                content = content.ToUpper();
+                            }
+
+                            if (content.Contains(searchInput))
+                            {
+                                await AddFileAsync(filePath);
+                                FileCount++;
+                            }
+                        }
+                    }
+
+                    if (token.IsCancellationRequested)
+                    {
+                        Files.Clear();
+                        FileCount = 0;
+                        FileCountSelected = 0;
+
+                        SelectAll = false;
+                        SelectEverySecondFirst = false;
+                        SelectEverySecondLast = false;
+                        token.ThrowIfCancellationRequested();
+                    }
+                }
+            }
+        }
+
+
+
     }
 }

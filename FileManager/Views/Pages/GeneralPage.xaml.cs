@@ -1,4 +1,4 @@
-﻿using FileManager.Resources;
+﻿using FileManager.Resources.Settings;
 using FileManager.Services;
 using FileManager.ViewModels;
 using System.Windows;
@@ -20,7 +20,7 @@ namespace FileManager.Views.Pages
         public GeneralPage(GeneralPageViewModel viewModel)
         {
             ViewModel = viewModel;
-            this.DataContext = ViewModel;
+            DataContext = ViewModel;
 
             Loaded += OnLoaded;
 
@@ -154,5 +154,14 @@ namespace FileManager.Views.Pages
 
         #endregion Delete
 
+        private void BtnRenameReplace_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnRenameReplaceByIndexExplanation_OnClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
