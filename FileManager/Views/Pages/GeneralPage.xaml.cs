@@ -1,4 +1,5 @@
-﻿using FileManager.Resources.Settings;
+﻿using FileManager.Models;
+using FileManager.Resources.Settings;
 using FileManager.Services;
 using FileManager.ViewModels;
 using System.Windows;
@@ -156,12 +157,25 @@ namespace FileManager.Views.Pages
 
         private void BtnRenameReplace_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.RenameReplace();
         }
 
         private void BtnRenameReplaceByIndexExplanation_OnClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void TxtRenameReplaceInputString_KeyDown(object sender, KeyEventArgs e)
+        {
+            foreach(FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = txtRenameReplaceInputString.Text;
+            }
+        }
+
+        private void btnTest_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Container.TestHighlight = "bla";
         }
     }
 }

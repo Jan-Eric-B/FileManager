@@ -66,11 +66,11 @@
                 <VirtualizingStackPanel Orientation="Horizontal">
 
                     <!-- By String -->
-                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}" KeyDown="TxtRenameReplaceInputString_KeyDown"/>
 
                     <!-- By Index -->
                     <VirtualizingStackPanel Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByIndex,Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal">
-                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputStartInt}" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
+                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputStartInt}" Min="1" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
                         <ui:NumberBox Text="{Binding Path=RenameReplaceInputLengthInt}" Width="87.5" Height="32" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
                     </VirtualizingStackPanel>
 
@@ -97,7 +97,7 @@
                 <!-- Switch -->
                 <VirtualizingStackPanel Orientation="Horizontal">
 
-
+                    <ui:Button x:Name="btnTest" Click="btnTest_Click">Test</ui:Button>
                 </VirtualizingStackPanel>
                 <ui:NavigationSeparator/>
                 <!-- Switch -->

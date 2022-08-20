@@ -106,6 +106,17 @@ namespace FileManager.ViewModels
 
         public ObservableCollection<FileModel> Files { get; set; }
 
+        private string highlightedText = "Apple";
+        public string HighlightedText
+        {
+            get => highlightedText;
+            set
+            {
+                highlightedText = value;
+                OnPropertyChanged(nameof(HighlightedText));
+            }
+        }
+
         #region Selection
 
         private bool selectAll = false;
@@ -263,6 +274,7 @@ namespace FileManager.ViewModels
                     SearchAsync();
                 }
             }
+            
         }
 
         #endregion Main
@@ -370,7 +382,7 @@ namespace FileManager.ViewModels
                     FileName = Path.GetFileName(filePath),
                     FileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath),
                     Extension = Path.GetExtension(filePath),
-                    DirectoryName = Path.GetDirectoryName(filePath),
+                    DirectoryName = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar,
                     FilePath = filePath,
                     FileNameWithSubdirectory = Path.GetFileName(filePath),
                     FileSize = FileSizeConverterService.SizeSuffix(new FileInfo(filePath).Length, 1),
@@ -388,6 +400,38 @@ namespace FileManager.ViewModels
         }
 
         #endregion Search
+
+
+
+        private string testText = "The Apple on the tree";
+        public string TestText
+        {
+            get => testText;
+            set
+            {
+                testText = value;
+                OnPropertyChanged(nameof(TestText));
+            }
+        }
+
+
+        private string testHighlight = "Apple";
+        public string TestHighlight
+        {
+            get => testHighlight;
+            set
+            {
+                testHighlight = value;
+                OnPropertyChanged(nameof(TestHighlight));
+            }
+        }
+
+
+
+
+
+
+
 
     }
 }

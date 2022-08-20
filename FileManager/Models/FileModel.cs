@@ -118,5 +118,18 @@ namespace FileManager.Models
                 OnPropertyChanged(nameof(IsChecked));
             }
         }
+
+        private string highlightedText = string.Empty;
+        public string HighlightedText
+        {
+            get => highlightedText;
+            set
+            {
+                highlightedText = value;
+                OnPropertyChanged(nameof(HighlightedText));
+            }
+        }
+
+
     }
 }

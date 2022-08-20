@@ -2,7 +2,11 @@
 using FileManager.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic.FileIO;
+using System;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using Wpf.Ui.Common.Interfaces;
 
 namespace FileManager.ViewModels
@@ -118,7 +122,7 @@ namespace FileManager.ViewModels
         }
 
         // Input (String)
-        private string renameReplaceInputString;
+        private string renameReplaceInputString = string.Empty;
         public string RenameReplaceInputString
         {
             get => renameReplaceInputString;
@@ -130,7 +134,7 @@ namespace FileManager.ViewModels
         }
 
         // Start (Index)
-        private int renameReplaceInputStartInt;
+        private int renameReplaceInputStartInt = 1;
         public int RenameReplaceInputStartInt
         {
             get => renameReplaceInputStartInt;
@@ -141,7 +145,7 @@ namespace FileManager.ViewModels
             }
         }
         // Lenght (Index)
-        private int renameReplaceInputLengthInt;
+        private int renameReplaceInputLengthInt = 0;
         public int RenameReplaceInputLengthInt
         {
             get => renameReplaceInputLengthInt;
@@ -154,7 +158,7 @@ namespace FileManager.ViewModels
 
 
         // Output
-        private string renameReplaceOutputString;
+        private string renameReplaceOutputString = string.Empty;
         public string RenameReplaceOutputString
         {
             get => renameReplaceOutputString;
@@ -346,5 +350,61 @@ namespace FileManager.ViewModels
         }
 
         #endregion Delete
+
+        #region Rename
+
+        private async Task UpdateFileAsync(FileModel file, string fileNameWithoutExtensionNew)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                file.FileNameWithoutExtension = fileNameWithoutExtensionNew;
+                file.FileName = fileNameWithoutExtensionNew + file.Extension;
+                file.FilePath = file.DirectoryName + fileNameWithoutExtensionNew + file.Extension;
+                file.FileNameWithSubdirectory = file.FilePath[Container.MainPath.Length..];
+            }));
+        }
+
+
+        public async void RenameReplace()
+        {
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
+                {
+                    string fileNameWithoutExtensionNew = string.Empty;
+
+                    //String
+                    if (RenameReplaceByString && file.FileNameWithoutExtension.Contains(RenameReplaceInputString))
+                    {
+                        fileNameWithoutExtensionNew = file.FileNameWithoutExtension.Replace(RenameReplaceInputString, RenameReplaceOutputString);
+                    }
+                    //Position
+                    else if (!RenameReplaceByString)
+                    {
+                        try
+                        {
+                            int start = RenameReplaceInputStartInt - 1;
+                            int end = RenameReplaceInputLengthInt;
+                            fileNameWithoutExtensionNew = file.FileNameWithoutExtension.Remove(start, end).Insert(start, RenameReplaceOutputString);
+                        }
+                        catch
+                        {
+                            MessageBoxService.MessageBoxOK("Length was out of range", "Error", 150, 0);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(fileNameWithoutExtensionNew))
+                    {
+                        string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                        File.Move(file.FilePath, newFilePath);
+
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(newFilePath));
+                    }
+                }    
+            }
+        }
+
+        #endregion
     }
 }
