@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
+using System.Windows.Media;
+using Windows.UI.ViewManagement;
 
 namespace FileManager.Services
 {
@@ -87,7 +89,8 @@ namespace FileManager.Services
 
         private static void AddHighlightedPartToTextBlock(TextBlock textBlock, string part)
         {
-            textBlock.Inlines.Add(new Run { Text = part, TextDecorations= TextDecorations.Underline});
+
+            textBlock.Inlines.Add(new Run { Text = part, TextDecorations = TextDecorations.Underline, Background = new SolidColorBrush(WIndowsAccentColorsService.AccentLight1()) });
         }
 
         public static List<string> SplitTextIntoTermAndNotTermParts(string text, string term)

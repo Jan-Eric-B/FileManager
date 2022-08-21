@@ -177,5 +177,13 @@ namespace FileManager.Views.Pages
         {
             ViewModel.Container.TestHighlight = "bla";
         }
+
+        private void txtRenameReplaceInputString_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = txtRenameReplaceInputString.Text;
+            }
+        }
     }
 }
