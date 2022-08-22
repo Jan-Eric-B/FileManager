@@ -161,17 +161,20 @@
                                 <!--<CheckBox Grid.Column="2" Content="Subdirectories" IsChecked="{Binding Path=ViewModel.SearchOptionsSubdirectories, Mode=TwoWay}" Cursor="Hand" Margin="10,0" />-->
                             </Grid>
 
-                            
+
                             <Border Grid.Row="1" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8,0,0,0">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <ItemsControl x:Name="ItemsControl" ItemsSource="{Binding Path=ViewModel.Files}" DockPanel.Dock="Bottom" Background="#00000000" BorderBrush="#00000000">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid >
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                                        <CheckBox Checked="CheckBox_Checked" Content="" IsChecked="{Binding IsChecked, Mode=TwoWay}" Unchecked="CheckBox_Unchecked" Margin="3" MouseEnter="Checkbox_OnMouseEnter" GotMouseCapture="Checkbox_OnGotMouseCapture"/>
-                                                        <TextBlock services:HighlightTermBehavior.Text="{Binding FileNameWithSubdirectory}" services:HighlightTermBehavior.TermToBeHighlighted="{Binding HighlightedText}" Margin="-90,0,0,0" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
-                                                    </StackPanel>
+                                                <Grid>
+                                                    <VirtualizingStackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                        <CheckBox Checked="CheckBox_Checked" IsChecked="{Binding IsChecked, Mode=TwoWay}" Unchecked="CheckBox_Unchecked" Margin="3" MouseEnter="Checkbox_OnMouseEnter" GotMouseCapture="Checkbox_OnGotMouseCapture"/>
+                                                        <VirtualizingStackPanel Orientation="Horizontal" Margin="-90,0,0,0" >
+                                                            <TextBlock Text="{Binding SubdirectoryPath}" FontStyle="Italic"  FontSize="12" Margin="0,2,0,0" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
+                                                            <TextBlock services:HighlightTermBehavior.Text="{Binding FileName}" services:HighlightTermBehavior.TermToBeHighlighted="{Binding HighlightedText}" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
+                                                        </VirtualizingStackPanel>
+                                                    </VirtualizingStackPanel>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" >
                                                         <Border CornerRadius="10" Background="{DynamicResource ApplicationBackgroundBrush}">
                                                             <TextBlock Text="{Binding FileSize}" Padding="5"/>

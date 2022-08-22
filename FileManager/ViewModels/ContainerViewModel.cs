@@ -274,7 +274,7 @@ namespace FileManager.ViewModels
                     SearchAsync();
                 }
             }
-            
+
         }
 
         #endregion Main
@@ -385,6 +385,7 @@ namespace FileManager.ViewModels
                     DirectoryName = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar,
                     FilePath = filePath,
                     FileNameWithSubdirectory = Path.GetFileName(filePath),
+                    SubdirectoryPath = "",
                     FileSize = FileSizeConverterService.SizeSuffix(new FileInfo(filePath).Length, 1),
                     IsChecked = false
                 };
@@ -393,6 +394,7 @@ namespace FileManager.ViewModels
                 if (filePath.Length > MainPath.Length + file.FileName.Length)
                 {
                     file.FileNameWithSubdirectory = filePath[MainPath.Length..];
+                    file.SubdirectoryPath = file.DirectoryName[MainPath.Length..];
                 }
 
                 Files.Add(file);
@@ -400,37 +402,6 @@ namespace FileManager.ViewModels
         }
 
         #endregion Search
-
-
-
-        private string testText = "The Apple on the tree";
-        public string TestText
-        {
-            get => testText;
-            set
-            {
-                testText = value;
-                OnPropertyChanged(nameof(TestText));
-            }
-        }
-
-
-        private string testHighlight = "Apple";
-        public string TestHighlight
-        {
-            get => testHighlight;
-            set
-            {
-                testHighlight = value;
-                OnPropertyChanged(nameof(TestHighlight));
-            }
-        }
-
-
-
-
-
-
 
 
     }
