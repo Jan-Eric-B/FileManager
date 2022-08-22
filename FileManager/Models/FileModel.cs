@@ -92,6 +92,20 @@ namespace FileManager.Models
         }
 
         /// <summary>
+        /// Difference from the MainPath and the file path (subdirectories ): 'System32\'
+        /// </summary>
+        private string subdirectoryPath;
+        public string SubdirectoryPath
+        {
+            get => subdirectoryPath;
+            set
+            {
+                subdirectoryPath = value;
+                OnPropertyChanged(nameof(SubdirectoryPath));
+            }
+        }
+
+        /// <summary>
         /// Size of the file: '3 Mb'
         /// </summary>
         private string fileSize;

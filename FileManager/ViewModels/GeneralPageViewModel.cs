@@ -361,6 +361,7 @@ namespace FileManager.ViewModels
                 file.FileName = fileNameWithoutExtensionNew + file.Extension;
                 file.FilePath = file.DirectoryName + fileNameWithoutExtensionNew + file.Extension;
                 file.FileNameWithSubdirectory = file.FilePath[Container.MainPath.Length..];
+                file.SubdirectoryPath = file.DirectoryName[Container.MainPath.Length..];
             }));
         }
 
@@ -401,7 +402,7 @@ namespace FileManager.ViewModels
 
                         await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(newFilePath));
                     }
-                }    
+                }
             }
         }
 
