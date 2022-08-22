@@ -25,7 +25,7 @@
 
     <VirtualizingStackPanel x:Name="RootPanel" Margin="10,0,10,18" IsVirtualizing="True" VirtualizationMode="Recycling">
         <!-- Move -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
+        <ui:CardExpander x:Name="ceMove" IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceMove_GotFocus" >
             <VirtualizingStackPanel Height="auto">
                 <!-- TextBox Input -->
                 <ui:TextBox x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" HorizontalAlignment="Stretch" Cursor="IBeam"/>
@@ -53,25 +53,25 @@
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Delete -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
+        <ui:CardExpander x:Name="ceDelete" IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceDelete_GotFocus" >
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
                 <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="BtnDeleteItem_Click"/>
                 <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->
-        <ui:CardExpander IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
+        <ui:CardExpander x:Name="ceRename" IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceRename_GotFocus" >
             <VirtualizingStackPanel Height="auto">
                 <!-- Replace -->
                 <VirtualizingStackPanel Orientation="Horizontal">
 
                     <!-- By String -->
-                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}" TextChanged="txtRenameReplaceInputString_TextChanged"/>
+                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Padding="10" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}" TextChanged="txtRenameReplaceInputString_TextChanged" LostFocus="txtRenameReplaceInputString_LostFocus" GotFocus="txtRenameReplaceInputString_GotFocus"/>
 
                     <!-- By Index -->
                     <VirtualizingStackPanel Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByIndex,Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal">
-                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputStartInt}" Min="1" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
-                        <ui:NumberBox Text="{Binding Path=RenameReplaceInputLengthInt}" Width="87.5" Height="32" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="False"/>
+                        <ui:NumberBox x:Name="nbRenameReplaceInputStartInt" Text="{Binding Path=RenameReplaceInputStartInt}" Min="1" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
+                        <ui:NumberBox x:Name="nbRenameReplaceInputLengthInt" Text="{Binding Path=RenameReplaceInputLengthInt}" Min="0" Width="87.5" Height="32" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
                     </VirtualizingStackPanel>
 
                     <!-- Output -->

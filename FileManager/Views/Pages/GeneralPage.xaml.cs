@@ -175,7 +175,6 @@ namespace FileManager.Views.Pages
 
         private void btnTest_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.Container.TestHighlight = "bla";
         }
 
         private void txtRenameReplaceInputString_TextChanged(object sender, TextChangedEventArgs e)
@@ -183,6 +182,69 @@ namespace FileManager.Views.Pages
             foreach (FileModel file in ViewModel.Container.Files)
             {
                 file.HighlightedText = txtRenameReplaceInputString.Text;
+            }
+        }
+
+        private void txtRenameReplaceInputString_LostFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = "";
+            }
+        }
+
+        private void txtRenameReplaceInputString_GotFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = txtRenameReplaceInputString.Text;
+            }
+        }
+
+        private void TextBlock_RemoveHighlight(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = "";
+            }
+        }
+
+
+        // Highlight by Index
+        private void NumberBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = file.FileName.Substring(int.Parse(nbRenameReplaceInputStartInt.Text) - 1, int.Parse(nbRenameReplaceInputLengthInt.Text));
+            }
+        }
+
+        private void CardExpander_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ceMove_GotFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = "";
+            }
+        }
+
+        private void ceDelete_GotFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = "";
+            }
+        }
+
+        private void ceRename_GotFocus(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                file.HighlightedText = "";
             }
         }
     }
