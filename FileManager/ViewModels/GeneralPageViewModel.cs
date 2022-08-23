@@ -156,7 +156,6 @@ namespace FileManager.ViewModels
             }
         }
 
-
         // Output
         private string renameReplaceOutputString = string.Empty;
         public string RenameReplaceOutputString
@@ -169,15 +168,76 @@ namespace FileManager.ViewModels
             }
         }
 
+        #endregion
 
+        #region Swap
+
+        // Input
+        private string renameSwapInputString = " - ";
+        public string RenameSwapInputString
+        {
+            get => renameSwapInputString;
+            set
+            {
+                renameSwapInputString = value;
+                OnPropertyChanged(nameof(RenameSwapInputString));
+            }
+        }
+
+        // Part One
+        private int renameSwapPartOneInt = 1;
+        public int RenameSwapPartOneInt
+        {
+            get => renameSwapPartOneInt;
+            set
+            {
+                renameSwapPartOneInt = value;
+                OnPropertyChanged(nameof(RenameSwapPartOneInt));
+            }
+        }
+
+        // Part Two
+        private int renameSwapPartTwoInt = 2;
+        public int RenameSwapPartTwoInt
+        {
+            get => renameSwapPartTwoInt;
+            set
+            {
+                renameSwapPartTwoInt = value;
+                OnPropertyChanged(nameof(RenameSwapPartTwoInt));
+            }
+        }
 
         #endregion
 
+        #region Insert
 
+        // Input (String)
+        private string renameInsertInputString = string.Empty;
+        public string RenameInsertInputString
+        {
+            get => renameInsertInputString;
+            set
+            {
+                renameInsertInputString = value;
+                OnPropertyChanged(nameof(RenameInsertInputString));
+            }
+        }
 
+        private bool renameInsertCountUp = false;
+        public bool RenameInsertCountUp
+        {
+            get { return renameInsertCountUp; }
+            set
+            {
+                renameInsertCountUp = value;
+                OnPropertyChanged(nameof(RenameInsertCountUp));
+            }
+        }
 
         #endregion
 
+        #endregion
 
         //____________________________________________________________
 
@@ -203,11 +263,44 @@ namespace FileManager.ViewModels
             _dataInitialized = true;
         }
 
+        private string NameCount(string input, int count)
+        {
+            if (input.Contains('0'))
+            {
+                string countString = string.Empty;
+
+                if (input.Contains("00"))
+                {
+                    switch (Container.FileCountSelected)
+                    {
+                        case <= 99:
+                            countString = count.ToString("D" + 2);
+                            break;
+
+                        case >= 100 and <= 999:
+                            countString = count.ToString("D" + 3);
+                            break;
+
+                        case >= 1000 and <= 9999:
+                            countString = count.ToString("D" + 4);
+                            break;
+
+                        case >= 10000 and <= 99999:
+                            countString = count.ToString("D" + 5);
+                            break;
+                    }
+                    return input.Replace("00", countString);
+                }
+                return input.Replace("0", count.ToString());
+            }
+            return input;
+        }
+
         #endregion Main
 
         #region Move
 
-        public void MoveToMainPath()
+        public async void MoveToMainPath()
         {
             foreach (FileModel file in Container.Files)
             {
@@ -216,10 +309,10 @@ namespace FileManager.ViewModels
                     File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
                 }
             }
-            Container.SearchAsync();
+            await Container.SearchAsync();
         }
 
-        public void MoveToSamePath()
+        public async void MoveToSamePath()
         {
             string newdir = Container.MainPath + MoveDirectoryName + Path.DirectorySeparatorChar;
 
@@ -236,10 +329,10 @@ namespace FileManager.ViewModels
                 }
             }
 
-            Container.SearchAsync();
+            await Container.SearchAsync();
         }
 
-        public void MoveToSinglePath()
+        public async void MoveToSinglePath()
         {
             if (MoveDirectoryUseFileName)
             {
@@ -272,7 +365,7 @@ namespace FileManager.ViewModels
                     {
                         count++;
 
-                        string newdir = Container.MainPath + NameCount(count) + Path.DirectorySeparatorChar;
+                        string newdir = Container.MainPath + NameCount(MoveDirectoryName, count) + Path.DirectorySeparatorChar;
 
                         if (!Directory.Exists(newdir))
                         {
@@ -283,47 +376,14 @@ namespace FileManager.ViewModels
                     }
                 }
             }
-            Container.SearchAsync();
-        }
-
-        private string NameCount(int count)
-        {
-            if (MoveDirectoryName.Contains('0'))
-            {
-                string countString = string.Empty;
-
-                if (MoveDirectoryName.Contains("00"))
-                {
-                    switch (Container.FileCountSelected)
-                    {
-                        case <= 99:
-                            countString = count.ToString("D" + 2);
-                            break;
-
-                        case >= 100 and <= 999:
-                            countString = count.ToString("D" + 3);
-                            break;
-
-                        case >= 1000 and <= 9999:
-                            countString = count.ToString("D" + 4);
-                            break;
-
-                        case >= 10000 and <= 99999:
-                            countString = count.ToString("D" + 5);
-                            break;
-                    }
-                    return MoveDirectoryName.Replace("00", countString);
-                }
-                return MoveDirectoryName.Replace("0", count.ToString());
-            }
-            return MoveDirectoryName;
+            await Container.SearchAsync();
         }
 
         #endregion Move
 
         #region Delete
 
-        public void DeleteItem()
+        public async void DeleteItem()
         {
             foreach (FileModel file in Container.Files)
             {
@@ -333,10 +393,10 @@ namespace FileManager.ViewModels
                 }
             }
 
-            Container.SearchAsync();
+            await Container.SearchAsync();
         }
 
-        public void DeleteItemPermanently()
+        public async void DeleteItemPermanently()
         {
             foreach (FileModel file in Container.Files)
             {
@@ -346,7 +406,7 @@ namespace FileManager.ViewModels
                 }
             }
 
-            Container.SearchAsync();
+            await Container.SearchAsync();
         }
 
         #endregion Delete
@@ -364,7 +424,6 @@ namespace FileManager.ViewModels
                 file.SubdirectoryPath = file.DirectoryName[Container.MainPath.Length..];
             }));
         }
-
 
         public async void RenameReplace()
         {
@@ -406,6 +465,103 @@ namespace FileManager.ViewModels
             }
         }
 
+        public async void RenameSwap()
+        {
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked && file.FileNameWithoutExtension.Contains(RenameSwapInputString))
+                {
+                    //Splits into parts
+                    string[] parts = file.FileNameWithoutExtension.Split(new string[] { RenameSwapInputString }, StringSplitOptions.None);
+
+                    // If NumberBox input to high. Not enough parts
+                    if (RenameSwapPartOneInt <= parts.Length && RenameSwapPartTwoInt <= parts.Length && RenameSwapPartOneInt != RenameSwapPartTwoInt)
+                    {
+                        string fileNameWithoutExtensionNew = string.Empty;
+
+                        for (int i = 0; i < parts.Length; i++)
+                        {
+                            if (i == RenameSwapPartOneInt - 1)
+                            {
+                                fileNameWithoutExtensionNew += parts[RenameSwapPartTwoInt - 1] + RenameSwapInputString;
+                            }
+                            else if (i == RenameSwapPartTwoInt - 1)
+                            {
+                                fileNameWithoutExtensionNew += parts[RenameSwapPartOneInt - 1] + RenameSwapInputString;
+                            }
+                            else
+                            {
+                                fileNameWithoutExtensionNew += parts[i] + RenameSwapInputString;
+                            }
+                        }
+                        //Removes last RenameSwapInputString
+                        fileNameWithoutExtensionNew = fileNameWithoutExtensionNew.Remove(fileNameWithoutExtensionNew.Length - RenameSwapInputString.Length);
+
+                        string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                        File.Move(file.FilePath, newFilePath);
+
+                        await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    }
+                }
+            }
+        }
+
+        public async void RenameInsertFront()
+        {
+            int count = 0;
+
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    string RenameInsertInputNew = RenameInsertInputString;
+
+                    if (RenameInsertCountUp)
+                    {
+                        count++;
+                        RenameInsertInputNew = NameCount(RenameInsertInputString, count);
+                    }
+
+                    string fileNameWithoutExtensionNew = RenameInsertInputNew + file.FileNameWithoutExtension;
+
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                    File.Move(file.FilePath, newFilePath);
+
+                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                }
+            }
+        }
+
+        public async void RenameInsertBack()
+        {
+            int count = 0;
+
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    string RenameInsertInputNew = RenameInsertInputString;
+
+                    if (RenameInsertCountUp)
+                    {
+                        count++;
+                        RenameInsertInputNew = NameCount(RenameInsertInputString, count);
+                    }
+
+                    string fileNameWithoutExtensionNew = file.FileNameWithoutExtension + RenameInsertInputNew;
+
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                    File.Move(file.FilePath, newFilePath);
+
+                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                }
+            }
+        }
+
         #endregion
+
     }
 }

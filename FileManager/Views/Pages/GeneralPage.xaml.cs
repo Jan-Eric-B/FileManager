@@ -71,6 +71,12 @@ namespace FileManager.Views.Pages
 
         #endregion
 
+        //Info Button Count up
+        private void CountUpExplanation_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBoxService.MessageBoxOK("Counting-Up description", "If containing a '0' it will be replaced with the counted up number:\r\n(1,2,3,4,...17,18,...)\r\nIf containing a '00' it will be replaced with leading zeros depending on count of selected items:\r\n(01,02,03,04,.../001,002,003,004,...)", 0, 600);
+        }
+
         #endregion Main
 
         #region Move
@@ -127,12 +133,6 @@ namespace FileManager.Views.Pages
             }
         }
 
-        //Info Button
-        private void BtnMoveCountUpExplanation_OnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBoxService.MessageBoxOK("Counting-Up description", "If containing a '0' it will be replaced with the counted up number\r\n(1,2,3,4,...17,18,...)\r\nIf containing a '00' it will be replaced with leading zeros depending on count of selected items\r\n(01,02,03,04,.../001,002,003,004,...)", 0,600);
-        }
-
         #endregion Move
 
         #region Delete
@@ -155,52 +155,9 @@ namespace FileManager.Views.Pages
 
         #endregion Delete
 
-        private void BtnRenameReplace_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.RenameReplace();
-        }
+        #region Rename
 
-        private void BtnRenameReplaceByIndexExplanation_OnClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void TxtRenameReplaceInputString_KeyDown(object sender, KeyEventArgs e)
-        {
-            foreach(FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = txtRenameReplaceInputString.Text;
-            }
-        }
-
-        private void btnTest_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void txtRenameReplaceInputString_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            foreach (FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = txtRenameReplaceInputString.Text;
-            }
-        }
-
-        private void txtRenameReplaceInputString_LostFocus(object sender, RoutedEventArgs e)
-        {
-            foreach (FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = "";
-            }
-        }
-
-        private void txtRenameReplaceInputString_GotFocus(object sender, RoutedEventArgs e)
-        {
-            foreach (FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = txtRenameReplaceInputString.Text;
-            }
-        }
-
+        // Remove Highlight
         private void TextBlock_RemoveHighlight(object sender, RoutedEventArgs e)
         {
             foreach (FileModel file in ViewModel.Container.Files)
@@ -209,43 +166,106 @@ namespace FileManager.Views.Pages
             }
         }
 
+        #region Replace
 
-        // Highlight by Index
+        private void BtnRenameReplace_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RenameReplace();
+        }
+
+        private void BtnRenameReplaceByIndexExplanation_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBoxService.MessageBoxOK("Replace by Index", "First input-field is the start position and the second one is the length.\r\nVisualization can be buggy. If multiple are visible, only the first one will be replaced.", 160, 520);
+        }
+
+        #region Highlight
+
+        // Add Highlight (String)
+        private void TextBlockRenameReplaceInputString_AddHighlight(object sender, RoutedEventArgs e)
+        {
+            foreach (FileModel file in ViewModel.Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    file.HighlightedText = txtRenameReplaceInputString.Text;
+                }
+            }
+        }
+
+        // Add Highlight (Index)
         private void NumberBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             foreach (FileModel file in ViewModel.Container.Files)
             {
-                file.HighlightedText = file.FileName.Substring(int.Parse(nbRenameReplaceInputStartInt.Text) - 1, int.Parse(nbRenameReplaceInputLengthInt.Text));
+                if (file.IsChecked)
+                {
+                    int fileNameLenght = file.FileNameWithoutExtension.Length;
+
+                    int start = int.Parse(nbRenameReplaceInputStartInt.Text) - 1;
+                    int lenght = int.Parse(nbRenameReplaceInputLengthInt.Text);
+
+                    if (start + lenght > fileNameLenght)
+                    {
+                        if (start > fileNameLenght)
+                        {
+                            file.HighlightedText = "";
+                        }
+                        else
+                        {
+                            file.HighlightedText = file.FileName[start..fileNameLenght];
+                        }
+                    }
+                    else
+                    {
+                        file.HighlightedText = file.FileName.Substring(start, lenght);
+                    }
+                }
             }
         }
 
-        private void CardExpander_GotFocus(object sender, RoutedEventArgs e)
-        {
+        #endregion
 
+        #endregion
+
+        #region Swap
+
+        private void BtnRenameSwap_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RenameSwap();
         }
 
-        private void ceMove_GotFocus(object sender, RoutedEventArgs e)
+        #region Highlight
+
+        private void TextBlockRenameSwapInputString_AddHighlight(object sender, RoutedEventArgs e)
         {
             foreach (FileModel file in ViewModel.Container.Files)
             {
-                file.HighlightedText = "";
+                if (file.IsChecked)
+                {
+                    file.HighlightedText = txtRenameSwapInputString.Text;
+                }
             }
         }
 
-        private void ceDelete_GotFocus(object sender, RoutedEventArgs e)
+        #endregion
+
+        #endregion
+
+        #region Insert
+
+        private void BtnRenameInsertFront_Click(object sender, RoutedEventArgs e)
         {
-            foreach (FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = "";
-            }
+            ViewModel.RenameInsertFront();
         }
 
-        private void ceRename_GotFocus(object sender, RoutedEventArgs e)
+        private void BtnRenameInsertBack_Click(object sender, RoutedEventArgs e)
         {
-            foreach (FileModel file in ViewModel.Container.Files)
-            {
-                file.HighlightedText = "";
-            }
+            ViewModel.RenameInsertBack();
         }
+
+        #endregion
+
+        #endregion
+
     }
 }

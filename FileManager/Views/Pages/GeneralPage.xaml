@@ -25,7 +25,7 @@
 
     <VirtualizingStackPanel x:Name="RootPanel" Margin="10,0,10,18" IsVirtualizing="True" VirtualizationMode="Recycling">
         <!-- Move -->
-        <ui:CardExpander x:Name="ceMove" IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceMove_GotFocus" >
+        <ui:CardExpander x:Name="ceMove" IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto">
                 <!-- TextBox Input -->
                 <ui:TextBox x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" HorizontalAlignment="Stretch" Cursor="IBeam"/>
@@ -43,7 +43,7 @@
                                     <RadioButton Content="Name of file" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryUseFileName, Mode=TwoWay}"/>
                                     <VirtualizingStackPanel Orientation="Horizontal">
                                         <RadioButton Content="Count up" GroupName="ToSingleSubdirectory" IsChecked="{Binding Path=MoveDirectoryNameCountUp, Mode=TwoWay}"/>
-                                        <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="BtnMoveCountUpExplanation_OnClick"/>
+                                        <ui:Button x:Name="btnMoveCountUpExplanation" Content="?" Click="CountUpExplanation_OnClick"/>
                                     </VirtualizingStackPanel>
                                 </VirtualizingStackPanel>
                             </ui:MenuItem>
@@ -53,29 +53,29 @@
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Delete -->
-        <ui:CardExpander x:Name="ceDelete" IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceDelete_GotFocus" >
+        <ui:CardExpander x:Name="ceDelete" IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
                 <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="BtnDeleteItem_Click"/>
                 <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->
-        <ui:CardExpander x:Name="ceRename" IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" GotFocus="ceRename_GotFocus" >
+        <ui:CardExpander x:Name="ceRename" IsExpanded="{Binding Path=CardExpanderRename}" Header="Rename" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto">
                 <!-- Replace -->
                 <VirtualizingStackPanel Orientation="Horizontal">
 
                     <!-- By String -->
-                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Padding="10" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}" TextChanged="txtRenameReplaceInputString_TextChanged" LostFocus="txtRenameReplaceInputString_LostFocus" GotFocus="txtRenameReplaceInputString_GotFocus"/>
+                    <ui:TextBox x:Name="txtRenameReplaceInputString" Text="{Binding Path=RenameReplaceInputString}" Width="180" Height="32" Padding="5" Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByString,Converter={StaticResource BooleanToVisibilityConverter}}" TextChanged="TextBlockRenameReplaceInputString_AddHighlight" LostFocus="TextBlock_RemoveHighlight" GotFocus="TextBlockRenameReplaceInputString_AddHighlight"/>
 
                     <!-- By Index -->
                     <VirtualizingStackPanel Visibility="{Binding IsChecked,ElementName=rbRenameReplaceByIndex,Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal">
-                        <ui:NumberBox x:Name="nbRenameReplaceInputStartInt" Text="{Binding Path=RenameReplaceInputStartInt}" Min="1" Width="87.5" Height="32" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
-                        <ui:NumberBox x:Name="nbRenameReplaceInputLengthInt" Text="{Binding Path=RenameReplaceInputLengthInt}" Min="0" Width="87.5" Height="32" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
+                        <ui:NumberBox x:Name="nbRenameReplaceInputStartInt" Text="{Binding Path=RenameReplaceInputStartInt}" Min="1" Width="88" Height="32" Padding="5" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
+                        <ui:NumberBox x:Name="nbRenameReplaceInputLengthInt" Text="{Binding Path=RenameReplaceInputLengthInt}" Min="0" Width="87" Height="32" Padding="5" Margin="0,0,0,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True" TextChanged="NumberBox_TextChanged"/>
                     </VirtualizingStackPanel>
 
                     <!-- Output -->
-                    <ui:TextBox x:Name="txtRenameReplaceOutputString" Text="{Binding Path=RenameReplaceOutputString}" Margin="5,0" Width="180" Height="32"/>
+                    <ui:TextBox x:Name="txtRenameReplaceOutputString" Text="{Binding Path=RenameReplaceOutputString}" Margin="5,0" Width="180" Height="32" Padding="5"/>
 
                     <ui:Button x:Name="btnRenameReplace" Content="Replace" Click="BtnRenameReplace_Click"/>
                     <Menu Grid.Column="2" Margin="-5,0,0,0" Background="Transparent" HorizontalAlignment="Right" Height="45">
@@ -93,24 +93,38 @@
                         </ui:MenuItem>
                     </Menu>
                 </VirtualizingStackPanel>
-                <ui:NavigationSeparator/>
-                <!-- Switch -->
+                <ui:NavigationSeparator Margin="10,0,10,3"/>
+                <!-- Swap -->
                 <VirtualizingStackPanel Orientation="Horizontal">
-
-                    <ui:Button x:Name="btnTest" Click="btnTest_Click">Test</ui:Button>
+                    <ui:TextBox x:Name="txtRenameSwapInputString" Text="{Binding Path=RenameSwapInputString}" Margin="0,0,5,0" Width="180" Height="32" Padding="5" TextChanged="TextBlockRenameSwapInputString_AddHighlight" GotFocus="TextBlockRenameSwapInputString_AddHighlight" LostFocus="TextBlock_RemoveHighlight"/>
+                    <ui:NumberBox x:Name="nbRenameSwapPartOneInt" Text="{Binding Path=RenameSwapPartOneInt}" Min="1" Width="88" Height="32" Padding="5" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True"/>
+                    <ui:NumberBox x:Name="nbRenameSwapPartTwoInt" Text="{Binding Path=RenameSwapPartTwoInt}" Min="1" Width="87" Height="32" Padding="5" Margin="0,0,5,0" DecimalPlaces="0" ClearButtonEnabled="False" SpinButtonsEnabled="True"/>
+                    <ui:Button x:Name="btnRenameSwap" Content="Swap" Click="BtnRenameSwap_Click"/>
                 </VirtualizingStackPanel>
-                <ui:NavigationSeparator/>
-                <!-- Switch -->
+                <ui:NavigationSeparator Margin="10,3,10,0"/>
+                <!-- Insert -->
                 <VirtualizingStackPanel Orientation="Horizontal">
-
-
+                    <ui:TextBox x:Name="txtRenameInsertInputString" Text="{Binding Path=RenameInsertInputString}" Width="180" Height="32" Padding="5"/>
+                    <ui:Button x:Name="btnRenameInsertFront" Margin="5,0" Content="|&lt;" Click="BtnRenameInsertFront_Click" />
+                    <ui:Button x:Name="btnRenameInsertBack" Content="&gt;|" Click="BtnRenameInsertBack_Click" />
+                    <Menu Grid.Column="2" Margin="-5,0,0,0" Background="Transparent" HorizontalAlignment="Right" Height="45">
+                        <ui:MenuItem SymbolIcon="Filter24">
+                            <VirtualizingStackPanel>
+                                <VirtualizingStackPanel Orientation="Horizontal">
+                                    <CheckBox Content="Count up" IsChecked="{Binding Path=RenameInsertCountUp, Mode=TwoWay}"/>
+                                    <ui:Button x:Name="btnRenameInsertCountUpExplanation" Content="?" Click="CountUpExplanation_OnClick"/>
+                                </VirtualizingStackPanel>
+                            </VirtualizingStackPanel>
+                        </ui:MenuItem>
+                    </Menu>
                 </VirtualizingStackPanel>
-                <ui:NavigationSeparator/>
+                <ui:NavigationSeparator Margin="10,0,10,3"/>
                 <!-- Capitalization -->
                 <VirtualizingStackPanel Orientation="Horizontal">
 
 
                 </VirtualizingStackPanel>
+                <ui:NavigationSeparator Margin="10,3"/>
                 <!-- Undo -->
                 <VirtualizingStackPanel Orientation="Horizontal">
 
