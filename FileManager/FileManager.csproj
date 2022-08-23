@@ -6,7 +6,7 @@
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>FileManager.App</StartupObject>
-    <ApplicationIcon>FileManager.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\FileManager.ico</ApplicationIcon>
     <AssemblyName>FileManager</AssemblyName>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <Version>$(Version)</Version>
@@ -21,13 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\FileManager.png" />
     <None Remove="Resources\microsoft-shell-desktop.ico" />
     <None Remove="Resources\microsoft-shell-settings.ico" />
     <None Remove="Resources\FileManager_Full.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="FileManager.ico" />
+    <Content Include="Resources\FileManager.ico" />
   </ItemGroup>
 
 
@@ -35,6 +36,7 @@
     <Resource Include="Resources\microsoft-shell-desktop.ico" />
     <Resource Include="Resources\microsoft-shell-settings.ico" />
     <EmbeddedResource Include="Resources\FileManager.ico" />
+    <Resource Include="Resources\FileManager.png" />
     <Resource Include="Resources\FileManager_Full.png" />
   </ItemGroup>
 
