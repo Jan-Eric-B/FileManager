@@ -256,7 +256,7 @@ namespace FileManager.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 MainPath = dialog.SelectedPath + Path.DirectorySeparatorChar;
-                SearchAsync();
+                await SearchAsync();
             }
         }
 
@@ -271,10 +271,9 @@ namespace FileManager.ViewModels
                 if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
                 {
                     MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
-                    SearchAsync();
+                    await SearchAsync();
                 }
             }
-
         }
 
         #endregion Main
@@ -402,7 +401,6 @@ namespace FileManager.ViewModels
         }
 
         #endregion Search
-
 
     }
 }

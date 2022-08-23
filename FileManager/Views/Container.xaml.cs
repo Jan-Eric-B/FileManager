@@ -204,19 +204,19 @@ public partial class Container : INavigationWindow
     {
         if (e.Key == Key.Return || e.Key == Key.Tab)
         {
-            ViewModel.SearchAsync();
+            await ViewModel.SearchAsync();
         }
     }
 
     private async void CheckBox_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.SearchAsync();
+        await ViewModel.SearchAsync();
     }
 
     #endregion
 
-    // Itemlist
-    #region Itemlist
+    // ItemList
+    #region ItemList
 
     // Items selected count
     private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -340,13 +340,13 @@ public partial class Container : INavigationWindow
         }
     }
 
-    private void ProgressBar_Drop(object sender, System.Windows.DragEventArgs e)
+    private async void ProgressBar_Drop(object sender, System.Windows.DragEventArgs e)
     {
         string[] directories = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
         if (directories.Length == 1)
         {
             ViewModel.MainPath = directories[0] + Path.DirectorySeparatorChar;
-            ViewModel.SearchAsync();
+            await ViewModel.SearchAsync();
         }
     }
 
