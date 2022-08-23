@@ -23,7 +23,6 @@
   <ItemGroup>
     <None Remove="Resources\microsoft-shell-desktop.ico" />
     <None Remove="Resources\microsoft-shell-settings.ico" />
-    <None Remove="Resources\FileManager.png" />
     <None Remove="Resources\FileManager_Full.png" />
   </ItemGroup>
 
@@ -35,8 +34,7 @@
   <ItemGroup>
     <Resource Include="Resources\microsoft-shell-desktop.ico" />
     <Resource Include="Resources\microsoft-shell-settings.ico" />
-    <Resource Include="Resources\FileManager.ico" />
-    <Resource Include="Resources\FileManager.png" />
+    <EmbeddedResource Include="Resources\FileManager.ico" />
     <Resource Include="Resources\FileManager_Full.png" />
   </ItemGroup>
 
