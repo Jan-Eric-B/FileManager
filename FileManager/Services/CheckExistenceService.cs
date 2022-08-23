@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace FileManager.Services
 {
@@ -49,6 +50,24 @@ namespace FileManager.Services
                 newFullPath = Path.Combine(directoryName, tempFileName + extension);
             }
             return newFullPath;
+        }
+
+        /// <summary>
+        /// TEMP
+        /// Checks if file exists (Case Sensitive)
+        /// </summary>
+        public static bool FileExistsCaseSensitive(string filename)
+        {
+            string name = Path.GetDirectoryName(filename);
+
+            if (name != null && Array.Exists(Directory.GetFiles(name), s => s == Path.GetFullPath(filename)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
