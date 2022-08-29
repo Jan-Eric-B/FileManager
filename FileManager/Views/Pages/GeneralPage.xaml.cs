@@ -265,7 +265,32 @@ namespace FileManager.Views.Pages
 
         #endregion
 
+        #region Capitalzation
+
+        private async void BtnRenameCapitalize_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.ToCapitalization();
+        }
+
+        private async void BtnRenameLowerCase_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.ToLowerCase();
+        }
+
+        private async void BtnRenameUpperCase_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.ToUpperCase();
+        }
+
+        private async void BtnRenameCapitalizationUndo(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.CapitalizationUndo();
+        }
+
         #endregion
+
+        #endregion
+
 
     }
 }
