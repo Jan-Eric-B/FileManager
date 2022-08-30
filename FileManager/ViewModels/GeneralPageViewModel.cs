@@ -7,10 +7,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Windows.Media.Playlists;
 using Wpf.Ui.Common.Interfaces;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace FileManager.ViewModels
 {
@@ -243,7 +247,7 @@ namespace FileManager.ViewModels
 
         #region Capitalization
 
-        private bool renameCapitalizationUndo = true;
+        private bool renameCapitalizationUndo = false;
         public bool RenameCapitalizationUndo
         {
             get { return renameCapitalizationUndo; }
@@ -615,7 +619,7 @@ namespace FileManager.ViewModels
                 }
             }
             CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files});
-            RenameCapitalizationUndo = false;
+            RenameCapitalizationUndo = true;
         }
 
         public async Task ToUpperCase()
@@ -635,7 +639,7 @@ namespace FileManager.ViewModels
                 }
             }
             CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files});
-            RenameCapitalizationUndo = false;
+            RenameCapitalizationUndo = true;
         }
         public async Task ToLowerCase()
         {
@@ -653,13 +657,28 @@ namespace FileManager.ViewModels
                 }
             }
             CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files });
-            RenameCapitalizationUndo = false;
+            RenameCapitalizationUndo = true;
         }
 
         public async Task CapitalizationUndo()
         {
+            CapitalizationChangesList lastChange = CapitalizationChangesLists.Last();
+
+            foreach (FileModel value in lastChange.New)
+            {
+                int index = lastChange.New.IndexOf(value);
+
+                File.Move(value.FilePath, lastChange.Old[index].FilePath);
+                await UpdateFileAsync(Container.Files[index], lastChange.Old[index].FileNameWithoutExtension);
+            }
 
 
+            //foreach(FileModel file in Container.Files)
+            //{
+            //    int index = Container.Files.IndexOf(file);
+
+            //    File.Move(file.FilePath, lastChange.Old[index].FilePath);
+            //}
 
         }
 
