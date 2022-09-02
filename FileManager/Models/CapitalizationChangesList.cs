@@ -9,9 +9,9 @@ namespace FileManager.Models
 {
     public class CapitalizationChangesList
     {
-        public ObservableCollection<FileModel> Old;
+        public List<FileModel> Old;
 
-        public ObservableCollection<FileModel> New;
+        public List<FileModel> New;
 
     }
 }

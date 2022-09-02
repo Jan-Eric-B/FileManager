@@ -605,7 +605,7 @@ namespace FileManager.ViewModels
 
         public async Task ToCapitalization()
         {
-            ObservableCollection<FileModel> backUpValues = Container.Files;
+            List<FileModel> backUpValues = Container.Files.ToList();
 
             foreach (FileModel file in Container.Files)
             {
@@ -615,17 +615,27 @@ namespace FileManager.ViewModels
 
                     File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
                 }
             }
-            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files});
+            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList()});
             RenameCapitalizationUndo = true;
         }
 
         public async Task ToUpperCase()
         {
-            ObservableCollection<FileModel> backUpValues = Container.Files;
 
+            List<FileModel> backUpValues = new List<FileModel>(Container.Files);
+
+            ToUpperTest();
+            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+
+            CapitalizationChangesLists.Add(test);
+            RenameCapitalizationUndo = true;
+        }
+
+        private async Task ToUpperTest()
+        {
             foreach (FileModel file in Container.Files)
             {
                 if (file.IsChecked)
@@ -637,26 +647,30 @@ namespace FileManager.ViewModels
                     await UpdateFileAsync(file, fileNameWithoutExtensionNew);
                     RenameCapitalizationUndo = false;
                 }
-            }
-            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files});
-            RenameCapitalizationUndo = true;
+            } 
         }
+
         public async Task ToLowerCase()
         {
-            ObservableCollection<FileModel> backUpValues = Container.Files;
+            List<FileModel> backUpValues = new List<FileModel>();
 
             foreach (FileModel file in Container.Files)
             {
+                backUpValues.Add(file);
+
+
                 if (file.IsChecked)
                 {
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToLower();
 
                     File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
                 }
             }
-            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files });
+            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+
+            CapitalizationChangesLists.Add(test);
             RenameCapitalizationUndo = true;
         }
 
