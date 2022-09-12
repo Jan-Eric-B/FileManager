@@ -172,7 +172,7 @@
                                                         <CheckBox Checked="CheckBox_Checked" IsChecked="{Binding IsChecked, Mode=TwoWay}" Unchecked="CheckBox_Unchecked" Margin="3" MouseEnter="Checkbox_OnMouseEnter" GotMouseCapture="Checkbox_OnGotMouseCapture"/>
                                                         <VirtualizingStackPanel Orientation="Horizontal" Margin="-90,0,0,0" >
                                                             <TextBlock Text="{Binding SubdirectoryPath}" FontStyle="Italic"  FontSize="12" Margin="0,2,0,0" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
-                                                            <TextBlock services:HighlightTermBehavior.Text="{Binding FileName}" services:HighlightTermBehavior.TermToBeHighlighted="{Binding HighlightedText}" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
+                                                            <services:SelectableTextBlock services:HighlightTermBehavior.Text="{Binding FileName}" services:HighlightTermBehavior.TermToBeHighlighted="{Binding HighlightedText}" VerticalAlignment="Center" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" />
                                                         </VirtualizingStackPanel>
                                                     </VirtualizingStackPanel>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" >
