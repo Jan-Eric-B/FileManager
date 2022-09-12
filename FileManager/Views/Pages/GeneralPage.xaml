@@ -121,8 +121,10 @@
                 <ui:NavigationSeparator Margin="10,0,10,3"/>
                 <!-- Capitalization -->
                 <VirtualizingStackPanel Orientation="Horizontal">
-
-
+                    <ui:Button x:Name="btnRenameCapitalize" Content="Capitalize" Click="BtnRenameCapitalize_Click" />
+                    <ui:Button x:Name="btnRenameLowerCase" Content="LowerCase" Click="BtnRenameLowerCase_Click" Margin="5,0" />
+                    <ui:Button x:Name="btnRenameUpperCase" Content="UpperCase" Click="BtnRenameUpperCase_Click" Margin="0,0,5,0" />
+                    <ui:Button x:Name="btnRenameCapitalizationUndo" IsEnabled="{Binding Path=RenameCapitalizationUndo}" Content="Undo" Click="BtnRenameCapitalizationUndo" />
                 </VirtualizingStackPanel>
                 <ui:NavigationSeparator Margin="10,3"/>
                 <!-- Undo -->

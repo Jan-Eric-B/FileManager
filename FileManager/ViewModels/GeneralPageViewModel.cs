@@ -3,11 +3,18 @@ using FileManager.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic.FileIO;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Windows.Media.Playlists;
 using Wpf.Ui.Common.Interfaces;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace FileManager.ViewModels
 {
@@ -238,6 +245,25 @@ namespace FileManager.ViewModels
 
         #endregion
 
+
+        #region Capitalization
+
+        private bool renameCapitalizationUndo = false;
+        public bool RenameCapitalizationUndo
+        {
+            get { return renameCapitalizationUndo; }
+            set
+            {
+                renameCapitalizationUndo = value;
+                OnPropertyChanged(nameof(RenameCapitalizationUndo));
+
+            }
+        }
+
+
+
+        #endregion
+
         #endregion
 
         //____________________________________________________________
@@ -426,6 +452,8 @@ namespace FileManager.ViewModels
             }));
         }
 
+        #region Replace
+
         public async void RenameReplace()
         {
             foreach (FileModel file in Container.Files)
@@ -465,6 +493,10 @@ namespace FileManager.ViewModels
                 }
             }
         }
+
+        #endregion
+
+        #region Swap
 
         public async void RenameSwap()
         {
@@ -507,6 +539,10 @@ namespace FileManager.ViewModels
                 }
             }
         }
+
+        #endregion
+
+        #region Insert
 
         public async void RenameInsertFront()
         {
@@ -563,6 +599,109 @@ namespace FileManager.ViewModels
         }
 
         #endregion
+
+        #region Capitalization
+
+        List<CapitalizationChangesList> CapitalizationChangesLists = new List<CapitalizationChangesList>();
+
+        public async Task ToCapitalization()
+        {
+            List<FileModel> backUpValues = Container.Files.ToList();
+
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    string fileNameWithoutExtensionNew = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(file.FileNameWithoutExtension.ToLower());
+
+                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                }
+            }
+            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList()});
+            RenameCapitalizationUndo = true;
+        }
+
+        public async Task ToUpperCase()
+        {
+
+            List<FileModel> backUpValues = new List<FileModel>(Container.Files);
+
+            ToUpperTest();
+            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+
+            CapitalizationChangesLists.Add(test);
+            RenameCapitalizationUndo = true;
+        }
+
+        private async Task ToUpperTest()
+        {
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToUpper();
+
+                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    RenameCapitalizationUndo = false;
+                }
+            } 
+        }
+
+        public async Task ToLowerCase()
+        {
+            List<FileModel> backUpValues = new List<FileModel>();
+
+            foreach (FileModel file in Container.Files)
+            {
+                backUpValues.Add(file);
+
+
+                if (file.IsChecked)
+                {
+                    string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToLower();
+
+                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                }
+            }
+            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+
+            CapitalizationChangesLists.Add(test);
+            RenameCapitalizationUndo = true;
+        }
+
+        public async Task CapitalizationUndo()
+        {
+            CapitalizationChangesList lastChange = CapitalizationChangesLists.Last();
+
+            foreach (FileModel value in lastChange.New)
+            {
+                int index = lastChange.New.IndexOf(value);
+
+                File.Move(value.FilePath, lastChange.Old[index].FilePath);
+                await UpdateFileAsync(Container.Files[index], lastChange.Old[index].FileNameWithoutExtension);
+            }
+
+
+            //foreach(FileModel file in Container.Files)
+            //{
+            //    int index = Container.Files.IndexOf(file);
+
+            //    File.Move(file.FilePath, lastChange.Old[index].FilePath);
+            //}
+
+        }
+
+        #endregion
+
+
+        #endregion
+
 
     }
 }

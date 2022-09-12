@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Threading;
 
 namespace FileManager.Models
 {
@@ -143,7 +144,6 @@ namespace FileManager.Models
                 OnPropertyChanged(nameof(HighlightedText));
             }
         }
-
 
     }
 }
