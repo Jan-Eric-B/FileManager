@@ -99,6 +99,7 @@ namespace FileManager.ViewModels
 
         #region Replace
 
+
         private bool renameReplaceByString = true;
         public bool RenameReplaceByString
         {
