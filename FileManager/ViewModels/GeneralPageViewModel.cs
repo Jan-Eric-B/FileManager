@@ -333,7 +333,7 @@ namespace FileManager.ViewModels
             {
                 if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
                 {
-                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(Container.MainPath + file.FileName));
+                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, Container.MainPath + file.FileName));
                 }
             }
             await Container.SearchAsync();
@@ -352,7 +352,7 @@ namespace FileManager.ViewModels
             {
                 if (file.IsChecked)
                 {
-                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
                 }
             }
 
@@ -378,7 +378,7 @@ namespace FileManager.ViewModels
                         //    newdir = CheckExistenceService.RenameIfExists(newdir);
                         //}
 
-                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
                     }
                 }
             }
@@ -399,7 +399,7 @@ namespace FileManager.ViewModels
                             Directory.CreateDirectory(newdir);
                         }
 
-                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(newdir + file.FileName));
+                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
                     }
                 }
             }
@@ -484,7 +484,7 @@ namespace FileManager.ViewModels
 
                     if (!string.IsNullOrWhiteSpace(fileNameWithoutExtensionNew))
                     {
-                        string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                        string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
                         File.Move(file.FilePath, newFilePath);
 
@@ -530,7 +530,7 @@ namespace FileManager.ViewModels
                         //Removes last RenameSwapInputString
                         fileNameWithoutExtensionNew = fileNameWithoutExtensionNew.Remove(fileNameWithoutExtensionNew.Length - RenameSwapInputString.Length);
 
-                        string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                        string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
                         File.Move(file.FilePath, newFilePath);
 
@@ -562,7 +562,7 @@ namespace FileManager.ViewModels
 
                     string fileNameWithoutExtensionNew = RenameInsertInputNew + file.FileNameWithoutExtension;
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
                     File.Move(file.FilePath, newFilePath);
 
@@ -589,7 +589,7 @@ namespace FileManager.ViewModels
 
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension + RenameInsertInputNew;
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
                     File.Move(file.FilePath, newFilePath);
 
@@ -602,11 +602,11 @@ namespace FileManager.ViewModels
 
         #region Capitalization
 
-        List<CapitalizationChangesList> CapitalizationChangesLists = new List<CapitalizationChangesList>();
+        //List<CapitalizationChangesList> CapitalizationChangesLists = new List<CapitalizationChangesList>();
 
         public async Task ToCapitalization()
         {
-            List<FileModel> backUpValues = Container.Files.ToList();
+           // List<FileModel> backUpValues = Container.Files.ToList();
 
             foreach (FileModel file in Container.Files)
             {
@@ -614,28 +614,20 @@ namespace FileManager.ViewModels
                 {
                     string fileNameWithoutExtensionNew = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(file.FileNameWithoutExtension.ToLower());
 
-                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    File.Move(file.FilePath, newFilePath);
+
+                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
                 }
             }
-            CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList()});
-            RenameCapitalizationUndo = true;
+            //CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList()});
+            //RenameCapitalizationUndo = true;
         }
+
+
 
         public async Task ToUpperCase()
-        {
-
-            List<FileModel> backUpValues = new List<FileModel>(Container.Files);
-
-            ToUpperTest();
-            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
-
-            CapitalizationChangesLists.Add(test);
-            RenameCapitalizationUndo = true;
-        }
-
-        private async Task ToUpperTest()
         {
             foreach (FileModel file in Container.Files)
             {
@@ -643,58 +635,65 @@ namespace FileManager.ViewModels
                 {
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToUpper();
 
-                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+
+                    File.Move(file.FilePath, newFilePath);
 
                     await UpdateFileAsync(file, fileNameWithoutExtensionNew);
-                    RenameCapitalizationUndo = false;
+                    //RenameCapitalizationUndo = false;
                 }
-            } 
+            }
         }
 
         public async Task ToLowerCase()
         {
-            List<FileModel> backUpValues = new List<FileModel>();
+            //List<FileModel> backUpValues = new List<FileModel>();
 
             foreach (FileModel file in Container.Files)
             {
-                backUpValues.Add(file);
+               // backUpValues.Add(file);
 
 
                 if (file.IsChecked)
                 {
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToLower();
 
-                    File.Move(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                     UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    File.Move(file.FilePath, newFilePath);
+
+                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
                 }
             }
-            CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+            //CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
 
-            CapitalizationChangesLists.Add(test);
-            RenameCapitalizationUndo = true;
+            //CapitalizationChangesLists.Add(test);
+            //RenameCapitalizationUndo = true;
         }
+
+        //public async Task ToUpperCase()
+        //{
+
+        //    List<FileModel> backUpValues = new List<FileModel>(Container.Files);
+
+        //    ToUpperTest();
+        //    CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
+
+        //    CapitalizationChangesLists.Add(test);
+        //    RenameCapitalizationUndo = true;
+        //}
 
         public async Task CapitalizationUndo()
         {
-            CapitalizationChangesList lastChange = CapitalizationChangesLists.Last();
+            //CapitalizationChangesList lastChange = CapitalizationChangesLists.Last();
 
-            foreach (FileModel value in lastChange.New)
-            {
-                int index = lastChange.New.IndexOf(value);
-
-                File.Move(value.FilePath, lastChange.Old[index].FilePath);
-                await UpdateFileAsync(Container.Files[index], lastChange.Old[index].FileNameWithoutExtension);
-            }
-
-
-            //foreach(FileModel file in Container.Files)
+            //foreach (FileModel value in lastChange.New)
             //{
-            //    int index = Container.Files.IndexOf(file);
+            //    int index = lastChange.New.IndexOf(value);
 
-            //    File.Move(file.FilePath, lastChange.Old[index].FilePath);
+            //    File.Move(value.FilePath, lastChange.Old[index].FilePath);
+            //    await UpdateFileAsync(Container.Files[index], lastChange.Old[index].FileNameWithoutExtension);
             //}
-
         }
 
         #endregion

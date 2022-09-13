@@ -35,19 +35,22 @@ namespace FileManager.Services
         /// <summary>
         /// Checks like Windows if file exists and renames it if necessary.
         /// </summary>
-        public static string RenameIfExists(string file)
+        public static string RenameIfExists(string oldFile, string newFile)
         {
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
-            string extension = Path.GetExtension(file);
-            string directoryName = Path.GetDirectoryName(file);
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(newFile);
+            string extension = Path.GetExtension(newFile);
+            string directoryName = Path.GetDirectoryName(newFile);
 
-            string newFullPath = file;
+            string newFullPath = newFile;
 
-            int count = 1;
-            while (Check(newFullPath))
+            if(!string.Equals(oldFile, newFile, StringComparison.OrdinalIgnoreCase))
             {
-                string tempFileName = string.Format("{0}({1})", fileNameWithoutExtension, count++);
-                newFullPath = Path.Combine(directoryName, tempFileName + extension);
+                int count = 1;
+                while (Check(newFullPath))
+                {
+                    string tempFileName = string.Format("{0}({1})", fileNameWithoutExtension, count++);
+                    newFullPath = Path.Combine(directoryName, tempFileName + extension);
+                }
             }
             return newFullPath;
         }
