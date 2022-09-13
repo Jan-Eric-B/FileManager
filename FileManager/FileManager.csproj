@@ -14,6 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExiftoolWrapper" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
@@ -21,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="exiftool%28-k%29.exe" />
     <None Remove="Resources\FileManager.png" />
     <None Remove="Resources\microsoft-shell-desktop.ico" />
     <None Remove="Resources\microsoft-shell-settings.ico" />
@@ -35,6 +38,9 @@
   <ItemGroup>
     <Resource Include="Resources\microsoft-shell-desktop.ico" />
     <Resource Include="Resources\microsoft-shell-settings.ico" />
+    <EmbeddedResource Include="exiftool(-k).exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\FileManager.ico" />
     <Resource Include="Resources\FileManager.png" />
     <Resource Include="Resources\FileManager_Full.png" />
@@ -56,12 +62,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ThemeSettings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Pages\VideoPage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Pages\ImagePage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -77,20 +77,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>ThemeSettings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\Pages\VideoPage.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Pages\ImagePage.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Pages\SettingsPageControls.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
   </ItemGroup>
 
   <ItemGroup>

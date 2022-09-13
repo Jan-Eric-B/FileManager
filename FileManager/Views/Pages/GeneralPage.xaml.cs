@@ -153,6 +153,14 @@ namespace FileManager.Views.Pages
             }
         }
 
+        private async void BtnDeleteItemMetaData_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete the MetaData for these files?", 150, 0) == true)
+            {
+                ViewModel.DeleteItemMetaData();
+            }
+        }
+
         #endregion Delete
 
         #region Rename
@@ -286,6 +294,7 @@ namespace FileManager.Views.Pages
         {
             await ViewModel.CapitalizationUndo();
         }
+
 
         #endregion
 

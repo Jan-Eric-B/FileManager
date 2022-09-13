@@ -57,6 +57,7 @@
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
                 <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="BtnDeleteItem_Click"/>
                 <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
+                <ui:Button x:Name="btnDeleteItemMetaData" Content="Delete MetaData" Margin="5,0" Click="BtnDeleteItemMetaData_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->

@@ -1,5 +1,8 @@
-﻿using FileManager.Models;
+﻿using Brain2CPU.ExifTool;
+using FileManager.Models;
+using FileManager.Resources;
 using FileManager.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic.FileIO;
 using System;
@@ -12,8 +15,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Windows.Media.Playlists;
+using Windows.Storage;
+using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Mvvm.Services;
 using static System.Net.WebRequestMethods;
+using Dispatcher = Microsoft.AspNetCore.Components.Dispatcher;
 using File = System.IO.File;
 
 namespace FileManager.ViewModels
@@ -248,7 +256,7 @@ namespace FileManager.ViewModels
 
         #region Capitalization
 
-        private bool renameCapitalizationUndo = false;
+        private bool renameCapitalizationUndo = true;
         public bool RenameCapitalizationUndo
         {
             get { return renameCapitalizationUndo; }
@@ -270,9 +278,10 @@ namespace FileManager.ViewModels
 
         #region Main
 
-        public GeneralPageViewModel(ContainerViewModel container)
+        public GeneralPageViewModel(ContainerViewModel container, ISnackbarService snackbarService)
         {
             Container = container;
+            _snackbarService = snackbarService;
         }
 
         public static void OnNavigatedFrom()
@@ -434,6 +443,33 @@ namespace FileManager.ViewModels
             }
 
             await Container.SearchAsync();
+        }
+
+        private ExifToolWrapper _exif;
+
+
+        private readonly ISnackbarService _snackbarService;
+
+
+        public async Task DeleteItemMetaData()
+        {
+            await _snackbarService.ShowAsync("Removing MetaData", "Please wait", SymbolRegular.Clock24);
+
+
+            _exif = new ExifToolWrapper();
+            _exif.Start();
+           
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked && CheckExistenceService.Check(file.FilePath) && ExifToolSupportedFiles.Writeable.Keys.ToList().Contains(file.Extension.Replace(".", "").ToUpper()))
+                {
+                    ExifToolResponse r = _exif.ClearExif(file.FilePath);
+                }
+            }
+            _exif.Dispose();
+            //await Container.SearchAsync();
+            await _snackbarService.HideAsync();
+            MessageBoxService.MessageBoxOK("Removing MetaData", "Done", 150, 0);
         }
 
         #endregion Delete
@@ -694,6 +730,9 @@ namespace FileManager.ViewModels
             //    File.Move(value.FilePath, lastChange.Old[index].FilePath);
             //    await UpdateFileAsync(Container.Files[index], lastChange.Old[index].FileNameWithoutExtension);
             //}
+
+
+
         }
 
         #endregion
