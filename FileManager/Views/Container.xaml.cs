@@ -80,7 +80,7 @@ public partial class Container : INavigationWindow
         {
             string newMainPath = args[0] + Path.DirectorySeparatorChar;
 
-            if (CheckExistenceService.IsDirectory(newMainPath))
+            if (EditFileSevice.IsDirectory(newMainPath))
             {
                 ViewModel.MainPath = newMainPath;
             }
@@ -167,7 +167,7 @@ public partial class Container : INavigationWindow
     {
         SearchFilters settings = new();
 
-        if (CheckExistenceService.Check(settings.MainPath))
+        if (EditFileSevice.Check(settings.MainPath))
         {
             ViewModel.MainPath = settings.MainPath;
         }
@@ -321,7 +321,7 @@ public partial class Container : INavigationWindow
 
             foreach (string filename in items)
             {
-                if (!CheckExistenceService.IsDirectory(filename))
+                if (!EditFileSevice.IsDirectory(filename))
                 {
                     dropEnabled = false;
                     break;

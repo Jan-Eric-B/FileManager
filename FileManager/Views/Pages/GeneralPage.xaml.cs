@@ -2,6 +2,7 @@
 using FileManager.Resources.Settings;
 using FileManager.Services;
 using FileManager.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,6 +34,7 @@ namespace FileManager.Views.Pages
             get;
         }
 
+
         private void CardExpander_SaveSettings(object sender, RoutedEventArgs e)
         {
             SettingsSave();
@@ -58,7 +60,7 @@ namespace FileManager.Views.Pages
             ViewModel.CardExpanderRename = settings.CardExpanderRename;
         }
 
-        private void SettingsSave()
+        public void SettingsSave()
         {
             GeneralPageSettings settings = new()
             {

@@ -240,7 +240,7 @@ namespace FileManager.ViewModels
         {
             VistaFolderBrowserDialog dialog = new();
 
-            if (CheckExistenceService.Check(MainPath))
+            if (EditFileSevice.Check(MainPath))
             {
                 dialog.SelectedPath = MainPath;
             }
@@ -268,7 +268,7 @@ namespace FileManager.ViewModels
             {
                 DirectoryInfo directoryInfoMainPathParent = directoryInfoMainPath.Parent;
 
-                if (CheckExistenceService.Check(directoryInfoMainPathParent.FullName))
+                if (EditFileSevice.Check(directoryInfoMainPathParent.FullName))
                 {
                     MainPath = directoryInfoMainPathParent.FullName + Path.DirectorySeparatorChar;
                     await SearchAsync();
@@ -316,7 +316,7 @@ namespace FileManager.ViewModels
         {
             SearchOption searchOption = SearchOptionsSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-            if (CheckExistenceService.Check(MainPath))
+            if (EditFileSevice.Check(MainPath))
             {
                 foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
                 {

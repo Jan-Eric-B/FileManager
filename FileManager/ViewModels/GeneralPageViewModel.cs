@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms.Design;
 using System.Windows.Threading;
 using Windows.Media.Playlists;
 using Windows.Storage;
@@ -342,7 +343,12 @@ namespace FileManager.ViewModels
             {
                 if (file.IsChecked && file.FileNameWithSubdirectory.Length != file.FilePath.Length)
                 {
-                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, Container.MainPath + file.FileName));
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, Container.MainPath + file.FileName);
+
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
             await Container.SearchAsync();
@@ -352,7 +358,7 @@ namespace FileManager.ViewModels
         {
             string newdir = Container.MainPath + MoveDirectoryName + Path.DirectorySeparatorChar;
 
-            if (!Directory.Exists(newdir))
+            if (!EditFileSevice.IsDirectory(newdir))
             {
                 Directory.CreateDirectory(newdir);
             }
@@ -361,7 +367,12 @@ namespace FileManager.ViewModels
             {
                 if (file.IsChecked)
                 {
-                    File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, newdir + file.FileName);
+
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
 
@@ -378,7 +389,7 @@ namespace FileManager.ViewModels
                     {
                         string newdir = Container.MainPath + file.FileNameWithoutExtension + Path.DirectorySeparatorChar;
 
-                        if (!Directory.Exists(newdir))
+                        if (!EditFileSevice.IsDirectory(newdir))
                         {
                             Directory.CreateDirectory(newdir);
                         }
@@ -387,7 +398,12 @@ namespace FileManager.ViewModels
                         //    newdir = CheckExistenceService.RenameIfExists(newdir);
                         //}
 
-                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
+                        (bool, string) result = EditFileSevice.FileMove(file.FilePath, newdir + file.FileName);
+
+                        if (result.Item1)
+                        {
+                            await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                        }
                     }
                 }
             }
@@ -403,12 +419,12 @@ namespace FileManager.ViewModels
 
                         string newdir = Container.MainPath + NameCount(MoveDirectoryName, count) + Path.DirectorySeparatorChar;
 
-                        if (!Directory.Exists(newdir))
+                        if (!EditFileSevice.IsDirectory(newdir))
                         {
                             Directory.CreateDirectory(newdir);
                         }
 
-                        File.Move(file.FilePath, CheckExistenceService.RenameIfExists(file.FilePath, newdir + file.FileName));
+                        EditFileSevice.FileMove(file.FilePath, newdir + file.FileName);
                     }
                 }
             }
@@ -423,9 +439,9 @@ namespace FileManager.ViewModels
         {
             foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
+                if (file.IsChecked)
                 {
-                    FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    EditFileSevice.FileDelete(file.FilePath);
                 }
             }
 
@@ -436,9 +452,9 @@ namespace FileManager.ViewModels
         {
             foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
+                if (file.IsChecked)
                 {
-                    FileSystem.DeleteFile(file.FilePath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently);
+                    EditFileSevice.FileDeletePermanent(file.FilePath);
                 }
             }
 
@@ -461,7 +477,7 @@ namespace FileManager.ViewModels
            
             foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked && CheckExistenceService.Check(file.FilePath) && ExifToolSupportedFiles.Writeable.Keys.ToList().Contains(file.Extension.Replace(".", "").ToUpper()))
+                if (file.IsChecked && EditFileSevice.Check(file.FilePath) && ExifToolSupportedFiles.Writeable.Keys.ToList().Contains(file.Extension.Replace(".", "").ToUpper()))
                 {
                     ExifToolResponse r = _exif.ClearExif(file.FilePath);
                 }
@@ -494,7 +510,7 @@ namespace FileManager.ViewModels
         {
             foreach (FileModel file in Container.Files)
             {
-                if (file.IsChecked && CheckExistenceService.Check(file.FilePath))
+                if (file.IsChecked && EditFileSevice.Check(file.FilePath))
                 {
                     string fileNameWithoutExtensionNew = string.Empty;
 
@@ -520,11 +536,12 @@ namespace FileManager.ViewModels
 
                     if (!string.IsNullOrWhiteSpace(fileNameWithoutExtensionNew))
                     {
-                        string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                        (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                        File.Move(file.FilePath, newFilePath);
-
-                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(newFilePath));
+                        if (result.Item1)
+                        {
+                            await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                        }
                     }
                 }
             }
@@ -566,11 +583,12 @@ namespace FileManager.ViewModels
                         //Removes last RenameSwapInputString
                         fileNameWithoutExtensionNew = fileNameWithoutExtensionNew.Remove(fileNameWithoutExtensionNew.Length - RenameSwapInputString.Length);
 
-                        string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                        (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                        File.Move(file.FilePath, newFilePath);
-
-                        await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                        if (result.Item1)
+                        {
+                            await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                        }
                     }
                 }
             }
@@ -598,11 +616,12 @@ namespace FileManager.ViewModels
 
                     string fileNameWithoutExtensionNew = RenameInsertInputNew + file.FileNameWithoutExtension;
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    File.Move(file.FilePath, newFilePath);
-
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
         }
@@ -625,11 +644,12 @@ namespace FileManager.ViewModels
 
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension + RenameInsertInputNew;
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    File.Move(file.FilePath, newFilePath);
-
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
         }
@@ -650,11 +670,12 @@ namespace FileManager.ViewModels
                 {
                     string fileNameWithoutExtensionNew = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(file.FileNameWithoutExtension.ToLower());
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    File.Move(file.FilePath, newFilePath);
-
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
             //CapitalizationChangesLists.Add(new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList()});
@@ -671,12 +692,12 @@ namespace FileManager.ViewModels
                 {
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToUpper();
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    File.Move(file.FilePath, newFilePath);
-
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
-                    //RenameCapitalizationUndo = false;
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
         }
@@ -694,11 +715,12 @@ namespace FileManager.ViewModels
                 {
                     string fileNameWithoutExtensionNew = file.FileNameWithoutExtension.ToLower();
 
-                    string newFilePath = CheckExistenceService.RenameIfExists(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + fileNameWithoutExtensionNew + file.Extension);
 
-                    File.Move(file.FilePath, newFilePath);
-
-                    await UpdateFileAsync(file, fileNameWithoutExtensionNew);
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
                 }
             }
             //CapitalizationChangesList test = new CapitalizationChangesList { Old = backUpValues, New = Container.Files.ToList() };
@@ -739,7 +761,6 @@ namespace FileManager.ViewModels
 
 
         #endregion
-
 
     }
 }
