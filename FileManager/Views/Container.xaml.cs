@@ -98,7 +98,7 @@ public partial class Container : INavigationWindow
 
         // Click to copy Path to Clipboard and Doubleclick on Item, tries to open it
         SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
-        DoubleClickAction = () => StartProcessService.Start(ToOpenFile, true);
+        DoubleClickAction = () => StartProcessService.Start(ToOpenFile, true, false);
     }
     public ContainerViewModel ViewModel
     {

@@ -682,8 +682,6 @@ namespace FileManager.ViewModels
             //RenameCapitalizationUndo = true;
         }
 
-
-
         public async Task ToUpperCase()
         {
             foreach (FileModel file in Container.Files)

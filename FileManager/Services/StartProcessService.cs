@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 
 namespace FileManager.Services
 {
@@ -13,14 +14,21 @@ namespace FileManager.Services
         /// Starts process
         /// </summary>
         /// <param name="useShellExecute"> if true, then the Process class will use the ShellExecute function, otherwise it will use CreateProcess</param>
-        public static bool Start(string path, bool useShellExecute)
+        public static bool Start(string path, bool useShellExecute, bool asAdministrator)
         {
             try
             {
-                Process process = new()
+                Process process = new();
+
+                if (asAdministrator)
                 {
-                    StartInfo = new ProcessStartInfo(path) { UseShellExecute = useShellExecute },
-                };
+                    process.StartInfo = new ProcessStartInfo(path) { UseShellExecute = useShellExecute, Verb = "runas" };
+                }
+                else
+                {
+                    process.StartInfo = new ProcessStartInfo(path) { UseShellExecute = useShellExecute };
+                }
+                
                 process.Start();
                 return true;
             }
