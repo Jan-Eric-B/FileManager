@@ -72,6 +72,8 @@ public partial class Container : INavigationWindow
 
         ItemsControl.ItemsSource = ViewModel.Files;
 
+        cmbFileExtensions.ItemsSource = ViewModel.FileExtensions;
+
         SettingsLoad();
 
         string[] args = App.Args;

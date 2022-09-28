@@ -106,6 +106,8 @@ namespace FileManager.ViewModels
 
         public ObservableCollection<FileModel> Files { get; set; }
 
+        public ObservableCollection<string> FileExtensions { get; set; }
+
         private string highlightedText = "Apple";
         public string HighlightedText
         {
@@ -234,6 +236,7 @@ namespace FileManager.ViewModels
         public ContainerViewModel()
         {
             Files = new ObservableCollection<FileModel>();
+            FileExtensions = new ObservableCollection<string>();
         }
 
         private async void FolderDialog(string parameter)
@@ -284,6 +287,8 @@ namespace FileManager.ViewModels
         public async Task SearchAsync()
         {
             Files.Clear();
+            FileExtensions.Clear();
+            FileExtensions.Add(".*");
             FileCount = 0;
             FileCountSelected = 0;
 
@@ -397,6 +402,12 @@ namespace FileManager.ViewModels
                 }
 
                 Files.Add(file);
+
+                if (!FileExtensions.Contains(file.Extension.ToLower()))
+                {
+                    FileExtensions.Add(file.Extension.ToLower());
+                }
+
             }));
         }
 
