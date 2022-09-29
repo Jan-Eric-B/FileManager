@@ -11,6 +11,9 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using FileManager.Services.ApplicationStructure;
+using System.ComponentModel;
+using System.Windows.Data;
+using System.Windows.Forms.Integration;
 
 namespace FileManager.Views;
 
@@ -40,9 +43,9 @@ public partial class Container : INavigationWindow
 
     //____________________________________________________________
 
-    #region Main
+#region Main
 
-    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
+public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
         // Assign the view model
         ViewModel = viewModel;
@@ -130,11 +133,11 @@ public partial class Container : INavigationWindow
         _windowService.Show<Views.Windows.SettingsWindow>();
     }
 
-    #endregion
+#endregion
 
-    #region INavigationWindow methods
+#region INavigationWindow methods
 
-    public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     public Frame GetFrame() => RootFrame;
     public INavigation GetNavigation() => RootNavigation;
     public void CloseWindow() => Close();

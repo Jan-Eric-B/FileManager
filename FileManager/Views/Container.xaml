@@ -166,6 +166,7 @@
                                 <!--<CheckBox Grid.Column="2" Content="Subdirectories" IsChecked="{Binding Path=ViewModel.SearchOptionsSubdirectories, Mode=TwoWay}" Cursor="Hand" Margin="10,0" />-->
                             </Grid>
 
+                           
 
                             <Border Grid.Row="1" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8,0,0,0">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">

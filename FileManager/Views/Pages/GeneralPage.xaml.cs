@@ -163,6 +163,14 @@ namespace FileManager.Views.Pages
             }
         }
 
+        private void BtnDeleteEmptyFolders_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxService.MessageBoxYesNo("Deletion", "Do you really want to delete all empty folders?", 150, 0) == true)
+            {
+                ViewModel.DeleteEmptyFolders(ViewModel.Container.MainPath);
+            }
+        }
+
         #endregion Delete
 
         #region Rename
@@ -298,10 +306,10 @@ namespace FileManager.Views.Pages
         }
 
 
-        #endregion
 
         #endregion
 
+        #endregion
 
     }
 }

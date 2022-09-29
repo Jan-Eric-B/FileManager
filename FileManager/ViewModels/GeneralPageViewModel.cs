@@ -274,6 +274,8 @@ namespace FileManager.ViewModels
         #endregion
 
         #endregion
+        private readonly ISnackbarService _snackbarService;
+        private ExifToolWrapper _exif;
 
         //____________________________________________________________
 
@@ -461,12 +463,6 @@ namespace FileManager.ViewModels
             await Container.SearchAsync();
         }
 
-        private ExifToolWrapper _exif;
-
-
-        private readonly ISnackbarService _snackbarService;
-
-
         public async Task DeleteItemMetaData()
         {
             await _snackbarService.ShowAsync("Removing MetaData", "Please wait", SymbolRegular.Clock24);
@@ -486,6 +482,19 @@ namespace FileManager.ViewModels
             //await Container.SearchAsync();
             await _snackbarService.HideAsync();
             MessageBoxService.MessageBoxOK("Removing MetaData", "Done", 150, 0);
+        }
+
+        public async void DeleteEmptyFolders(string startLocation)
+        {
+            foreach (var directory in Directory.GetDirectories(startLocation))
+            {
+                DeleteEmptyFolders(directory);
+                if (Directory.GetFiles(directory).Length == 0 &&
+                    Directory.GetDirectories(directory).Length == 0)
+                {
+                    Directory.Delete(directory, false);
+                }
+            }
         }
 
         #endregion Delete

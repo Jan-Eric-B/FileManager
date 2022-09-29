@@ -31,9 +31,9 @@
                 <ui:TextBox x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" HorizontalAlignment="Stretch" Cursor="IBeam"/>
                 <VirtualizingStackPanel Orientation="Horizontal">
                     <!-- To Main Directory -->
-                    <ui:Button x:Name="btnMoveToMainPath" Margin="0,0,10,0" Content="To main path" Click="BtnMoveToMainPath_Click"/>
+                    <ui:Button x:Name="btnMoveToMainPath" Margin="0,0,5,0" Content="To main path" Click="BtnMoveToMainPath_Click"/>
                     <!-- To Same Subdirectory -->
-                    <ui:Button x:Name="btnMoveToSamePath" Margin="0,0,10,0" Content="To same subdirectory" Click="BtnMoveToSamePath_Click" MouseEnter="BtnHighlightRequiredTextBox_MouseEnter" MouseLeave="BtnHighlightRequiredTextBox_MouseLeave" />
+                    <ui:Button x:Name="btnMoveToSamePath" Margin="0,0,5,0" Content="To same subdirectory" Click="BtnMoveToSamePath_Click" MouseEnter="BtnHighlightRequiredTextBox_MouseEnter" MouseLeave="BtnHighlightRequiredTextBox_MouseLeave" />
                     <!-- To Single Subdirectory -->
                     <VirtualizingStackPanel Orientation="Horizontal">
                         <ui:Button x:Name="btnMoveToSinglePath" Margin="0,0,0,0" Content="To single subdirectory" Click="BtnMoveToSinglePath_Click" MouseEnter="BtnHighlightRequiredTextBox_MouseEnter" MouseLeave="BtnHighlightRequiredTextBox_MouseLeave"/>
@@ -55,9 +55,10 @@
         <!-- Delete -->
         <ui:CardExpander x:Name="ceDelete" IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
             <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
-                <ui:Button x:Name="btnDeleteItem" Content="Delete" Margin="5,0" Click="BtnDeleteItem_Click"/>
-                <ui:Button x:Name="btnDeleteItemPermanently" Content="Delete Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
-                <ui:Button x:Name="btnDeleteItemMetaData" Content="Delete MetaData" Margin="5,0" Click="BtnDeleteItemMetaData_Click"/>
+                <ui:Button x:Name="btnDeleteItem" Icon="Delete24" Content="Delete" Click="BtnDeleteItem_Click"/>
+                <ui:Button x:Name="btnDeleteItemPermanently" Icon="Delete24" Content="Permanently" Margin="5,0" Click="BtnDeleteItemPermanently_Click"/>
+                <ui:Button x:Name="btnDeleteItemMetaData" Icon="Delete24" Content="MetaData" Click="BtnDeleteItemMetaData_Click"/>
+                <ui:Button x:Name="btnDeleteEmptyFolders" Icon="Delete24" Content="Empty Folders" Margin="5,0" Click="BtnDeleteEmptyFolders_Click"/>
             </VirtualizingStackPanel>
         </ui:CardExpander>
         <!-- Rename -->
