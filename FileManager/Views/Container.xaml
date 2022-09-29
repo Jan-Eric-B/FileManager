@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="clr-namespace:FileManager.Views.Pages"
     xmlns:services="clr-namespace:FileManager.Services"
-    Title="WPF UI"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    Title="FileManager"
     Width="1200"
     Height="654"
     d:DesignHeight="650"
@@ -19,7 +20,11 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
-
+        <CollectionViewSource x:Name="cvsFiles" x:Key="cvsFiles" Source="{Binding Path=ViewModel.Files}" Filter="cvsFiles_Filter" >
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="FileName" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -139,16 +144,15 @@
                                 </Grid.ColumnDefinitions>
 
                                 <VirtualizingStackPanel Orientation="Horizontal" Grid.Column="0">
-                                    <CheckBox IsChecked="{Binding Path=ViewModel.SelectEverySecondFirst, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                    <CheckBox IsChecked="{Binding Path=ViewModel.SelectEverySecondLast, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-100,0" />
-                                    <CheckBox IsChecked="{Binding Path=ViewModel.SelectAll, Mode=TwoWay}" Margin="-70,0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Select All" Cursor="Hand" />
+                                    <CheckBox x:Name="cboSelectEverySecondFirst" IsChecked="{Binding Path=ViewModel.SelectEverySecondFirst, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Click="cboSelect_Click" />
+                                    <CheckBox x:Name="cboSelectEverySecondLast" IsChecked="{Binding Path=ViewModel.SelectEverySecondLast, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-100,0" Click="cboSelect_Click" />
+                                    <CheckBox x:Name="cboSelectAll" IsChecked="{Binding Path=ViewModel.SelectAll, Mode=TwoWay}" Margin="-70,0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Select All" Cursor="Hand" Click="cboSelect_Click" />
                                 </VirtualizingStackPanel>
 
-                                <ui:TextBox Grid.Column="1" Text="{Binding Path=ViewModel.SearchInput}" KeyDown="SearchBox_KeyDown" Cursor="IBeam" Padding="5"/>
+                                <ui:TextBox x:Name="txSearch"  Grid.Column="1" Text="{Binding Path=ViewModel.SearchInput}" Cursor="IBeam" Padding="5" TextChanged="TextBox_TextChanged"/>
 
+                                <ComboBox x:Name="cmbFileExtensions" Grid.Column="2" Background="Transparent" Height="40" Margin="5,0,0,0" SelectedIndex="{Binding Path=ViewModel.SelectedFileExtension}" ItemsSource="{Binding Path=ViewModel.FileExtensions}" SelectionChanged="cmbFileExtensions_SelectionChanged"/>
 
-
-                                <ComboBox x:Name="cmbFileExtensions" Grid.Column="2" Background="Transparent" Height="40" Margin="5,0,0,0" SelectedIndex="0" ItemsSource="{Binding Path=ViewModel.FileExtensions}"/>
 
                                 <Menu Grid.Column="3" Background="Transparent" HorizontalAlignment="Right" Height="45">
                                     <ui:MenuItem Header="Filter" SymbolIcon="Filter24">
@@ -160,17 +164,11 @@
                                         </StackPanel>
                                     </ui:MenuItem>
                                 </Menu>
-
-
-
-                                <!--<CheckBox Grid.Column="2" Content="Subdirectories" IsChecked="{Binding Path=ViewModel.SearchOptionsSubdirectories, Mode=TwoWay}" Cursor="Hand" Margin="10,0" />-->
                             </Grid>
-
-                           
 
                             <Border Grid.Row="1" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8,0,0,0">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl x:Name="ItemsControl" ItemsSource="{Binding Path=ViewModel.Files}" DockPanel.Dock="Bottom" Background="#00000000" BorderBrush="#00000000">
+                                    <ItemsControl Name="ItemsControl" Margin="15" ItemsSource="{Binding Source={StaticResource cvsFiles}}" DockPanel.Dock="Bottom" Background="#00000000" BorderBrush="#00000000">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
@@ -193,6 +191,8 @@
                                 </ScrollViewer>
                             </Border>
 
+                            
+                            
                             <StackPanel Orientation="Horizontal" Grid.Row="2">
                                 <TextBlock Text="{Binding ViewModel.FileCount, StringFormat=' {0} Elements | '}" />
                                 <TextBlock Text="{Binding ViewModel.FileCountSelected, StringFormat=' {0} Selected Elements'}" />

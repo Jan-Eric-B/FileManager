@@ -1,15 +1,18 @@
 ﻿using FileManager.Models;
 using FileManager.Services;
+using FileManager.Views;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -108,6 +111,18 @@ namespace FileManager.ViewModels
 
         public ObservableCollection<string> FileExtensions { get; set; }
 
+
+        private int selectedFileExtension = 0;
+        public int SelectedFileExtension
+        {
+            get => selectedFileExtension;
+            set
+            {
+                selectedFileExtension = value;
+                OnPropertyChanged(nameof(SelectedFileExtension));
+            }
+        }
+
         private string highlightedText = "Apple";
         public string HighlightedText
         {
@@ -127,23 +142,22 @@ namespace FileManager.ViewModels
             get { return selectAll; }
             set
             {
+                //if (selectAll)
+                //{
+                //    foreach (FileModel file in Files)
+                //    {
+                //        file.IsChecked = true;
+                //    }
+                //}
+                //else
+                //{
+                //    foreach (FileModel file in Files)
+                //    {
+                //        file.IsChecked = false;
+                //    }
+                //}
+
                 selectAll = value;
-
-                if (selectAll)
-                {
-                    foreach (FileModel file in Files)
-                    {
-                        file.IsChecked = true;
-                    }
-                }
-                else
-                {
-                    foreach (FileModel file in Files)
-                    {
-                        file.IsChecked = false;
-                    }
-                }
-
                 OnPropertyChanged(nameof(SelectAll));
             }
         }
@@ -154,21 +168,6 @@ namespace FileManager.ViewModels
             get { return selectEverySecondFirst; }
             set
             {
-                if (selectEverySecondFirst)
-                {
-                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
-                    {
-                        file.IsChecked = false;
-                    }
-                }
-                else
-                {
-                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 0))
-                    {
-                        file.IsChecked = true;
-                    }
-                }
-
                 selectEverySecondFirst = value;
                 OnPropertyChanged(nameof(SelectEverySecondFirst));
             }
@@ -180,20 +179,6 @@ namespace FileManager.ViewModels
             get { return selectEverySecondLast; }
             set
             {
-                if (selectEverySecondLast)
-                {
-                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
-                    {
-                        file.IsChecked = false;
-                    }
-                }
-                else
-                {
-                    foreach (FileModel file in Files.Where((_, i) => i % 2 == 1))
-                    {
-                        file.IsChecked = true;
-                    }
-                }
                 selectEverySecondLast = value;
                 OnPropertyChanged(nameof(SelectEverySecondLast));
             }
@@ -289,6 +274,7 @@ namespace FileManager.ViewModels
             Files.Clear();
             FileExtensions.Clear();
             FileExtensions.Add(".*");
+            SelectedFileExtension = 0;
             FileCount = 0;
             FileCountSelected = 0;
 
@@ -325,48 +311,8 @@ namespace FileManager.ViewModels
             {
                 foreach (string filePath in Directory.EnumerateFiles(MainPath, "*.*", searchOption))
                 {
-                    // If SearchInput is empty, display all files
-                    if (string.IsNullOrWhiteSpace(SearchInput))
-                    {
-                        await AddFileAsync(filePath);
-                        await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
-                    }
-                    else
-                    {
-                        // Get Filename
-                        string fileName = Path.GetFileName(filePath);
-
-                        // If Case Sensitive
-                        if (!SearchOptionsCaseSensitive)
-                        {
-                            searchInput = searchInput.ToUpper();
-                            fileName = fileName.ToUpper();
-                        }
-
-                        // Search in Name
-                        if (SearchOptionsFileName && fileName.Contains(searchInput))
-                        {
-                            await AddFileAsync(filePath);
-                            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
-                        }
-
-                        // Search in File
-                        if (SearchOptionsFileContent)
-                        {
-                            string content = File.ReadAllText(filePath);
-                            // Case Sensitivity
-                            if (!SearchOptionsCaseSensitive)
-                            {
-                                content = content.ToUpper();
-                            }
-
-                            if (content.Contains(searchInput))
-                            {
-                                await AddFileAsync(filePath);
-                                await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
-                            }
-                        }
-                    }
+                    await AddFileAsync(filePath);
+                    await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => FileCount++));
 
                     if (token.IsCancellationRequested)
                     {

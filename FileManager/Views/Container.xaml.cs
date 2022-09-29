@@ -14,6 +14,10 @@ using FileManager.Services.ApplicationStructure;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Forms.Integration;
+using FileManager.Models;
+using System.Linq;
+using CheckBox = System.Windows.Controls.CheckBox;
+using System.Collections.Generic;
 
 namespace FileManager.Views;
 
@@ -73,7 +77,10 @@ public Container(ContainerViewModel viewModel, INavigationService navigationServ
         // Wpf.Ui.Appearance.Watcher.Watch(this, Appearance.BackgroundType.Mica, true, false);
         _windowService = windowService;
 
-        ItemsControl.ItemsSource = ViewModel.Files;
+        //ItemsControl.ItemsSource = ViewModel.Files;
+
+
+
 
         cmbFileExtensions.ItemsSource = ViewModel.FileExtensions;
 
@@ -205,17 +212,107 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     // Search
     #region Search
 
-    private async void SearchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-    {
-        if (e.Key == Key.Return || e.Key == Key.Tab)
-        {
-            await ViewModel.SearchAsync();
-        }
-    }
-
+    // start new search when enabling subdirectories
     private async void CheckBox_Click(object sender, RoutedEventArgs e)
     {
         await ViewModel.SearchAsync();
+    }
+
+    // Filter List
+    private void cvsFiles_Filter(object sender, FilterEventArgs e)
+    {
+        FileModel a = e.Item as FileModel;
+        if ((a.FileName.Contains(txSearch.Text)))
+        {
+            if (cmbFileExtensions.SelectedIndex != 0)
+            {
+                if (a.Extension.Equals(cmbFileExtensions.SelectedValue))
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+            }
+            else
+            {
+                e.Accepted = true;
+            }
+        }
+        else
+        {
+            e.Accepted = false;
+        }
+
+    }
+
+    // When Search Input changes
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ((CollectionViewSource)this.Resources["cvsFiles"]).View.Refresh();
+    }
+
+    // When selecting a combobox item
+    private void cmbFileExtensions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ((CollectionViewSource)this.Resources["cvsFiles"]).View.Refresh();
+    }
+
+    // When checking selection Checkboxes
+    private void cboSelect_Click(object sender, RoutedEventArgs e)
+    {
+        ICollectionView view = ((CollectionViewSource)this.Resources["cvsFiles"]).View;
+        List<FileModel> viewList = view.Cast<FileModel>().ToList();
+
+        if ((sender as CheckBox).IsChecked == true)
+        {
+            if ((sender as CheckBox).Name.Equals("cboSelectAll"))
+            {
+                foreach (FileModel file in viewList)
+                {
+                    file.IsChecked = true;
+                }
+            }
+            if ((sender as CheckBox).Name.Equals("cboSelectEverySecondFirst"))
+            {
+                foreach (FileModel file in viewList.Where((_, i) => i % 2 == 0))
+                {
+                    file.IsChecked = true;
+                }
+            }
+            if ((sender as CheckBox).Name.Equals("cboSelectEverySecondLast"))
+            {
+                foreach (FileModel file in viewList.Where((_, i) => i % 2 == 1))
+                {
+                    file.IsChecked = true;
+                }
+            }
+        }
+        else
+        {
+            if ((sender as CheckBox).Name.Equals("cboSelectAll"))
+            {
+                foreach (FileModel file in viewList)
+                {
+                    file.IsChecked = false;
+                }
+            }
+            if ((sender as CheckBox).Name.Equals("cboSelectEverySecondFirst"))
+            {
+                foreach (FileModel file in viewList.Where((_, i) => i % 2 == 0))
+                {
+                    file.IsChecked = false;
+                }
+            }
+            if ((sender as CheckBox).Name.Equals("cboSelectEverySecondLast"))
+            {
+                foreach (FileModel file in viewList.Where((_, i) => i % 2 == 1))
+                {
+                    file.IsChecked = false;
+                }
+            }
+        }
     }
 
     #endregion
@@ -356,4 +453,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     }
 
     #endregion
+
+    
+
 }
