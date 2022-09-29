@@ -127,6 +127,10 @@
                     <ui:Button x:Name="btnRenameLowerCase" Content="LowerCase" Click="BtnRenameLowerCase_Click" Margin="5,0" />
                     <ui:Button x:Name="btnRenameUpperCase" Content="UpperCase" Click="BtnRenameUpperCase_Click" Margin="0,0,5,0" />
                     <ui:Button x:Name="btnRenameCapitalizationUndo" IsEnabled="{Binding Path=RenameCapitalizationUndo}" Content="Undo" Click="BtnRenameCapitalizationUndo" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:NavigationSeparator Margin="5,0"/>
+                    </StackPanel>
+                    <ui:Button x:Name="btnRenameFixExtensions" Click="btnRenameFixExtensions_Click">Fix Extensions</ui:Button>
                 </VirtualizingStackPanel>
                 <ui:NavigationSeparator Margin="10,3"/>
                 <!-- Undo -->

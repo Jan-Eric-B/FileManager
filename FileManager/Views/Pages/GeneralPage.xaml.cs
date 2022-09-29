@@ -311,5 +311,9 @@ namespace FileManager.Views.Pages
 
         #endregion
 
+        private void btnRenameFixExtensions_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.FixExtensions();
+        }
     }
 }

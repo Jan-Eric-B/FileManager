@@ -769,5 +769,29 @@ namespace FileManager.ViewModels
 
         #endregion
 
+
+        public async Task FixExtensions()
+        {
+            foreach (FileModel file in Container.Files)
+            {
+                if (file.IsChecked)
+                {
+                    string newExtension = file.Extension.ToLower();
+
+                    if (newExtension.Equals(".jpeg") || newExtension.Equals(".jpe"))
+                    {
+                        newExtension = ".jpg";
+                    }
+
+                    (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + file.FileNameWithoutExtension + newExtension);
+
+                    if (result.Item1)
+                    {
+                        await UpdateFileAsync(file, Path.GetFileNameWithoutExtension(result.Item2));
+                    }
+                }
+            }
+        }
+
     }
 }
