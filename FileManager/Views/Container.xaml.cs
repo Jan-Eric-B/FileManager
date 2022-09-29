@@ -222,7 +222,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     private void cvsFiles_Filter(object sender, FilterEventArgs e)
     {
         FileModel a = e.Item as FileModel;
-        if ((a.FileName.Contains(txSearch.Text)))
+        if ((a.FileNameWithoutExtension.Contains(txSearch.Text)))
         {
             if (cmbFileExtensions.SelectedIndex != 0)
             {

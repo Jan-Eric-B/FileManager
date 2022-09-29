@@ -1,8 +1,8 @@
-﻿using FileManager.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FileManager.Models;
 using FileManager.Services;
 using FileManager.Views;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.ObjectModel;
