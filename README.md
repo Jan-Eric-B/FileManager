@@ -1,5 +1,6 @@
 # FileManager
 
+![Screenshot](https://github.com/Jan-Eric-B/FileManager/blob/main/FileManagerScreenshot.png "Screenshot")
 
 This is an application for editing files and directories. 
 It is a tool that I have developed for my private handling of files and is mainly used to practice the development of an application.
