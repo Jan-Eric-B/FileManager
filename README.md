@@ -22,6 +22,7 @@ The fancy UI was built using [WPF UI](https://github.com/lepoco/wpfui).
 * Delete files, metadata or empty folders
 * Renaming files by replacing, swaping, adding or capitalizing
 * Fixing Extensions (replace with lowercase or standardize the extensions (.jpeg & .jpe to .jpg)
+
 [WIP]
 * Copying of names or paths of files
 * Converting images or videos
@@ -37,6 +38,7 @@ The fancy UI was built using [WPF UI](https://github.com/lepoco/wpfui).
 * Moving Files onto application executable or in the path display
 * Slecting all files, every second or by hovering over the checkboxes
 * Highlighting the part to be replaced during renaming
+
 [WIP]
 * Setup file for installing
 * automatic installing lates FFMPEG and ExifTool
