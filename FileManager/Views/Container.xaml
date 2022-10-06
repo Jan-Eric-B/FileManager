@@ -144,9 +144,9 @@
                                 </Grid.ColumnDefinitions>
 
                                 <VirtualizingStackPanel Orientation="Horizontal" Grid.Column="0">
-                                    <CheckBox x:Name="cboSelectEverySecondFirst" IsChecked="{Binding Path=ViewModel.SelectEverySecondFirst, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Click="cboSelect_Click" />
-                                    <CheckBox x:Name="cboSelectEverySecondLast" IsChecked="{Binding Path=ViewModel.SelectEverySecondLast, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-100,0" Click="cboSelect_Click" />
-                                    <CheckBox x:Name="cboSelectAll" IsChecked="{Binding Path=ViewModel.SelectAll, Mode=TwoWay}" Margin="-70,0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Select All" Cursor="Hand" Click="cboSelect_Click" />
+                                    <CheckBox x:Name="cboSelectEverySecondFirst" ToolTip="selects every second item. All odd items" IsChecked="{Binding Path=ViewModel.SelectEverySecondFirst, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Click="cboSelect_Click" />
+                                    <CheckBox x:Name="cboSelectEverySecondLast" ToolTip="selects every second item. All even items" IsChecked="{Binding Path=ViewModel.SelectEverySecondLast, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-100,0" Click="cboSelect_Click" />
+                                    <CheckBox x:Name="cboSelectAll" ToolTip="Select all visible" IsChecked="{Binding Path=ViewModel.SelectAll, Mode=TwoWay}" Margin="-70,0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Select All" Cursor="Hand" Click="cboSelect_Click" />
                                 </VirtualizingStackPanel>
 
                                 <ui:TextBox x:Name="txSearch"  Grid.Column="1" Text="{Binding Path=ViewModel.SearchInput}" Cursor="IBeam" Padding="5" TextChanged="TextBox_TextChanged"/>
