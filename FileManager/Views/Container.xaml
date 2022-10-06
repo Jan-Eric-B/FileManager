@@ -53,22 +53,22 @@
                 TransitionDuration="200"
                 TransitionType="FadeInWithSlide">
                 <ui:NavigationCompact.Items>
-                    <ui:NavigationItem
+                    <ui:NavigationItem x:Name="navItemGeneral"
                         Content="General"
                         Icon="Home24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:GeneralPage}" />
+                        PageType="{x:Type pages:GeneralPage}" Activated="navItemGeneral_Activated" />
                     <ui:NavigationSeparator />
-                    <ui:NavigationItem
+                    <ui:NavigationItem x:Name="NavItemImage"
                         Content="Images"
                         Icon="Image24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:ImagePage}" />
-                    <ui:NavigationItem
+                        PageType="{x:Type pages:ImagePage}" Activated="NavItemImage_Activated" />
+                    <ui:NavigationItem x:Name="NavItemVideo"
                         Content="Videos"
                         Icon="Video24"
                         Cursor="Hand"
-                        PageType="{x:Type pages:VideoPage}" />
+                        PageType="{x:Type pages:VideoPage}" Activated="NavItemVideo_Activated" />
                 </ui:NavigationCompact.Items>
                 <ui:NavigationCompact.Footer>
                     <!--  A navigation element that does not point to the page can be used as a button.  -->

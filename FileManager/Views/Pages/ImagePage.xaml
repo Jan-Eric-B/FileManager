@@ -13,42 +13,28 @@
     Scrollable="True"
     mc:Ignorable="d">
 
-    <VirtualizingStackPanel
-        x:Name="RootPanel"
-        Margin="18,0,18,18"
-        IsVirtualizing="True"
-        VirtualizationMode="Recycling">
+    <VirtualizingStackPanel x:Name="RootPanel" Margin="10,0,10,18" IsVirtualizing="True" VirtualizationMode="Recycling">
+        <!-- Move -->
+        <ui:CardExpander x:Name="ceMove" IsExpanded="{Binding Path=CardExpanderMove}" Header="Move" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45*"/>
+                    <ColumnDefinition Width="55*"/>
+                </Grid.ColumnDefinitions>
+                <ui:TextBox Grid.Column="0" x:Name="txSubdirectoryName" Text="{Binding Path=MoveDirectoryName}" PlaceholderText="Subdirectory name" Margin="5,0" HorizontalAlignment="Stretch" Cursor="IBeam"/>
 
-        <ui:Card Margin="0,8,0,0">
+                <VirtualizingStackPanel Orientation="Horizontal" Grid.Column="1">
+                    <ui:NumberBox x:Name="nbMoveToSimilarDifferenceTolerance" Text="{Binding Path=MoveToSimilarDifferenceTolerance}" Min="0" Width="auto" Height="32" Padding="5" Margin="0,0,5,0" Step="0.05" DecimalPlaces="2" ClearButtonEnabled="False" SpinButtonsEnabled="True" IntegersOnly="False"/>
+                    <ui:Button x:Name="btnMoveToSimilar" Content="Group similar" Click="btnMoveToSimilar_Click"/>
+                    <ui:Button x:Name="btnMoveToSimilarExplanation" Content="?" Margin="5,0,0,2" Click="btnMoveToSimilarExplanation_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </VirtualizingStackPanel>
+            </Grid>
+        </ui:CardExpander>
+        <!-- IDK -->
+        <ui:CardExpander x:Name="ceDelete" IsExpanded="{Binding Path=CardExpanderDelete}" Header="Delete" Padding="10" Margin="0,5" Collapsed="CardExpander_SaveSettings" Expanded="CardExpander_SaveSettings" >
+            <VirtualizingStackPanel Height="auto" Orientation="Horizontal">
 
-        </ui:Card>
-
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
-        <ui:Card Margin="0,8,0,0">
-
-        </ui:Card>
+            </VirtualizingStackPanel>
+        </ui:CardExpander>
     </VirtualizingStackPanel>
 </ui:UiPage>

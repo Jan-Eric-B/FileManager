@@ -1,15 +1,10 @@
 ﻿using FileManager.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using XnaFan.ImageComparison;
-using static System.Net.WebRequestMethods;
 using File = System.IO.File;
 
 namespace FileManager.Services
@@ -27,7 +22,7 @@ namespace FileManager.Services
         public static async Task Compare(ObservableCollection<FileModel> files, double percentage, string mainPath, string directoryName)
         {
             // If Collection exists and is filled
-            if (!files.Safe().Any())
+            if (!(!files?.Any() ?? false))
             {
                 // Check if "scene" folders already exist and count up
                 int scene = 1;
@@ -53,7 +48,6 @@ namespace FileManager.Services
 
                         // Calculate difference percentage
                         float percentageDifference = await CompareTwoImages(files[i].FilePath, files[i + 1].FilePath).ConfigureAwait(false);
-
 
                         // Move first file to the same "scene" folder
                         File.Move(files[i].FilePath, sceneDirectory + files[i].FileName);

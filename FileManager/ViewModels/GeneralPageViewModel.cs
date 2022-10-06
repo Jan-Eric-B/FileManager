@@ -783,6 +783,11 @@ namespace FileManager.ViewModels
                         newExtension = ".jpg";
                     }
 
+                    if (newExtension.Equals(".dip"))
+                    {
+                        newExtension = ".bmp";
+                    }
+
                     (bool, string) result = EditFileSevice.FileMove(file.FilePath, file.DirectoryName + file.FileNameWithoutExtension + newExtension);
 
                     if (result.Item1)

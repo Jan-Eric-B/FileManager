@@ -1,4 +1,5 @@
 ﻿using FileManager.Resources.Settings;
+using FileManager.Services;
 using FileManager.ViewModels;
 using System.Windows;
 using Wpf.Ui.Common.Interfaces;
@@ -70,5 +71,19 @@ namespace FileManager.Views.Pages
 
         #endregion
 
+        private void btnMoveToSimilarExplanation_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxService.MessageBoxOK("Move to similar", "This groups similar or identical images together.\r\n" +
+                "It only compares images next to each other.\r\n" +
+                "Main Purpose is to group scenes/cuts of videos\r\n\r\n" +
+                "The more similar the images are, the smaller the difference.\r\n" +
+                "This goes in the direction of zero. ( 0 = equal / 1 = unequal).\r\n" +
+                "The higher the tolerance, the more likely they are to be grouped. ", 270, 600);
+        }
+
+        private void btnMoveToSimilar_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.MoveToSimilar();
+        }
     }
 }

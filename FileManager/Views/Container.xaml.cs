@@ -18,6 +18,9 @@ using FileManager.Models;
 using System.Linq;
 using CheckBox = System.Windows.Controls.CheckBox;
 using System.Collections.Generic;
+using System.Threading;
+using Timer = System.Windows.Forms.Timer;
+using Windows.Media.Core;
 
 namespace FileManager.Views;
 
@@ -26,6 +29,8 @@ namespace FileManager.Views;
 /// </summary>
 public partial class Container : INavigationWindow
 {
+    string CurrentPage = "GeneralPage";
+
     #region Services
 
     private readonly IThemeService _themeService;
@@ -221,14 +226,39 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     // Filter List
     private void cvsFiles_Filter(object sender, FilterEventArgs e)
     {
+        //object frame = RootFrame.Content;
+        //Type objectType = frame.GetType();
+
+        List<string> images = new List<string> { ".png", ".jpg", ".jpeg", ".jpe", ".bmp", ".dip", ".gif" };
+        List<string> videos = new List<string> { ".mpeg", ".mp4", ".mov", ".avi", ".wmv", ".gif" };
+
+
         FileModel a = e.Item as FileModel;
-        if ((a.FileNameWithoutExtension.Contains(txSearch.Text)))
+        // Search Input
+        if (a.FileNameWithoutExtension.Contains(txSearch.Text))
         {
+            // If Extension is selected
             if (cmbFileExtensions.SelectedIndex != 0)
             {
+                // If Equals selected Extension
                 if (a.Extension.Equals(cmbFileExtensions.SelectedValue))
                 {
-                    e.Accepted = true;
+                    if (CurrentPage == "GeneralPage")
+                    {
+                        e.Accepted = true;
+                    }
+                    else if (CurrentPage == "ImagePage" && images.Contains(a.Extension, StringComparer.OrdinalIgnoreCase))
+                    {
+                        e.Accepted = true;
+                    }
+                    else if (CurrentPage == "VideoPage" && videos.Contains(a.Extension, StringComparer.OrdinalIgnoreCase))
+                    {
+                        e.Accepted = true;
+                    }
+                    else
+                    {
+                        e.Accepted = false;
+                    }
                 }
                 else
                 {
@@ -237,7 +267,22 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
             }
             else
             {
-                e.Accepted = true;
+                if (CurrentPage == "GeneralPage")
+                {
+                    e.Accepted = true;
+                }
+                else if (CurrentPage == "ImagePage" && images.Contains(a.Extension, StringComparer.OrdinalIgnoreCase))
+                {
+                    e.Accepted = true;
+                }
+                else if (CurrentPage == "VideoPage" && videos.Contains(a.Extension, StringComparer.OrdinalIgnoreCase))
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
             }
         }
         else
@@ -452,8 +497,26 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         }
     }
 
+
+
     #endregion
 
-    
 
+    private void navItemGeneral_Activated(object sender, RoutedEventArgs e)
+    {
+        CurrentPage = "GeneralPage";
+        ((CollectionViewSource)this.Resources["cvsFiles"]).View.Refresh();
+    }
+
+    private void NavItemImage_Activated(object sender, RoutedEventArgs e)
+    {
+        CurrentPage = "ImagePage";
+        ((CollectionViewSource)this.Resources["cvsFiles"]).View.Refresh();
+    }
+
+    private void NavItemVideo_Activated(object sender, RoutedEventArgs e)
+    {
+        CurrentPage = "VideoPage";
+        ((CollectionViewSource)this.Resources["cvsFiles"]).View.Refresh();
+    }
 }
