@@ -1,26 +1,23 @@
-﻿using FileManager.Resources.Settings;
+﻿using FileManager.Models;
+using FileManager.Resources.Settings;
 using FileManager.Services;
+using FileManager.Services.ApplicationStructure;
 using FileManager.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows;
-using System;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
-using FileManager.Services.ApplicationStructure;
-using System.ComponentModel;
-using System.Windows.Data;
-using System.Windows.Forms.Integration;
-using FileManager.Models;
-using System.Linq;
 using CheckBox = System.Windows.Controls.CheckBox;
-using System.Collections.Generic;
-using System.Threading;
 using Timer = System.Windows.Forms.Timer;
-using Windows.Media.Core;
 
 namespace FileManager.Views;
 
@@ -29,14 +26,14 @@ namespace FileManager.Views;
 /// </summary>
 public partial class Container : INavigationWindow
 {
-    string CurrentPage = "GeneralPage";
+    private string CurrentPage = "GeneralPage";
 
     #region Services
 
     private readonly IThemeService _themeService;
     private readonly IWindowService _windowService;
 
-    #endregion
+    #endregion Services
 
     #region MouseDown Variables
 
@@ -48,13 +45,13 @@ public partial class Container : INavigationWindow
     private readonly TimeSpan DoubleClickMaxTime;
     private string ToOpenFile = string.Empty;
 
-    #endregion
+    #endregion MouseDown Variables
 
     //____________________________________________________________
 
-#region Main
+    #region Main
 
-public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
+    public Container(ContainerViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService, IDialogService dialogService, IWindowService windowService)
     {
         // Assign the view model
         ViewModel = viewModel;
@@ -83,9 +80,6 @@ public Container(ContainerViewModel viewModel, INavigationService navigationServ
         _windowService = windowService;
 
         //ItemsControl.ItemsSource = ViewModel.Files;
-
-
-
 
         cmbFileExtensions.ItemsSource = ViewModel.FileExtensions;
 
@@ -117,6 +111,7 @@ public Container(ContainerViewModel viewModel, INavigationService navigationServ
         SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
         DoubleClickAction = () => StartProcessService.Start(ToOpenFile, true, false);
     }
+
     public ContainerViewModel ViewModel
     {
         get;
@@ -145,20 +140,26 @@ public Container(ContainerViewModel viewModel, INavigationService navigationServ
         _windowService.Show<Views.Windows.SettingsWindow>();
     }
 
-#endregion
+    #endregion Main
 
-#region INavigationWindow methods
+    #region INavigationWindow methods
 
-public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+    public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+
     public Frame GetFrame() => RootFrame;
+
     public INavigation GetNavigation() => RootNavigation;
+
     public void CloseWindow() => Close();
+
     public void SetPageService(IPageService pageService) => RootNavigation.PageService = pageService;
+
     public void ShowWindow() => Show();
 
     #endregion INavigationWindow methods
 
     //Need to be fixed!!!!!!
+
     #region Settings
 
     private void SettingsSave()
@@ -180,6 +181,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         theme.Save();
         settings.Save();
     }
+
     private void SettingsLoad()
     {
         SearchFilters settings = new();
@@ -212,9 +214,10 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         }
     }
 
-    #endregion
+    #endregion Settings
 
     // Search
+
     #region Search
 
     // start new search when enabling subdirectories
@@ -231,7 +234,6 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
         List<string> images = new List<string> { ".png", ".jpg", ".jpeg", ".jpe", ".bmp", ".dip", ".gif" };
         List<string> videos = new List<string> { ".mpeg", ".mp4", ".mov", ".avi", ".wmv", ".gif" };
-
 
         FileModel a = e.Item as FileModel;
         // Search Input
@@ -289,7 +291,6 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         {
             e.Accepted = false;
         }
-
     }
 
     // When Search Input changes
@@ -360,9 +361,10 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         }
     }
 
-    #endregion
+    #endregion Search
 
     // ItemList
+
     #region ItemList
 
     // Items selected count
@@ -370,6 +372,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
     {
         ViewModel.FileCountSelected++;
     }
+
     private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
     {
         ViewModel.FileCountSelected--;
@@ -386,6 +389,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
             }
         }
     }
+
     private void Checkbox_OnGotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed)
@@ -398,9 +402,10 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         }
     }
 
-    #endregion
+    #endregion ItemList
 
     // Click and Doubleclick on Path and Items
+
     #region MouseDown
 
     private void ClickTimer_Tick(object sender, EventArgs e)
@@ -411,6 +416,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
         SingleClickAction();
     }
+
     private void MouseDownChange()
     {
         if (InDoubleClick)
@@ -442,6 +448,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         ToOpenFile = ViewModel.MainPath;
         MouseDownChange();
     }
+
     // Item TextBlock
     private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -449,9 +456,10 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         MouseDownChange();
     }
 
-    #endregion
+    #endregion MouseDown
 
     // Drag-Over-Event - only accepts one directory
+
     #region Path drag over
 
     private void ProgressBar_DragOver(object sender, System.Windows.DragEventArgs e)
@@ -461,7 +469,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         {
             string[] items = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
 
-            if(items.Length >= 2)
+            if (items.Length >= 2)
             {
                 dropEnabled = false;
             }
@@ -497,10 +505,7 @@ public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
         }
     }
 
-
-
-    #endregion
-
+    #endregion Path drag over
 
     private void navItemGeneral_Activated(object sender, RoutedEventArgs e)
     {

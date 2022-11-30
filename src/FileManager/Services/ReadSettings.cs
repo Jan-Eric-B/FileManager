@@ -65,31 +65,31 @@ namespace FileManager.Services
             return null;
         }
 
-        public static List<string> ReadFormat(string format)
-        {
-            string path = AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + format;
+        //public static List<string> ReadFormat(string format)
+        //{
+        //    string path = AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + format;
 
-            if (!EditFileSevice.Check(path))
-            {
-                try
-                {
-                    File.Create(path);
+        //    if (!EditFileSevice.Check(path))
+        //    {
+        //        try
+        //        {
+        //            File.Create(path);
 
-                    if (path.EndsWith("ImageFormats.ini"))
-                    {
-                        File.WriteAllText(path, ".png", ".jpg", ".gif", Encoder.ReferenceEquals);
-                    }
-                    if (path.EndsWith("VideoFormats.ini"))
-                    {
+        //            if (path.EndsWith("ImageFormats.ini"))
+        //            {
+        //                File.WriteAllText(path, ".png", ".jpg", ".gif", Encoder.ReferenceEquals);
+        //            }
+        //            if (path.EndsWith("VideoFormats.ini"))
+        //            {
 
-                    }
-                }
-                catch
-                {
+        //            }
+        //        }
+        //        catch
+        //        {
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
 
     }

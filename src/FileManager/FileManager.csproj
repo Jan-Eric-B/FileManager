@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="exiftool%28-k%29.exe" />
     <None Remove="Resources\FileManager.png" />
     <None Remove="Resources\microsoft-shell-desktop.ico" />
     <None Remove="Resources\microsoft-shell-settings.ico" />
@@ -39,7 +38,7 @@
   <ItemGroup>
     <Resource Include="Resources\microsoft-shell-desktop.ico" />
     <Resource Include="Resources\microsoft-shell-settings.ico" />
-    <EmbeddedResource Include="exiftool(-k).exe">
+    <EmbeddedResource Include="exiftool%28-k%29.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\FileManager.ico" />

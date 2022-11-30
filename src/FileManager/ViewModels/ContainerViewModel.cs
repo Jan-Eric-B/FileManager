@@ -2,17 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using FileManager.Models;
 using FileManager.Services;
-using FileManager.Views;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -34,6 +30,7 @@ namespace FileManager.ViewModels
         private CancellationTokenSource _tokenSource = new();
 
         private string mainPath;
+
         public string MainPath
         {
             get => mainPath;
@@ -45,6 +42,7 @@ namespace FileManager.ViewModels
         }
 
         private string searchInput = string.Empty;
+
         public string SearchInput
         {
             get { return searchInput; }
@@ -58,6 +56,7 @@ namespace FileManager.ViewModels
         #region Options
 
         private bool searchOptionsCaseSensitive = false;
+
         public bool SearchOptionsCaseSensitive
         {
             get { return searchOptionsCaseSensitive; }
@@ -69,6 +68,7 @@ namespace FileManager.ViewModels
         }
 
         private bool searchOptionsFileContent = false;
+
         public bool SearchOptionsFileContent
         {
             get { return searchOptionsFileContent; }
@@ -80,6 +80,7 @@ namespace FileManager.ViewModels
         }
 
         private bool searchOptionsFileName = false;
+
         public bool SearchOptionsFileName
         {
             get { return searchOptionsFileName; }
@@ -91,6 +92,7 @@ namespace FileManager.ViewModels
         }
 
         private bool searchOptionsSubdirectories = false;
+
         public bool SearchOptionsSubdirectories
         {
             get { return searchOptionsSubdirectories; }
@@ -111,8 +113,8 @@ namespace FileManager.ViewModels
 
         public ObservableCollection<string> FileExtensions { get; set; }
 
-
         private int selectedFileExtension = 0;
+
         public int SelectedFileExtension
         {
             get => selectedFileExtension;
@@ -124,6 +126,7 @@ namespace FileManager.ViewModels
         }
 
         private string highlightedText = "Apple";
+
         public string HighlightedText
         {
             get => highlightedText;
@@ -137,6 +140,7 @@ namespace FileManager.ViewModels
         #region Selection
 
         private bool selectAll = false;
+
         public bool SelectAll
         {
             get { return selectAll; }
@@ -163,6 +167,7 @@ namespace FileManager.ViewModels
         }
 
         private bool selectEverySecondFirst = false;
+
         public bool SelectEverySecondFirst
         {
             get { return selectEverySecondFirst; }
@@ -174,6 +179,7 @@ namespace FileManager.ViewModels
         }
 
         private bool selectEverySecondLast = false;
+
         public bool SelectEverySecondLast
         {
             get { return selectEverySecondLast; }
@@ -189,6 +195,7 @@ namespace FileManager.ViewModels
         #region ItemCount
 
         private int fileCount;
+
         public int FileCount
         {
             get { return fileCount; }
@@ -200,6 +207,7 @@ namespace FileManager.ViewModels
         }
 
         private int fileCountSelected;
+
         public int FileCountSelected
         {
             get { return fileCountSelected; }
@@ -353,11 +361,9 @@ namespace FileManager.ViewModels
                 {
                     FileExtensions.Add(file.Extension.ToLower());
                 }
-
             }));
         }
 
         #endregion Search
-
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace FileManager.Views.Pages
 {
     /// <summary>
-    /// Interaction logic for TMPage.xaml
+    /// Interaction logic for SettingsGuiPage.xaml
     /// </summary>
-    public partial class SettingsPageControls
+    public partial class SettingsGuiPage
     {
-        public SettingsPageControls()
+        public SettingsGuiPage()
         {
             InitializeComponent();
         }
