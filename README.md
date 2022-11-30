@@ -31,6 +31,7 @@ The fancy UI was built using [WPF UI](https://github.com/lepoco/wpfui).
 * Flipping, rotating or grayscaling images or videos
 * Extracting specific from a video
 * Cutting and merging of videos
+* Editing Folders
 
 ## Features
 
@@ -42,6 +43,6 @@ The fancy UI was built using [WPF UI](https://github.com/lepoco/wpfui).
 
 [WIP]
 * Setup file for installing
-* automatic installing lates FFMPEG and ExifTool
+* automatic installing latest FFMPEG and ExifTool
 * Settings window + more custom configurations
 
