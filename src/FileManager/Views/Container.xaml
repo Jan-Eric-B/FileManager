@@ -51,6 +51,7 @@
                 Precache="False"
                 SelectedPageIndex="-1"
                 TransitionDuration="200"
+                MaxWidth="150"
                 TransitionType="FadeInWithSlide">
                 <ui:NavigationCompact.Items>
                     <ui:NavigationItem x:Name="navItemGeneral"
@@ -88,7 +89,7 @@
                 Grid.Column="1"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 CornerRadius="8,0,0,0">
-                <Grid>
+                <Grid x:Name="TestGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
                         <RowDefinition Height="*" />
@@ -103,7 +104,7 @@
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
                         <ui:Button Grid.Column="0" Margin="5,0" Command="{Binding ViewModel.DirectoryScopeOut}" >↩</ui:Button>
-                        <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Path=ViewModel.MainPath, StringFormat='Path: {0} '}" ToolTip="{Binding Path=ViewModel.MainPath}"/>
+                        <services:SelectableTextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Path=ViewModel.MainPath, StringFormat='Path: {0} '}" ToolTip="{Binding Path=ViewModel.MainPath}"/>
                         <ProgressBar Grid.Column="1" Height="33" AllowDrop="True" Drop="ProgressBar_Drop" DragOver="ProgressBar_DragOver" MouseDown="Path_MouseDown"/>
                         <ui:Button Grid.Column="2" Margin="5,0,0,0" Command="{Binding ViewModel.OpenFolderDialog}" >...</ui:Button>
                     </Grid>
@@ -203,13 +204,11 @@
                     <!-- Pop-up-->
                     <ui:Snackbar
                         x:Name="RootSnackbar"
-                        Title="Hello World!"
                         Grid.Row="1"
                         MaxWidth="600"
                         Appearance="Secondary"
                         CloseButtonEnabled="False"
-                        Icon="PuzzlePiece24"
-                        Message="Default Message"/>
+                        Icon="PuzzlePiece24"/>
                 </Grid>
             </Border>
         </Grid>
@@ -228,7 +227,7 @@
             Title="FileManager"
             Grid.Row="0"
             ForceShutdown="False"
-            Icon="pack://application:,,,/Resources/FileManager.png"
+            Icon="pack://application:,,,/Resources/Icons/FileManager.png"
             Padding="16,0"
             MinimizeToTray="False"
             ShowHelp="False"

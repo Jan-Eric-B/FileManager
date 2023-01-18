@@ -467,10 +467,9 @@ namespace FileManager.ViewModels
         {
             await _snackbarService.ShowAsync("Removing MetaData", "Please wait", SymbolRegular.Clock24);
 
-
-            _exif = new ExifToolWrapper();
+            _exif = new ExifToolWrapper(ExtensionsService.GetPath("exiftool(-k).exe"));
             _exif.Start();
-           
+
             foreach (FileModel file in Container.Files)
             {
                 if (file.IsChecked && EditFileSevice.Check(file.FilePath) && ExifToolSupportedFiles.Writeable.Keys.ToList().Contains(file.Extension.Replace(".", "").ToUpper()))
@@ -478,6 +477,7 @@ namespace FileManager.ViewModels
                     ExifToolResponse r = _exif.ClearExif(file.FilePath);
                 }
             }
+            _exif.Stop();
             _exif.Dispose();
             //await Container.SearchAsync();
             await _snackbarService.HideAsync();

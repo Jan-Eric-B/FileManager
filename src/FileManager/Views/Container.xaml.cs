@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using CheckBox = System.Windows.Controls.CheckBox;
@@ -70,7 +71,13 @@ public partial class Container : INavigationWindow
         navigationService.SetNavigationControl(RootNavigation);
 
         // Allows you to use the Snackbar control defined in this window in other pages or windows
-        snackbarService.SetSnackbarControl(RootSnackbar);
+
+        Snackbar snackbar = RootSnackbar;
+        snackbar.Title = "Copied Path";
+        snackbar.Icon = Wpf.Ui.Common.SymbolRegular.Copy24;
+
+
+        snackbarService.SetSnackbarControl(snackbar);
 
         // Allows you to use the Dialog control defined in this window in other pages or windows
         dialogService.SetDialogControl(RootDialogOK);
@@ -108,8 +115,16 @@ public partial class Container : INavigationWindow
         ClickTimer.Tick += ClickTimer_Tick;
 
         // Click to copy Path to Clipboard and Doubleclick on Item, tries to open it
-        SingleClickAction = () => System.Windows.Clipboard.SetText(ToOpenFile);
+        SingleClickAction = () =>
+        {
+            snackbarService.Show();
+            System.Windows.Clipboard.SetText(ToOpenFile);
+        };
         DoubleClickAction = () => StartProcessService.Start(ToOpenFile, true, false);
+
+
+
+
     }
 
     public ContainerViewModel ViewModel

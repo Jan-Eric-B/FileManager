@@ -1,17 +1,16 @@
-﻿using System.Windows;
+﻿using FileManager.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace FileManager.Services
 {
-    /// <summary>
-    /// SelectableTextBlock
-    /// Custom TextBLock for selecting Text in List
-    /// https://stackoverflow.com/a/45627524/12273101
-    /// </summary>
     public class SelectableTextBlock : TextBlock
     {
-        private readonly TextEditorWrapper _editor;
-
         static SelectableTextBlock()
         {
             FocusableProperty.OverrideMetadata(typeof(SelectableTextBlock), new FrameworkPropertyMetadata(true));
@@ -20,6 +19,9 @@ namespace FileManager.Services
             // remove the focus rectangle around the control
             FocusVisualStyleProperty.OverrideMetadata(typeof(SelectableTextBlock), new FrameworkPropertyMetadata((object)null));
         }
+
+        private readonly TextEditorWrapper _editor;
+
         public SelectableTextBlock()
         {
             _editor = TextEditorWrapper.CreateFor(this);
