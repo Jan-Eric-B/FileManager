@@ -10,8 +10,73 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <ScrollViewer>
+    <VirtualizingStackPanel Orientation="Vertical">
+        <!--<ui:CardExpander Margin="0,8,0,0" Icon="Whiteboard24">
+            <ui:CardExpander.Header>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock
+                        FontSize="13"
+                        FontWeight="Medium"
+                        Text="CardControl" />
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                        Text="Stylized card with control on the right." />
+                </StackPanel>
+            </ui:CardExpander.Header>
+            
+        </ui:CardExpander>-->
 
-    <Grid>
-        <TextBlock Text="Extensions" />
-    </Grid>
+        <ui:Button x:Name="btOpenExtensionDirectory" HorizontalAlignment="Right" Margin="0,10,20,0" Click="btOpenExtensionDirectory_Click">Open Installation directory</ui:Button>
+
+        <ui:Card Margin="20">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" FontSize="23" FontWeight="Bold" VerticalContentAlignment="Center">ExifTool by Phil Harvey</Label>
+                    <ui:Button x:Name="btExifToolInstalled" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Icon="SubtractCircle24"></ui:Button>
+                </Grid>
+                <Label Margin="0,0,0,8">This tool is needed for deleting Metadata.</Label>
+                <Separator/>
+                <Label FontSize="20" Margin="0,10,0,0">Installation:</Label>
+                <Label>1. Download Windows Executable</Label>
+                <Label>2. Extract "exiftool(-k).exe" to Extension directory</Label>
+                <Label>3. Restart application</Label>
+            </StackPanel>
+            <ui:Card.Footer>
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button x:Name="btExifToolDownload" Margin="5,0" Click="btExifToolDownload_Click">Open Download page</ui:Button>
+                </StackPanel>
+            </ui:Card.Footer>
+        </ui:Card>
+
+        <ui:Card Margin="20,0">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" FontSize="23" FontWeight="Bold" VerticalContentAlignment="Center">FFmpeg</Label>
+                    <ui:Button x:Name="btFmpegInstalled" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Icon="SubtractCircle24"></ui:Button>
+                </Grid>
+                <Label Margin="0,0,0,8">This tool is needed for editing Videos and Images.</Label>
+                <Separator/>
+                <Label FontSize="20" Margin="0,10,0,0">Installation:</Label>
+                <Label>1. Download Windows Executable</Label>
+                <Label>2. Extract "ffmpeg.exe", "ffplay.exe" and "ffprobe.exe" (from bin directory) to Extension directory</Label>
+                <Label>3. Restart application</Label>
+            </StackPanel>
+            <ui:Card.Footer>
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button x:Name="btFfmpegDownload" Margin="5,0" Click="btFfmpegDownload_Click">Open Download page</ui:Button>
+                </StackPanel>
+            </ui:Card.Footer>
+        </ui:Card>
+    </VirtualizingStackPanel>
+        </ScrollViewer>
 </ui:UiPage>
