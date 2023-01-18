@@ -1,53 +1,48 @@
 ﻿<Window
     x:Class="FileManager.Views.Windows.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:FileManager.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="clr-namespace:FileManager.Views.Pages"
-    Title="Settings"
-    Width="600"
-    Height="400"
-    d:DesignWidth="600"
-    d:DesignHeight="400"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="FileManager - Settings"
+    Width="1000"
+    Height="500"
+    d:DesignHeight="450"
+    d:DesignWidth="900"
     Background="{DynamicResource ApplicationBackgroundBrush}"
     Style="{DynamicResource UiWindow}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
-        <!-- The first division of the grid divides the application into the top bar (TitleBar) and the content itself -->
+        <!--  The first division of the grid divides the application into the top bar (TitleBar) and the content itself  -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- TitleBar (Row 0) -->
+        <!--  Contains Buttons responsible for maximizing, minimizing and closing the app. It also has a background colored strip that allows you to move the application around  -->
         <ui:TitleBar
             x:Name="RootTitleBar"
             Grid.Row="0"
             ForceShutdown="False"
+            Padding="16,0"
             MinimizeToTray="False"
-            ShowMinimize="False"
-            ShowMaximize="False"
             ShowHelp="False"
+            ShowMaximize="False"
+            ShowMinimize="False"
             UseSnapLayout="True">
-            <ui:TitleBar.Header>
-                <StackPanel
-                    Margin="0,0,12,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                </StackPanel>
-            </ui:TitleBar.Header>
         </ui:TitleBar>
 
-        <!-- Content (Row 1) -->
+        <!-- Body -->
         <Grid
             x:Name="RootGrid"
             Grid.Row="1"
-            Margin="12,6,0,12"
+            Margin="12,-15,0,12"
             Visibility="Visible">
+            <!--  Here we separate CardProfile, Navigation and Frame  -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -57,56 +52,72 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Title (Row 0) -->
-            <Grid Grid.Row="0" Margin="6,-20,0,24">
+            <!--  Profile card displays the app's icon, name, and subtitle  -->
+            <Grid Grid.Row="0" Margin="6,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <!-- Settings Icon (Column 0) -->
+
+                <!-- Image -->
                 <Border
                     Grid.Column="0"
                     Width="40"
                     Height="40"
                     CornerRadius="20">
                     <Border.Background>
-                        <ImageBrush ImageSource="pack://application:,,,/Resources/FileManager_Full.png" />
+                        <ImageBrush ImageSource="pack://application:,,,/Resources/Icons/FileManager_Full.png" />
                     </Border.Background>
                 </Border>
-                <!-- Settings Title (Column 1) -->
+                
+                <!-- Text-->
                 <StackPanel
                     Grid.Column="1"
                     Margin="12,0,0,0"
                     VerticalAlignment="Center">
                     <TextBlock FontWeight="Medium" Text="Settings" />
-                    <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text=" v.0.0" />
+                    <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Version [TEMP]" />
                 </StackPanel>
             </Grid>
 
-            <!-- Navigation (Row 1, Column 0) -->
+            <!--  This element displays the navigation items  -->
             <ui:NavigationFluent
                 x:Name="RootNavigation"
                 Grid.Row="1"
                 Grid.Column="0"
                 Margin="0,0,12,0"
-                Width="160"
                 Frame="{Binding ElementName=RootFrame}"
                 SelectedPageIndex="0">
                 <ui:NavigationFluent.Items>
                     <ui:NavigationItem
-                        Content="Dashboard"
-                        Image="pack://application:,,,/Resources/microsoft-shell-desktop.ico"
-                        PageType="{x:Type pages:SettingsPageDashboard}"
-                        Tag="dashboard" Cursor="Hand" />
+                        Content="General"
+                        Image="pack://application:,,,/Resources/Icons/Settings/GeneralIcon.ico"
+                        PageType="{x:Type pages:SettingsGeneralPage}"
+                        Tag="general" />
                     <ui:NavigationItem
-                        Content="Controls"
-                        Image="pack://application:,,,/Resources/microsoft-shell-settings.ico"
-                        PageType="{x:Type pages:SettingsPageControls}"
-                        Tag="controls" />
+                        Content="GUI"
+                        Image="pack://application:,,,/Resources/Icons/Settings/GuiIcon.ico"
+                        PageType="{x:Type pages:SettingsGuiPage}"
+                        Tag="gui" />
+                    <ui:NavigationItem
+                        Content="Extensions"
+                        Image="pack://application:,,,/Resources/Icons/Settings/ExtensionsIcon.ico"
+                        PageType="{x:Type pages:SettingsExtensionsPage}"
+                        Tag="extensions" />
+                    <ui:NavigationItem
+                        Content="Logging"
+                        Image="pack://application:,,,/Resources/Icons/Settings/LoggingIcon.ico"
+                        PageType="{x:Type pages:SettingsLoggingPage}"
+                        Tag="logging" />
+                    <ui:NavigationItem
+                        Content="About"
+                        Image="pack://application:,,,/Resources/Icons/Settings/AboutIcon.ico"
+                        PageType="{x:Type pages:SettingsAboutPage}"
+                        Tag="about" />
                 </ui:NavigationFluent.Items>
             </ui:NavigationFluent>
 
-            <!-- Pages are presented here (Row 0-1, Column 1)-->
+            <!--  Pages are presented here  -->
             <Grid
                 Grid.Row="0"
                 Grid.RowSpan="2"
@@ -115,12 +126,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <!-- Title (Row 0) -->
                 <ui:Breadcrumb
                     Grid.Row="0"
                     Margin="0,0,0,18"
                     Navigation="{Binding ElementName=RootNavigation}" />
-                <!-- Page (Row 1) -->
                 <Frame x:Name="RootFrame" Grid.Row="1" />
             </Grid>
         </Grid>
