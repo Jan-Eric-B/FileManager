@@ -66,6 +66,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GeneralPageSettings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Settings\Presets.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Presets.settings</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Settings\SearchFilters.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -82,6 +87,10 @@
     <None Update="Resources\Settings\GeneralPageSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>GeneralPageSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\Settings\Presets.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Presets.Designer.cs</LastGenOutput>
     </None>
     <None Update="Resources\Settings\SearchFilters.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -5,13 +5,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FileManager.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:FileManager.Models"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="SettingsGeneralPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
+                <Setter Property="IsExpanded" Value="True" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="IsSelected" Value="{Binding IsInitiallySelected, Mode=OneTime}" />
+                <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+                <Setter Property="models:VirtualToggleButton.IsVirtualToggleButton" Value="True" />
+                <Setter Property="models:VirtualToggleButton.IsChecked" Value="{Binding IsChecked}" />
+            </Style>
 
-    <Grid>
-        <TextBlock Text="General" />
-    </Grid>
+            <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate" ItemsSource="{Binding Children, Mode=OneTime}">
+                <VirtualizingStackPanel Orientation="Horizontal">
+                    <!-- These elements are bound to a CustomTreeViewItem object. -->
+                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" Width="30" MinWidth="30" Checked="CheckBox_Checked_SavePresets" Unchecked="CheckBox_Unchecked_SavePresets" />
+                    <Label Content="{Binding Name, Mode=OneTime}" FontSize="{Binding FontSize, Mode=OneTime}" VerticalContentAlignment="Center"/>
+                </VirtualizingStackPanel>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Page.DataContext>
+        <ObjectDataProvider MethodName="CreateFoos" ObjectType="{x:Type models:CustomTreeViewItem}" />
+    </Page.DataContext>
+
+    <ScrollViewer>
+        <VirtualizingStackPanel x:Name="spTest">
+        <ui:Card Margin="20">
+            <StackPanel>
+                <TreeView x:Name="tree" PreviewMouseWheel="HandlePreviewMouseWheel" ItemContainerStyle="{StaticResource TreeViewItemStyle}" ItemsSource="{Binding Mode=OneTime}" ItemTemplate="{StaticResource CheckBoxItemTemplate}"/>
+            </StackPanel>
+        </ui:Card>
+    </VirtualizingStackPanel>
+        </ScrollViewer>
+
+
 </ui:UiPage>

@@ -55,19 +55,22 @@ namespace FileManager.Views.Pages
         private void SettingsLoad()
         {
             GeneralPageSettings settings = new();
-            ViewModel.CardExpanderMove = settings.CardExpanderMove;
-            ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
-            ViewModel.CardExpanderRename = settings.CardExpanderRename;
+            Presets presets = new();
+
+            if (presets.GeneralCardCollapseMove) ViewModel.CardExpanderMove = settings.CardExpanderMove;
+            if (presets.GeneralCardCollapseDelete) ViewModel.CardExpanderDelete = settings.CardExpanderDelete;
+            if (presets.GeneralCardCollapseRename) ViewModel.CardExpanderRename = settings.CardExpanderMove;
         }
 
         public void SettingsSave()
         {
-            GeneralPageSettings settings = new()
-            {
-                CardExpanderMove = ViewModel.CardExpanderMove,
-                CardExpanderDelete = ViewModel.CardExpanderDelete,
-                CardExpanderRename = ViewModel.CardExpanderRename,
-            };
+            GeneralPageSettings settings = new();
+            Presets presets = new();
+
+            if (presets.GeneralCardCollapseMove) settings.CardExpanderMove = ViewModel.CardExpanderMove;
+            if (presets.GeneralCardCollapseDelete) settings.CardExpanderDelete = ViewModel.CardExpanderDelete;
+            if (presets.GeneralCardCollapseRename) settings.CardExpanderRename = ViewModel.CardExpanderRename;
+           
             settings.Save();
         }
 
